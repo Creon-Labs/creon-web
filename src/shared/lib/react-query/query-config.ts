@@ -4,9 +4,9 @@ import { UseMutationOptions, DefaultOptions } from '@tanstack/react-query';
 export const queryConfig = {
   queries: {
     // throwOnError: true,
-    refetchOnWindowFocus: false,
-    retry: false,
-    staleTime: 1000 * 60,
+    retry: 3,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 60, // 1 hour
   },
 } satisfies DefaultOptions;
 
