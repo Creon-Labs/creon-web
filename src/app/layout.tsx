@@ -1,9 +1,12 @@
-import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google"
+import './globals.css';
 
-import { ThemeProvider } from "@/shared/components/theme-provider"
-import { cn } from "@/shared/utils/cn"
-import { TooltipProvider } from "@shadcn-ui/tooltip"
-import "./globals.css"
+import { Geist_Mono, Plus_Jakarta_Sans } from 'next/font/google';
+
+import { ThemeProvider } from '@/shared/components/theme-provider';
+import { ReactQueryProvider } from '@/shared/lib/react-query';
+import { cn } from '@/shared/utils/cn';
+import { TooltipProvider } from '@shadcn-ui/tooltip';
+import { Metadata } from 'next';
 
 const fontHeading = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -19,6 +22,11 @@ const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 })
+
+export const metadata: Metadata = {
+  title: 'Creon: Connecting Micro Entrepreneurs to Investors',
+  description: 'Connecting micro entrepreneurs with potential investors for funding and growth opportunities.',
+}
 
 export default function RootLayout({
   children,
@@ -38,9 +46,11 @@ export default function RootLayout({
       )}
     >
       <body>
-        <ThemeProvider>
-          <TooltipProvider>{children}</TooltipProvider>
-        </ThemeProvider>
+        <ReactQueryProvider>
+          <ThemeProvider>
+            <TooltipProvider>{children}</TooltipProvider>
+          </ThemeProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   )
