@@ -52,7 +52,7 @@ function ConnectButton({
       StellarWalletsKit.createButton(buttonWrapper.current, {
         mode: ButtonMode.free,
         children: "-",
-        classes: "absolute w-full h-full top-0 left-0",
+        classes: "inset-0 absolute",
       })
     }
   }, [])
@@ -91,7 +91,7 @@ function ConnectButton({
       {buttonText}
       <div
         ref={buttonWrapper}
-        className="absolute top-0 left-0 h-full w-full opacity-0"
+        className="absolute inset-0 opacity-0"
       />
     </div>
   )
