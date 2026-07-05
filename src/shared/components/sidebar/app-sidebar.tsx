@@ -5,7 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 import { cn } from "@/shared/utils/cn"
-import { ListIcon } from "@phosphor-icons/react"
+import { ListIcon, XIcon } from "@phosphor-icons/react"
 import { Button } from "@shadcn-ui/button"
 import {
   Sidebar,
@@ -20,6 +20,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@shadcn-ui/sidebar"
+import { Route } from "next"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -86,7 +87,7 @@ function AppSidebarLogo() {
 
 function AppSidebarNavItem({ item }: { item: AppSidebarNavItem }) {
   const pathname = usePathname()
-  const isActive = pathname === item.href
+  const isActive = pathname.startsWith(item.href)
 
   return (
     <SidebarMenuItem>
@@ -96,7 +97,7 @@ function AppSidebarNavItem({ item }: { item: AppSidebarNavItem }) {
         tooltip={item.title}
         className={cn("gap-3", isActive && "font-medium")}
       >
-        <Link href={item.href}>
+        <Link href={item.href as Route}>
           <item.icon weight={isActive ? "fill" : "regular"} />
           <span>{item.title}</span>
         </Link>
@@ -130,7 +131,7 @@ export function AppSidebar({
   className,
   sidebarProps,
 }: AppSidebarProps) {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, isMobile } = useSidebar()
 
   return (
     <Sidebar collapsible="icon" className={className} {...sidebarProps}>
@@ -143,7 +144,7 @@ export function AppSidebar({
           variant={"ghost"}
           className="ml-auto"
         >
-          <ListIcon />
+          {isMobile ? <XIcon /> : <ListIcon />}
         </Button>
       </SidebarHeader>
 

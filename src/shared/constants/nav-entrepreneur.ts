@@ -1,10 +1,10 @@
+import { WalletIcon } from "@phosphor-icons/react"
 import {
-  HouseIcon,
-  RocketLaunchIcon,
-  HandCoinsIcon,
   ChartLineUpIcon,
-  FileTextIcon,
   GearSixIcon,
+  HandCoinsIcon,
+  HouseIcon,
+  RocketLaunchIcon
 } from "@phosphor-icons/react/dist/ssr"
 import { SidebarNavItem } from "../types"
 
@@ -12,7 +12,7 @@ import { SidebarNavItem } from "../types"
 export const entrepreneurNavItems: SidebarNavItem[] = [
   {
     title: "Overview",
-    href: "/entrepreneur",
+    href: "/entrepreneur/overview",
     icon: HouseIcon,
   },
   {
@@ -21,19 +21,19 @@ export const entrepreneurNavItems: SidebarNavItem[] = [
     icon: RocketLaunchIcon,
   },
   {
-    title: "Funding",
-    href: "/entrepreneur/funding",
-    icon: HandCoinsIcon,
-  },
-  {
-    title: "Performance",
-    href: "/entrepreneur/performance",
+    title: "Profit Sharing",
+    href: "/entrepreneur/profit-sharing",
     icon: ChartLineUpIcon,
   },
   {
-    title: "Reports",
-    href: "/entrepreneur/reports",
-    icon: FileTextIcon,
+    title: "Disbursment",
+    href: "/entrepreneur/disbursment",
+    icon: HandCoinsIcon,
+  },
+  {
+    title: "My Wallet",
+    href: "/entrepreneur/wallet",
+    icon: WalletIcon,
   },
   {
     title: "Settings",

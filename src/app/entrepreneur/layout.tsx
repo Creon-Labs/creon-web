@@ -1,16 +1,24 @@
 import { SidebarInset, SidebarProvider } from "@shadcn-ui/sidebar"
 
+import { AppHeader } from "@/shared/components/app-header"
 import { EntrepreneurSidebar } from "@/shared/components/sidebar/entrepreneur-sidebar"
+import { sidebarCookieState } from "@/shared/components/sidebar/get-sidebar-cookie"
+import { AppContainer } from "@/shared/components/app-container"
 
-export default function EntrepreneurLayout({
+export default async function EntrepreneurLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const defaultOpen = await sidebarCookieState()
+
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={defaultOpen}>
       <EntrepreneurSidebar />
-      <SidebarInset className="p-4">{children}</SidebarInset>
+      <SidebarInset>
+        <AppHeader />
+        <AppContainer>{children}</AppContainer>
+      </SidebarInset>
     </SidebarProvider>
   )
 }
