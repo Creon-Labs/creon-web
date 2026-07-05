@@ -20,6 +20,7 @@ Key technologies:
 - **React Hook Form** + **Zod v4** for form validation
 - **Phosphor Icons** as the icon library
 - **pnpm** as the package manager
+- **`@creit-tech/stellar-wallets-kit`** for Stellar wallet connection (WalletConnect, Freighter, xBull, etc.)
 
 See [`docs/PROJECT.md`](./docs/PROJECT.md) for full domain/business context (roles, core flow, glossary).
 
@@ -92,7 +93,8 @@ src/
     ├── lib/
     │   ├── api-client.ts       # ← Fetch wrapper (api.get/post/put/patch/delete)
     │   ├── env.ts              # Environment variable schema (@t3-oss/env-nextjs)
-    │   └── react-query/        # TanStack Query provider & default config
+    │   ├── react-query/        # TanStack Query provider & default config
+    │   └── stellar-wallet/     # ← Stellar wallet integration
     ├── stores/                 # Global Zustand stores
     ├── types/                  # Shared TypeScript types
     └── utils/
@@ -162,6 +164,25 @@ Import them via the `@shadcn-ui/*` path alias:
 
 ```ts
 import { Button } from "@shadcn-ui/button"
+```
+
+---
+
+## Form (React Hook Form + Zod)
+
+Gunakan custom hook `useHookForm` dari `src/shared/lib/hook-form.ts` untuk membuat form. Hook ini adalah wrapper tipis di atas `useForm` yang secara otomatis menghubungkan `zodResolver` — cukup berikan `schema` Zod, tanpa perlu mengatur resolver secara manual.
+
+```ts
+import { useHookForm } from "@/shared/lib/hook-form"
+import { z } from "zod"
+
+const schema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+})
+
+const form = useHookForm({ schema, defaultValues: { email: "", password: "" } })
+// form.register, form.handleSubmit, form.formState, dll. tersedia seperti biasa
 ```
 
 ---
@@ -312,6 +333,51 @@ export const useCreateCampaign = ({ config }: UseCreateCampaignOptions = {}) => 
 
 Environment variables are validated with `@t3-oss/env-nextjs`. Add new vars to the env schema (in `src/shared/lib/env.ts` or equivalent) **before** using them — raw `process.env` access is not allowed.
 
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `NEXT_PUBLIC_BASE_API_URL` | ✅ | Backend REST API base URL |
+| `NEXT_PUBLIC_BASE_URL` | ✅ | Public app URL (used in WalletConnect metadata) |
+| `NEXT_PUBLIC_REOWN_PROJECT_ID` | ✅ | Reown (WalletConnect) project ID — get one at [cloud.reown.com](https://cloud.reown.com) |
+| `SECRET_KEY` | ✅ | Server-side secret (session signing, etc.) |
+
+---
+
+## Stellar Wallet Integration
+
+Creon menggunakan `@creit-tech/stellar-wallets-kit` (JSR: `jsr:^2.5.0`) untuk koneksi multi-wallet di Stellar network. Konfigurasi wallet (provider, WalletConnect module, dan UI button) sudah di-setup di `src/shared/lib/stellar-wallet/` dan **tidak perlu diubah**.
+
+### Menggunakan wallet state — `useStellarWallet`
+
+Gunakan hook `useStellarWallet` di client component untuk mengakses state wallet. Jangan import `StellarWalletsKit` secara langsung di dalam komponen.
+
+```tsx
+"use client"
+import { useStellarWallet } from "@/shared/lib/stellar-wallet"
+
+function MyComponent() {
+  const { connectedAddress, disconnect, signTransaction, signAuthEntry, signMessage } =
+    useStellarWallet()
+
+  // connectedAddress — string | undefined, undefined jika belum connect
+  // disconnect()     — putus koneksi wallet aktif
+  // signTransaction(xdr, opts?) — tanda tangani Stellar transaction XDR
+  // signAuthEntry(authEntry, opts?) — tanda tangani Soroban auth entry
+  // signMessage(message, opts?)     — tanda tangani pesan arbitrer
+}
+```
+
+### Menambahkan tombol Connect Wallet
+
+```tsx
+import { ConnectButton } from "@/shared/lib/stellar-wallet"
+
+<ConnectButton variant="default" size="default" />
+```
+
+`ConnectButton` menerima semua props variant/size dari shadcn `Button`. Jika wallet sudah terhubung, button otomatis menampilkan Stellar logo dan alamat wallet yang di-mask.
+
+> **Catatan:** Wallet hanya berjalan di sisi client. Jangan gunakan `useStellarWallet` di Server Component.
+
 ---
 
 ## Pull Request Guidelines
@@ -333,3 +399,4 @@ Environment variables are validated with `@t3-oss/env-nextjs`. Add new vars to t
 - **Tailwind CSS v4** is used (`@tailwindcss/postcss`). Configuration is CSS-first — there is no `tailwind.config.ts`.
 - **Zod v4** has breaking API changes from v3. Refer to Zod v4 docs.
 - shadcn style preset is `radix-lyra` (not the default `new-york` or `default`). Do not change the style in `components.json`.
+- **Wallet operations are client-side only** — never call `useStellarWallet` in Server Components.
