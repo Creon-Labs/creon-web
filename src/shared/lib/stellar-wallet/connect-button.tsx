@@ -1,21 +1,28 @@
 "use client"
 
-import { VariantProps } from 'class-variance-authority';
-import { useTheme } from 'next-themes';
-import { useEffect, useRef, useState } from 'react';
-
-import { StellarLogo } from '@/shared/assets/stellar-logo';
-import { cn } from '@/shared/utils/cn';
-import { maskAddress } from '@/shared/utils/mask-address';
-import { ButtonMode } from '@creit-tech/stellar-wallets-kit/components';
-import { defaultModules } from '@creit-tech/stellar-wallets-kit/modules/utils';
-import { StellarWalletsKit } from '@creit-tech/stellar-wallets-kit/sdk';
+import { VariantProps } from "class-variance-authority"
+import { useTheme } from "next-themes"
 import {
-  KitEventType, Networks, SwkAppDarkTheme, SwkAppLightTheme
-} from '@creit-tech/stellar-wallets-kit/types';
+  useContext,
+  useEffect,
+  useRef
+} from "react"
 
-import { buttonVariants } from '../../components/shadcn-ui/button';
-import { walletConnectModule } from '@/shared/lib/stellar-wallet/wc-module';
+import { StellarLogo } from "@/shared/assets/stellar-logo"
+import { cn } from "@/shared/utils/cn"
+import { maskAddress } from "@/shared/utils/mask-address"
+import { ButtonMode } from "@creit-tech/stellar-wallets-kit/components"
+import { defaultModules } from "@creit-tech/stellar-wallets-kit/modules/utils"
+import { StellarWalletsKit } from "@creit-tech/stellar-wallets-kit/sdk"
+import {
+  Networks,
+  SwkAppDarkTheme,
+  SwkAppLightTheme
+} from "@creit-tech/stellar-wallets-kit/types"
+
+import { walletConnectModule } from "@/shared/lib/stellar-wallet/wc-module"
+import { buttonVariants } from "../../components/shadcn-ui/button"
+import { WalletContext } from "./provider"
 
 type ButtonConnectWalletProps = VariantProps<typeof buttonVariants> & {
   className?: string
@@ -26,6 +33,12 @@ function ConnectButton({
   variant = "default",
   size = "default",
 }: ButtonConnectWalletProps) {
+  const ctx = useContext(WalletContext)
+
+  if (!ctx)
+    throw new Error("ConnectButton must be used within StellarWalletProvider")
+
+  const { connectedAddress } = ctx
   const { theme } = useTheme()
 
   useEffect(() => {
@@ -45,7 +58,6 @@ function ConnectButton({
   }, [theme])
 
   const buttonWrapper = useRef<HTMLDivElement>(null)
-  const [connectedAddress, setConnectedAddress] = useState<string>()
 
   useEffect(() => {
     if (buttonWrapper.current) {
@@ -56,18 +68,6 @@ function ConnectButton({
       })
     }
   }, [])
-
-  useEffect(() => {
-    StellarWalletsKit.on(KitEventType.STATE_UPDATED, async (event) => {
-      setConnectedAddress(event.payload.address)
-    })
-  }, [])
-
-  // useEffect(() => {
-  //   StellarWalletsKit.on(KitEventType.DISCONNECT, (event) => {
-  //     // We log out the user
-  //   })
-  // }, [])
 
   const buttonText = connectedAddress
     ? maskAddress(connectedAddress)
@@ -89,12 +89,9 @@ function ConnectButton({
     >
       {connectedAddress && <StellarLogo />}
       {buttonText}
-      <div
-        ref={buttonWrapper}
-        className="absolute inset-0 opacity-0"
-      />
+      <div ref={buttonWrapper} className="absolute inset-0 opacity-0" />
     </div>
   )
 }
 
-export { ConnectButton };
+export { ConnectButton }

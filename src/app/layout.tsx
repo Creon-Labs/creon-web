@@ -1,12 +1,13 @@
-import './globals.css';
+import "./globals.css"
 
-import { Geist_Mono, Plus_Jakarta_Sans } from 'next/font/google';
+import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google"
 
-import { ThemeProvider } from '@/shared/components/theme-provider';
-import { ReactQueryProvider } from '@/shared/lib/react-query';
-import { cn } from '@/shared/utils/cn';
-import { TooltipProvider } from '@shadcn-ui/tooltip';
-import { Metadata } from 'next';
+import { ThemeProvider } from "@/shared/components/theme-provider"
+import { ReactQueryProvider } from "@/shared/lib/react-query"
+import { cn } from "@/shared/utils/cn"
+import { TooltipProvider } from "@shadcn-ui/tooltip"
+import { Metadata } from "next"
+import { StellarWalletProvider } from "@/shared/lib/stellar-wallet"
 
 const fontHeading = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -24,8 +25,9 @@ const fontMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Creon: Connecting Micro Entrepreneurs to Investors',
-  description: 'Connecting micro entrepreneurs with potential investors for funding and growth opportunities.',
+  title: "Creon: Connecting Micro Entrepreneurs to Investors",
+  description:
+    "Connecting micro entrepreneurs with potential investors for funding and growth opportunities.",
 }
 
 export default function RootLayout({
@@ -48,7 +50,9 @@ export default function RootLayout({
       <body>
         <ReactQueryProvider>
           <ThemeProvider>
-            <TooltipProvider>{children}</TooltipProvider>
+            <TooltipProvider>
+              <StellarWalletProvider>{children}</StellarWalletProvider>
+            </TooltipProvider>
           </ThemeProvider>
         </ReactQueryProvider>
       </body>
