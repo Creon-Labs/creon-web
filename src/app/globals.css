@@ -37,6 +37,17 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
+
+    /* ── Semantic Colors ─────────────────────────────────────────────────── */
+    /* Use these raw values; apply opacity via Tailwind (e.g. bg-subtle/10)  */
+    --subtle: oklch(0.556 0 0);          /* neutral gray */
+    --subtle-foreground: oklch(0.269 0 0);
+    --info: oklch(0.623 0.214 255.1);    /* blue */
+    --info-foreground: oklch(0.45 0.18 255);
+    --warning: oklch(0.75 0.18 65.0);    /* amber */
+    --warning-foreground: oklch(0.5 0.18 55);
+    --success: oklch(0.65 0.18 145.0);   /* green */
+    --success-foreground: oklch(0.4 0.16 145);
 }
 
 .dark {
@@ -71,6 +82,16 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
+
+    /* ── Semantic Colors (dark overrides) ───────────────────────────────── */
+    --subtle: oklch(0.708 0 0);
+    --subtle-foreground: oklch(0.922 0 0);
+    --info: oklch(0.65 0.20 255.1);
+    --info-foreground: oklch(0.75 0.18 255);
+    --warning: oklch(0.78 0.18 65.0);
+    --warning-foreground: oklch(0.88 0.16 75);
+    --success: oklch(0.68 0.18 145.0);
+    --success-foreground: oklch(0.80 0.16 148);
 }
 
 @theme inline {
@@ -114,6 +135,16 @@
     --radius-2xl: calc(var(--radius) * 1.8);
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
+
+    /* ── Semantic Color Tokens ───────────────────────────────────────────── */
+    --color-subtle: var(--subtle);
+    --color-subtle-foreground: var(--subtle-foreground);
+    --color-info: var(--info);
+    --color-info-foreground: var(--info-foreground);
+    --color-warning: var(--warning);
+    --color-warning-foreground: var(--warning-foreground);
+    --color-success: var(--success);
+    --color-success-foreground: var(--success-foreground);
 }
 
 @layer base {
