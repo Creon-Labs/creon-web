@@ -48,7 +48,7 @@ export function AppHeader() {
   }
 
   return (
-    <header className="flex h-16 w-full items-center justify-between gap-4 border-b px-4 md:px-6">
+    <header className="flex h-16 w-full items-center justify-between gap-4 border-b px-4 md:px-6 sticky top-0 z-50 bg-background/80 backdrop-blur-sm">
       <div className="hidden w-full md:inline">
         {isStale && title === null ? (
           <Skeleton className="h-4 w-40" />
