@@ -1,10 +1,11 @@
 import {
-  ChartLineUpIcon,
+  ChartBarIcon,
   GearSixIcon,
-  HandCoinsIcon,
   HouseIcon,
   RocketLaunchIcon,
-  WalletIcon,
+  ShareNetworkIcon,
+  TargetIcon,
+  VaultIcon,
 } from "@phosphor-icons/react/dist/ssr"
 import { Route } from "next"
 
@@ -24,19 +25,19 @@ export function getEntrepreneurNavItems(campaignId: string): SidebarNavItem[] {
       icon: HouseIcon,
     },
     {
-      title: "Profit Sharing",
-      href: `/entrepreneur/${campaignId}/profit-sharing` as Route,
-      icon: ChartLineUpIcon,
+      title: "Holdings",
+      href: `/entrepreneur/${campaignId}/holdings` as Route,
+      icon: VaultIcon,
     },
     {
-      title: "Disbursement",
-      href: `/entrepreneur/${campaignId}/disbursment` as Route,
-      icon: HandCoinsIcon,
+      title: "Milestones",
+      href: `/entrepreneur/${campaignId}/milestones` as Route,
+      icon: TargetIcon,
     },
     {
-      title: "My Wallet",
-      href: `/entrepreneur/${campaignId}/wallet` as Route,
-      icon: WalletIcon,
+      title: "Distributions",
+      href: `/entrepreneur/${campaignId}/distributions` as Route,
+      icon: ShareNetworkIcon,
     },
     {
       title: "Settings",

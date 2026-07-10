@@ -3,8 +3,6 @@
 import { usePageTitle } from "@/shared/components/sections/app-header"
 
 export default function Page() {
-    usePageTitle("Wallet")
-  return (
-    <h1>Entrepreneur Wallet</h1>
-  )
+  usePageTitle("Holdings")
+  return <h1>Holdings</h1>
 }
