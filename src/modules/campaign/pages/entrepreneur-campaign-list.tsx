@@ -41,7 +41,7 @@ export function EntrepreneurCampaignListPage() {
         />
         <Button>
           <PlusIcon />
-          New Proposal
+          New Campaign
         </Button>
       </div>
 

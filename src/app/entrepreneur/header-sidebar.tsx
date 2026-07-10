@@ -1,13 +1,16 @@
 "use client"
 
-import { SidebarMenu } from "@shadcn-ui/sidebar"
+import { SidebarMenu, useSidebar } from "@shadcn-ui/sidebar"
 
-import { entrepreneurNavItems } from "@/shared/constants/nav-entrepreneur"
+import {
+  AppHeader
+} from "@/shared/components/sections/app-header"
 import {
   AppSidebar,
   AppSidebarProps,
 } from "@/shared/components/sections/sidebar"
 import { SidebarUserMenu } from "@/shared/components/sections/sidebar/sidebar-user-menu"
+import { entrepreneurNavItems } from "@/shared/constants/nav-entrepreneur"
 
 // Mock user — replace with real auth data when auth module is ready
 const MOCK_USER = {
@@ -30,4 +33,10 @@ export function EntrepreneurSidebar(props: EntrepreneurSidebarProps) {
       {...props}
     />
   )
+}
+
+export function EntrepreneurHeader() {
+  const { toggleSidebar } = useSidebar()
+
+  return <AppHeader toggleSidebar={toggleSidebar} />
 }

@@ -2,15 +2,13 @@
 
 import { BellIcon, CaretLeftIcon, ListIcon } from "@phosphor-icons/react"
 import { Button } from "@shadcn-ui/button"
-import { useSidebar } from "@shadcn-ui/sidebar"
-import { ConnectButton } from "../../lib/stellar-wallet"
-import { H5 } from "../primitives/typography"
-import { create } from "zustand"
-import { usePathname } from "next/navigation"
-import { useLayoutEffect } from "react"
 import { Skeleton } from "@shadcn-ui/skeleton"
+import { usePathname, useRouter } from "next/navigation"
+import { useLayoutEffect } from "react"
+import { create } from "zustand"
+import { ConnectButton } from "../../lib/stellar-wallet"
 import { ComposedBreadcrumb } from "../blocks/composed-breadcrumb"
-import { useRouter } from "next/navigation"
+import { H5 } from "../primitives/typography"
 
 type HeaderState = {
   title: string | string[] | null
@@ -33,8 +31,7 @@ export function usePageTitle(title: string | string[]) {
   }, [title, pathname, setTitle])
 }
 
-export function AppHeader() {
-  const { toggleSidebar } = useSidebar()
+export function AppHeader(props: { toggleSidebar?: () => void }) {
   const pathname = usePathname()
   const router = useRouter()
   const { title, pathname: titlePathname } = useHeaderStore()
@@ -74,14 +71,16 @@ export function AppHeader() {
           </div>
         )}
       </div>
-      <Button
-        onClick={toggleSidebar}
-        size={"icon-sm"}
-        variant={"ghost"}
-        className="md:hidden"
-      >
-        <ListIcon />
-      </Button>
+      {props.toggleSidebar && (
+        <Button
+          onClick={props.toggleSidebar}
+          size={"icon-sm"}
+          variant={"ghost"}
+          className="md:hidden"
+        >
+          <ListIcon />
+        </Button>
+      )}
 
       <div className="flex items-center gap-4">
         <Button variant={"ghost"} size={"icon"}>
