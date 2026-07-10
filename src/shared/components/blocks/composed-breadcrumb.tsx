@@ -12,7 +12,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@shadcn-ui/breadcrumb"
-import { cn } from "../utils/cn"
+import { cn } from "../../utils/cn"
 
 export type BreadcrumbItemType = { label: string; href: string } | string
 

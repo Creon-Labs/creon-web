@@ -2,9 +2,12 @@
 
 import { SidebarMenu } from "@shadcn-ui/sidebar"
 
-import { AppSidebar, type AppSidebarProps } from "@/shared/components/sidebar/app-sidebar"
-import { SidebarUserMenu } from "@/shared/components/sidebar/sidebar-user-menu"
 import { entrepreneurNavItems } from "@/shared/constants/nav-entrepreneur"
+import {
+  AppSidebar,
+  AppSidebarProps,
+} from "@/shared/components/sections/sidebar"
+import { SidebarUserMenu } from "@/shared/components/sections/sidebar/sidebar-user-menu"
 
 // Mock user — replace with real auth data when auth module is ready
 const MOCK_USER = {
@@ -15,10 +18,6 @@ const MOCK_USER = {
 
 type EntrepreneurSidebarProps = Omit<AppSidebarProps, "navGroups" | "footer">
 
-/**
- * Scope-specific sidebar for the Entrepreneur portal.
- * Bundles nav items + footer so no functions cross the Server→Client boundary.
- */
 export function EntrepreneurSidebar(props: EntrepreneurSidebarProps) {
   return (
     <AppSidebar

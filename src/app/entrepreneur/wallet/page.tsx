@@ -1,6 +1,6 @@
 "use client"
 
-import { usePageTitle } from "@/shared/components/app-header"
+import { usePageTitle } from "@/shared/components/sections/app-header"
 
 export default function Page() {
     usePageTitle("Wallet")

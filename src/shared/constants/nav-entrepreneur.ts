@@ -1,10 +1,10 @@
-import { WalletIcon } from "@phosphor-icons/react"
 import {
   ChartLineUpIcon,
   GearSixIcon,
   HandCoinsIcon,
   HouseIcon,
-  RocketLaunchIcon
+  RocketLaunchIcon,
+  WalletIcon
 } from "@phosphor-icons/react/dist/ssr"
 import { SidebarNavItem } from "../types"
 

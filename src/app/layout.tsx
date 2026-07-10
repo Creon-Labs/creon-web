@@ -2,7 +2,7 @@ import "./globals.css"
 
 import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google"
 
-import { ThemeProvider } from "@/shared/components/theme-provider"
+import { ThemeProvider } from "@/shared/components/provider/theme-provider"
 import { ReactQueryProvider } from "@/shared/lib/react-query"
 import { cn } from "@/shared/utils/cn"
 import { TooltipProvider } from "@shadcn-ui/tooltip"

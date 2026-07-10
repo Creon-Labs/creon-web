@@ -2,9 +2,9 @@
 
 import { SidebarMenu } from "@shadcn-ui/sidebar"
 
-import { AppSidebar, type AppSidebarProps } from "@/shared/components/sidebar/app-sidebar"
-import { SidebarUserMenu } from "@/shared/components/sidebar/sidebar-user-menu"
 import { adminNavItems } from "@/shared/constants/nav-admin"
+import { AppSidebar, AppSidebarProps } from "./app-sidebar"
+import { SidebarUserMenu } from "./sidebar-user-menu"
 
 // Mock user — replace with real auth data when auth module is ready
 const MOCK_USER = {

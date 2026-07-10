@@ -2,7 +2,7 @@ import { cva, VariantProps } from "class-variance-authority"
 import Link from "next/link"
 
 import { OutlineUSDC } from "@/shared/assets/usdc-outline"
-import ImageWithFallback from "@/shared/components/image-with-fallback"
+import ImageWithFallback from "@/shared/components/primitives/image-with-fallback"
 import { cn } from "@/shared/utils/cn"
 import { formatUsd } from "@/shared/utils/format-usd"
 import {
@@ -17,7 +17,7 @@ import { Progress } from "@shadcn-ui/progress"
 
 import { CampaignStatus } from "../types"
 import { CampaignStatusBadge } from "./status-badge"
-import { H5, Text } from "@/shared/components/typography"
+import { H5, Text } from "@/shared/components/primitives/typography"
 
 type CardVariant = {
   public: string

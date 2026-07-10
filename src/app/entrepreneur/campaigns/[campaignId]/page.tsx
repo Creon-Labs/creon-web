@@ -1,6 +1,6 @@
 "use client"
 
-import { usePageTitle } from "@/shared/components/app-header"
+import { usePageTitle } from "@/shared/components/sections/app-header"
 import { useStellarWallet } from "@/shared/lib/stellar-wallet"
 import { Button } from "@shadcn-ui/button"
 import { use } from "react"

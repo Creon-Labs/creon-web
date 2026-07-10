@@ -1,7 +1,7 @@
 "use client"
 
 import { CampaignCard, CampaignStatus } from "@/modules/campaign"
-import { SearchInput } from "@/shared/components/search-input"
+import { SearchInput } from "@/shared/components/blocks/search-input"
 import { useSearchState } from "@/shared/hooks/use-search-state"
 import { InfoIcon, PlusIcon } from "@phosphor-icons/react"
 import { Button } from "@shadcn-ui/button"
@@ -46,7 +46,7 @@ export function EntrepreneurCampaignListPage() {
       </div>
 
       <Tabs defaultValue="all" value={searchParams.tab}>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center flex-wrap gap-2">
           {tabs.map((tab, index) => (
             <Button
               data-is-active={searchParams.tab === tab.value}

@@ -1,7 +1,7 @@
 "use client"
 
 import { ButtonGroup } from "@shadcn-ui/button-group"
-import { cn } from "../utils/cn"
+import { cn } from "../../utils/cn"
 import {
   InputGroup,
   InputGroupAddon,
