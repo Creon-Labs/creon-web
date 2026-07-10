@@ -73,6 +73,7 @@ const campaignCardFooterVariants = cva<{
 })
 
 type CampaignCardProps = VariantProps<typeof campaignCardVariants> & {
+  id: string
   imageUrl: string
   title: string
   description: string
@@ -85,6 +86,7 @@ type CampaignCardProps = VariantProps<typeof campaignCardVariants> & {
 }
 
 function CampaignCard({
+  id,
   imageUrl,
   title,
   description,
@@ -106,7 +108,7 @@ function CampaignCard({
       className={cn(campaignCardVariants({ variant, className }))}
     >
       {/* Card Content */}
-      <Link href={"/entrepreneur/campaigns/1"}>
+      <Link href={`/entrepreneur/${id}/overview`} className="block">
         <CardContent className="group flex flex-col gap-0 overflow-clip sm:flex-row sm:gap-4">
           {/* Status Badge */}
           {isEntrepreneurCard && (

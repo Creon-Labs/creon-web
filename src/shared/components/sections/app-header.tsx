@@ -31,7 +31,11 @@ export function usePageTitle(title: string | string[]) {
   }, [title, pathname, setTitle])
 }
 
-export function AppHeader(props: { toggleSidebar?: () => void }) {
+export function AppHeader(props: {
+  toggleSidebar?: () => void
+  /** Optional custom element rendered in place of the default title text */
+  titleSlot?: React.ReactNode
+}) {
   const pathname = usePathname()
   const router = useRouter()
   const { title, pathname: titlePathname } = useHeaderStore()
@@ -50,7 +54,8 @@ export function AppHeader(props: { toggleSidebar?: () => void }) {
         {isStale && title === null ? (
           <Skeleton className="h-4 w-40" />
         ) : isStale ? null : !isArrayTitle ? (
-          <H5>{title}</H5>
+          // Render custom slot if provided, otherwise fall back to plain title
+          props.titleSlot ?? <H5>{title}</H5>
         ) : (
           <div className="flex items-center gap-3">
             <Button
