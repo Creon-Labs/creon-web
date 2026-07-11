@@ -1,42 +1,23 @@
+import { RocketLaunchIcon, UsersIcon } from "@phosphor-icons/react"
 import {
-  ChartBarIcon,
-  GearSixIcon,
-  HouseIcon,
-  UsersIcon,
-  ShieldCheckIcon,
-  ClipboardTextIcon,
+  HouseIcon
 } from "@phosphor-icons/react/dist/ssr"
 import { SidebarNavItem } from "../types"
 
 export const adminNavItems: SidebarNavItem[] = [
   {
     title: "Overview",
-    href: "/admin",
+    href: "/admin/overview",
     icon: HouseIcon,
   },
   {
-    title: "Users",
-    href: "/admin/users",
+    title: "Investments",
+    href: "/admin/kyc",
     icon: UsersIcon,
   },
   {
-    title: "Campaigns",
-    href: "/admin/campaigns",
-    icon: ChartBarIcon,
-  },
-  {
-    title: "Reports",
-    href: "/admin/reports",
-    icon: ClipboardTextIcon,
-  },
-  {
-    title: "Verification",
-    href: "/admin/verification",
-    icon: ShieldCheckIcon,
-  },
-  {
     title: "Settings",
-    href: "/admin/settings",
-    icon: GearSixIcon,
+    href: "/admin/campaigns",
+    icon: RocketLaunchIcon,
   },
 ]

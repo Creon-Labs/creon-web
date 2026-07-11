@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation"
+
 export default function Page() {
-  return <h1>Admin</h1>
+  redirect("/admin/overview")
 }
