@@ -1,5 +1,7 @@
 "use client"
 
+import { useRouter } from "next/navigation"
+
 import { CampaignCard, CampaignStatus } from "@/modules/campaign"
 import { SearchInput } from "@/shared/components/blocks/search-input"
 import { useSearchState } from "@/shared/hooks/use-search-state"
@@ -31,6 +33,7 @@ export const campaignQuerySchema = z.object({
 
 export function EntrepreneurCampaignListPage() {
   const { state: searchParams, setMany } = useSearchState(campaignQuerySchema)
+  const router = useRouter()
 
   return (
     <>
@@ -39,8 +42,8 @@ export function EntrepreneurCampaignListPage() {
           className="max-w-lg"
           onSearch={(val) => console.log(val)}
         />
-        <Button>
-          <PlusIcon />
+        <Button onClick={() => router.push("/entrepreneur/campaigns/new")}>
+          <PlusIcon data-icon="inline-start" />
           New Campaign
         </Button>
       </div>
