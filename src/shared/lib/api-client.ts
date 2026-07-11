@@ -19,6 +19,13 @@ type RequestOptions = {
   priority?: RequestPriority
 }
 
+export type ApiResponse<TData = any> = {
+  statusCode: number
+  message: string
+  data?: TData
+  error?: string
+}
+
 function buildUrlWithParams(
   url: string,
   params?: RequestOptions["params"]
@@ -81,6 +88,7 @@ async function fetchApi<TResponse>(
   )
 
   const response = await fetch(fullUrl, {
+    ...options,
     method,
     headers: {
       "Content-Type": "application/json",
@@ -92,19 +100,23 @@ async function fetchApi<TResponse>(
     credentials: "include",
     cache,
     next,
-    ...options,
   })
 
   if (!response.ok) {
-    const message = (await response.json()).message || response.statusText
-    if (typeof window !== "undefined") {
-      // useNotifications.getState().addNotification({
-      //   type: 'error',
-      //   title: 'Error',
-      //   message,
-      // });
+    try {
+      const res = await response.json()
+      return res
+    } catch (error) {
+      throw error
     }
-    throw new Error(message)
+    // const message = (await response.json()).message || response.statusText
+    // if (typeof window !== "undefined") {
+    //   // useNotifications.getState().addNotification({
+    //   //   type: 'error',
+    //   //   title: 'Error',
+    //   //   message,
+    //   // });
+    // }
   }
 
   return response.json()

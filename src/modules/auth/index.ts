@@ -5,3 +5,7 @@ export type { RegisterFormValues } from "./schemas/register.schema"
 export { registerSchema } from "./schemas/register.schema"
 
 export type { RegisterPayload, UserRole } from "./types/register.types"
+
+export { createAuthNonce, useCreateAuthNonce } from "./api/create-auth-nonce"
+export { login, useLogin } from "./api/login"
+export type { LoginResponse } from "./api/login"

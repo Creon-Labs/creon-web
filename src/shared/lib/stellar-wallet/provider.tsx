@@ -18,7 +18,11 @@ import {
   SwkAppLightTheme,
 } from "@creit-tech/stellar-wallets-kit/types"
 
+import { createAuthNonce, login as loginApi } from "@/modules/auth"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { walletConnectModule } from "./wc-module"
+import { setLocalStorage } from "@/shared/utils/localstorage"
 
 type SignTransactionOptions = {
   networkPassphrase?: string
@@ -43,6 +47,7 @@ type SignMessageFunction = (
 
 type WalletContextValue = {
   connectedAddress?: string
+  isConnecting: boolean
   disconnect: () => Promise<void>
   signTransaction: SignTransactionFunction
   signAuthEntry: SignAuthEntryFunction
@@ -55,20 +60,9 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme()
 
   const [connectedAddress, setConnectedAddress] = useState<string>()
+  const [isConnecting, setIsConnecting] = useState<boolean>(false)
 
-  useEffect(() => {
-    StellarWalletsKit.on(KitEventType.STATE_UPDATED, async (event) => {
-      const address = event.payload.address
-      if (address) {
-        setConnectedAddress(event.payload.address)
-      }
-    })
-  }, [])
-  useEffect(() => {
-    StellarWalletsKit.on(KitEventType.DISCONNECT, async () => {
-      setConnectedAddress(undefined)
-    })
-  }, [])
+  const router = useRouter()
 
   const disconnect = useCallback(async () => {
     await StellarWalletsKit.disconnect()
@@ -95,6 +89,76 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
     []
   )
 
+  const handleLogin = useCallback(
+    async (address: string) => {
+      try {
+        setIsConnecting(true)
+        const nonce = await createAuthNonce(address)
+
+        if (!nonce) throw new Error("Failed to create auth nonce")
+
+        let signedMessage
+        try {
+          signedMessage = (await signMessage(nonce)).signedMessage
+          setLocalStorage("auth_signature", signedMessage)
+        } catch {
+          toast.error("Failed to sign message")
+          await disconnect()
+          return
+        }
+
+        const { error, statusCode, message } = await loginApi({
+          walletAddress: address,
+          signature: signedMessage,
+        })
+
+        if (statusCode == 404) {
+          router.push(`/register`)
+          toast.warning("You are not registered yet!", {
+            description: "Please register to continue ",
+          })
+          setConnectedAddress(address)
+
+          return
+        }
+        if (error) {
+          toast.error("Failed to login", {
+            description: message,
+          })
+          await disconnect()
+          return
+        }
+
+        setConnectedAddress(address)
+
+        return
+      } catch {
+        toast.error("Failed to login", {
+          description: "Something went wrong, please try again later.",
+        })
+        await disconnect()
+      } finally {
+        setIsConnecting(false)
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
+
+  useEffect(() => {
+    StellarWalletsKit.on(KitEventType.STATE_UPDATED, async (event) => {
+      const address = event.payload.address
+      if (address) {
+        await handleLogin(address)
+      }
+    })
+  }, [handleLogin, signMessage])
+  useEffect(() => {
+    StellarWalletsKit.on(KitEventType.DISCONNECT, async () => {
+      setConnectedAddress(undefined)
+    })
+  }, [])
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       StellarWalletsKit.init({
@@ -114,6 +178,7 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
   return (
     <WalletContext.Provider
       value={{
+        isConnecting,
         connectedAddress,
         disconnect,
         signTransaction,

@@ -8,6 +8,7 @@ import { cn } from "@/shared/utils/cn"
 import { TooltipProvider } from "@shadcn-ui/tooltip"
 import { Metadata } from "next"
 import { StellarWalletProvider } from "@/shared/lib/stellar-wallet"
+import { Toaster } from "@shadcn-ui/sonner"
 
 const fontHeading = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -52,6 +53,7 @@ export default function RootLayout({
           <ThemeProvider>
             <TooltipProvider>
               <StellarWalletProvider>{children}</StellarWalletProvider>
+              <Toaster />
             </TooltipProvider>
           </ThemeProvider>
         </ReactQueryProvider>
