@@ -98,16 +98,20 @@ async function fetchApi<TResponse>(
     params
   )
 
+  // When the body is a FormData instance we must NOT set Content-Type —
+  // the browser sets it automatically with the correct multipart boundary —
+  // and we must NOT JSON.stringify it.
+  const isFormData = body instanceof FormData
   const response = await fetch(fullUrl, {
     ...options,
     method,
     headers: {
-      "Content-Type": "application/json",
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
       Accept: "application/json",
       ...headers,
       ...(cookieHeader ? { Cookie: cookieHeader } : {}),
     },
-    body: body ? JSON.stringify(body) : undefined,
+    body: isFormData ? body : body ? JSON.stringify(body) : undefined,
     credentials: "include",
     cache,
     next,

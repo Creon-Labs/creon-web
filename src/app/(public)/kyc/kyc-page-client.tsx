@@ -1,21 +1,18 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { useCallback } from "react"
 
-import { KycForm, type KycFormValues } from "@/modules/kyc"
+import { KycForm } from "@/modules/kyc"
 
 export function KycPageClient() {
-  const handleSubmit = useCallback(async (values: KycFormValues) => {
-    // TODO: wire up with API mutation once the backend integration is ready.
-    // Ensure that idCard and selfie (base64) are converted to File objects 
-    // to be sent via multipart/form-data.
-    console.log("[KycPageClient] form submitted:", values)
-  }, [])
+  const router = useRouter()
 
-  return (
-    <KycForm
-      onSubmit={handleSubmit}
-      isPending={false}
-    />
-  )
+  // Called by KycForm after a successful submission.
+  // Redirect the user to the dashboard so they can see their PENDING status.
+  const handleSuccess = useCallback(() => {
+    router.refresh()
+  }, [router])
+
+  return <KycForm onSuccess={handleSuccess} />
 }
