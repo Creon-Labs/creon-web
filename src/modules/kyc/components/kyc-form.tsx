@@ -156,7 +156,7 @@ export function KycForm({ onSuccess }: KycFormProps) {
         )
       })(e)
     },
-    [handleSubmit, submitKyc, resetMutation, onSuccess]
+    [resetMutation, handleSubmit, submitKyc, onSuccess, errorMessage]
   )
 
   return (

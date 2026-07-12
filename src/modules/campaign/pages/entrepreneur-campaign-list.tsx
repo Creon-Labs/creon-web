@@ -42,7 +42,7 @@ export function EntrepreneurCampaignListPage() {
           className="max-w-lg"
           onSearch={(val) => console.log(val)}
         />
-        <Button onClick={() => router.push("/entrepreneur/campaigns/new")}>
+        <Button onClick={() => router.push("/entrepreneur/campaign/new")}>
           <PlusIcon data-icon="inline-start" />
           New Campaign
         </Button>

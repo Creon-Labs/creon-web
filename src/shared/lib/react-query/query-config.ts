@@ -1,22 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { UseMutationOptions, DefaultOptions } from '@tanstack/react-query';
+import { UseMutationOptions, DefaultOptions } from "@tanstack/react-query"
 
 export const queryConfig = {
   queries: {
     // throwOnError: true,
-    retry: 3,
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 60, // 1 hour
   },
-} satisfies DefaultOptions;
+} satisfies DefaultOptions
 
 export type ApiFnReturnType<FnType extends (...args: any) => Promise<any>> =
-  Awaited<ReturnType<FnType>>;
+  Awaited<ReturnType<FnType>>
 
 export type QueryConfig<T extends (...args: any[]) => any> = Omit<
   ReturnType<T>,
-  'queryKey' | 'queryFn'
->;
+  "queryKey" | "queryFn"
+>
 
 export type MutationConfig<
   MutationFnType extends (...args: any) => Promise<any>,
@@ -24,4 +23,4 @@ export type MutationConfig<
   ApiFnReturnType<MutationFnType>,
   Error,
   Parameters<MutationFnType>[0]
->;
+>
