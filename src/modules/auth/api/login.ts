@@ -15,14 +15,10 @@ export type LoginPayload = {
 
 export type LoginResponse = ApiResponse<AuthPrincipalResponse>
 
-export const login = async (data: LoginPayload): Promise<LoginResponse> => {
-  try {
-    const res = await api.post<LoginResponse>("/auth/login", data)
+export const login = async (data: LoginPayload) => {
+  const res = await api.post<LoginResponse>("/auth/login", data)
 
-    return res
-  } catch (error) {
-    throw error
-  }
+  return res.data
 }
 
 type UseLoginOptions = {

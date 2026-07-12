@@ -22,6 +22,7 @@ import { createAuthNonce, login as loginApi } from "@/modules/auth"
 import { Route } from "next"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import { ApiError } from "../api-client"
 // import { walletConnectModule } from "./wc-module"
 
 type SignTransactionOptions = {
@@ -131,44 +132,45 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
 
         if (!signedMessage) return
 
-        const { error, statusCode, message, data } = await loginApi({
+        const data = await loginApi({
           walletAddress: address,
           signature: signedMessage,
         })
 
-        if (!error) {
-          setConnectedAddress(address)
-          toast.success("Login successful", {
-            description: "You are now logged in",
-          })
-          switch (data?.roles[0]) {
-            case "ENTREPRENEUR":
-              router.push("/entrepreneur")
-              break
-            case "INVESTOR":
-              router.push("/investor")
-              break
-            case "ADMIN":
-              router.push("/admin")
-              break
+        setConnectedAddress(address)
+        toast.success("Login successful", {
+          description: "You are now logged in",
+        })
+        switch (data?.roles[0]) {
+          case "ENTREPRENEUR":
+            router.push("/entrepreneur")
+            break
+          case "INVESTOR":
+            router.push("/investor")
+            break
+          case "ADMIN":
+            router.push("/admin")
+            break
+        }
+      } catch (error) {
+        if (error instanceof ApiError) {
+          if (error.status == 404) {
+            router.push(`/register`)
+            toast.warning("You are not registered yet!", {
+              description: "Please register to continue ",
+            })
+            setConnectedAddress(address)
+            return
+          } else {
+            toast.error("Failed to login", {
+              description: error.message,
+            })
+            await disconnect()
+            return
           }
-          return
         }
-        if (statusCode == 404) {
-          router.push(`/register`)
-          toast.warning("You are not registered yet!", {
-            description: "Please register to continue ",
-          })
-          setConnectedAddress(address)
-          return
-        } else {
-          toast.error("Failed to login", {
-            description: message,
-          })
-          await disconnect()
-          return
-        }
-      } catch {
+
+        // unknown error
         toast.error("Failed to login", {
           description: "Something went wrong, please try again later.",
         })

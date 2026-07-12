@@ -26,6 +26,17 @@ export type ApiResponse<TData = any> = {
   error?: string
 }
 
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+    public code: string
+  ) {
+    super(message)
+    this.name = "ApiError"
+  }
+}
+
 function buildUrlWithParams(
   url: string,
   params?: RequestOptions["params"]
@@ -103,20 +114,8 @@ async function fetchApi<TResponse>(
   })
 
   if (!response.ok) {
-    try {
-      const res = await response.json()
-      return res
-    } catch (error) {
-      throw error
-    }
-    // const message = (await response.json()).message || response.statusText
-    // if (typeof window !== "undefined") {
-    //   // useNotifications.getState().addNotification({
-    //   //   type: 'error',
-    //   //   title: 'Error',
-    //   //   message,
-    //   // });
-    // }
+    const body: ApiResponse<any> = await response.json()
+    throw new ApiError(body.message, body.statusCode, response.statusText)
   }
 
   return response.json()

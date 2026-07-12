@@ -10,8 +10,8 @@ import {
   useRegister,
   type RegisterFormValues,
 } from "@/modules/auth"
+import { ApiError } from "@/shared/lib/api-client"
 import { useStellarWallet } from "@/shared/lib/stellar-wallet"
-import { deleteLocalStorage } from "@/shared/utils/localstorage"
 import { maskAddress } from "@/shared/utils/mask-address"
 
 /**
@@ -35,62 +35,67 @@ export function RegisterPageClient() {
 
   const handleSubmit = useCallback(
     async (values: RegisterFormValues) => {
-      const nonce = await createAuthNonce(stubWallet.address)
-
-      if (!nonce) throw new Error("Failed to create auth nonce")
-
-      let signature
-
-      if (!signature) {
+      // Get Nonce from Backend
+      // TODO: implement Single Responsibility later for this function
+      const nonce = await (async () => {
         try {
-          signature = (await signMessage(nonce)).signedMessage
+          return await createAuthNonce(stubWallet.address)
         } catch {
-          toast.error("Failed to sign message")
+          toast.error("Failed to login", {
+            description: "Failed to create auth nonce, please try again!",
+          })
           await disconnect()
-          return
+          return null
         }
-      }
+      })()
 
-      if (!connectedAddress) {
-        toast.error("Wallet tidak terhubung")
-        return
-      }
+      if (!nonce) return
 
-      if (!signature) {
-        toast.error("Signature tidak ditemukan, silakan hubungkan ulang wallet")
-        return
-      }
+      // Sign Message
+      // TODO: implement Single Responsibility later for this function
+      const signature = await (async () => {
+        try {
+          return (await signMessage(nonce)).signedMessage
+        } catch {
+          toast.error("Failed to sign message", {
+            description: "User rejected the signature request",
+          })
+          await disconnect()
+          return null
+        }
+      })()
+
+      if (!signature) return
 
       try {
-        const res = await registerMutation.mutateAsync({
+        const data = await registerMutation.mutateAsync({
           ...values,
-          walletAddress: connectedAddress,
+          walletAddress: stubWallet.address,
           signature,
         })
 
-        if (res.statusCode >= 400 || res.error) {
-          toast.error(
-            Array.isArray(res.message)
-              ? res.message.join(", ")
-              : res.message || "Gagal melakukan registrasi"
-          )
-          return
-        }
-
-        toast.success("Registrasi berhasil")
-        deleteLocalStorage("auth_signature")
+        toast.success("Registration is successful")
 
         // Redirect based on role
-        if (res.data?.roles.includes("ENTREPRENEUR")) {
+        if (data?.roles.includes("ENTREPRENEUR")) {
           router.push("/entrepreneur")
-        } else if (res.data?.roles.includes("INVESTOR")) {
+        } else if (data?.roles.includes("INVESTOR")) {
           router.push("/investor")
         } else {
           router.push("/")
         }
       } catch (error) {
+        if (error instanceof ApiError) {
+          toast.error(
+            Array.isArray(error.message)
+              ? error.message.join(", ")
+              : error.message
+          )
+          return
+        }
+
         console.error("[RegisterPageClient] error:", error)
-        toast.error("Terjadi kesalahan, silakan coba lagi")
+        toast.error("Something went wrong, please try again")
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

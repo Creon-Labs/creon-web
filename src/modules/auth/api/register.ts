@@ -10,18 +10,13 @@ type AuthPrincipalResponse = {
   roles: AuthRole[]
 }
 
-export type RegisterResponse = ApiResponse<AuthPrincipalResponse>
+export const register = async (data: RegisterPayload) => {
+  const res = await api.post<ApiResponse<AuthPrincipalResponse>>(
+    "/auth/register",
+    data
+  )
 
-export const register = async (
-  data: RegisterPayload
-): Promise<RegisterResponse> => {
-  try {
-    const res = await api.post<RegisterResponse>("/auth/register", data)
-
-    return res
-  } catch (error) {
-    throw error
-  }
+  return res.data
 }
 
 type UseRegisterOptions = {

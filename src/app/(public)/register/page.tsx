@@ -108,17 +108,6 @@ export default function RegisterPage() {
 
           {/* Register form client wrapper */}
           <RegisterPageClient />
-
-          {/* Footer */}
-          <p className="mt-6 text-center text-xs text-muted-foreground">
-            Already have an account?{" "}
-            <Link
-              href="/"
-              className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
-            >
-              Connect your wallet
-            </Link>
-          </p>
         </div>
       </main>
     </div>
