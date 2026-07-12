@@ -1,8 +1,7 @@
 import { api, type ApiResponse } from "@/shared/lib/api-client"
 import { MutationConfig } from "@/shared/lib/react-query"
 import { useMutation } from "@tanstack/react-query"
-
-type AuthRole = "ENTREPRENEUR" | "INVESTOR" | "ADMIN"
+import { AuthRole } from "../types/login.types"
 
 type AuthPrincipalResponse = {
   userId: string

@@ -6,6 +6,7 @@ import {
   AppHeader,
   usePageTitle,
 } from "@/shared/components/sections/app-header"
+import { Suspense } from "react"
 
 export default function Page() {
   usePageTitle("Campaigns")
@@ -15,7 +16,9 @@ export default function Page() {
       <AppHeader />
 
       <AppContainer>
-        <EntrepreneurCampaignListPage />
+        <Suspense>
+          <EntrepreneurCampaignListPage />
+        </Suspense>
       </AppContainer>
     </>
   )

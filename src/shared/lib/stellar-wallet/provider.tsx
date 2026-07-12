@@ -19,10 +19,10 @@ import {
 } from "@creit-tech/stellar-wallets-kit/types"
 
 import { createAuthNonce, login as loginApi } from "@/modules/auth"
+import { Route } from "next"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { walletConnectModule } from "./wc-module"
-import { setLocalStorage } from "@/shared/utils/localstorage"
+// import { walletConnectModule } from "./wc-module"
 
 type SignTransactionOptions = {
   networkPassphrase?: string
@@ -64,9 +64,14 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
 
   const router = useRouter()
 
-  const disconnect = useCallback(async () => {
-    await StellarWalletsKit.disconnect()
-  }, [])
+  const disconnect = useCallback(
+    async ({ redirect }: { redirect?: Route } = {}) => {
+      await StellarWalletsKit.disconnect()
+
+      if (redirect) router.push(redirect)
+    },
+    [router]
+  )
 
   const signTransaction = useCallback(
     async (xdr: string, opts?: SignTransactionOptions) => {
@@ -93,45 +98,76 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
     async (address: string) => {
       try {
         setIsConnecting(true)
-        const nonce = await createAuthNonce(address)
 
-        if (!nonce) throw new Error("Failed to create auth nonce")
+        // Get Nonce from Backend
+        // TODO: implement Single Responsibility later for this function
+        const nonce = await (async () => {
+          try {
+            return await createAuthNonce(address)
+          } catch {
+            toast.error("Failed to login", {
+              description: "Failed to create auth nonce, please try again!",
+            })
+            await disconnect()
+            return null
+          }
+        })()
 
-        let signedMessage
-        try {
-          signedMessage = (await signMessage(nonce)).signedMessage
-          setLocalStorage("auth_signature", signedMessage)
-        } catch {
-          toast.error("Failed to sign message")
-          await disconnect()
-          return
-        }
+        if (!nonce) return
 
-        const { error, statusCode, message } = await loginApi({
+        // Sign Message
+        // TODO: implement Single Responsibility later for this function
+        const signedMessage = await (async () => {
+          try {
+            return (await signMessage(nonce)).signedMessage
+          } catch {
+            toast.error("Failed to sign message", {
+              description: "User rejected the signature request",
+            })
+            await disconnect()
+            return null
+          }
+        })()
+
+        if (!signedMessage) return
+
+        const { error, statusCode, message, data } = await loginApi({
           walletAddress: address,
           signature: signedMessage,
         })
 
+        if (!error) {
+          setConnectedAddress(address)
+          toast.success("Login successful", {
+            description: "You are now logged in",
+          })
+          switch (data?.roles[0]) {
+            case "ENTREPRENEUR":
+              router.push("/entrepreneur")
+              break
+            case "INVESTOR":
+              router.push("/investor")
+              break
+            case "ADMIN":
+              router.push("/admin")
+              break
+          }
+          return
+        }
         if (statusCode == 404) {
           router.push(`/register`)
           toast.warning("You are not registered yet!", {
             description: "Please register to continue ",
           })
           setConnectedAddress(address)
-
           return
-        }
-        if (error) {
+        } else {
           toast.error("Failed to login", {
             description: message,
           })
           await disconnect()
           return
         }
-
-        setConnectedAddress(address)
-
-        return
       } catch {
         toast.error("Failed to login", {
           description: "Something went wrong, please try again later.",
@@ -146,20 +182,6 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
   )
 
   useEffect(() => {
-    StellarWalletsKit.on(KitEventType.STATE_UPDATED, async (event) => {
-      const address = event.payload.address
-      if (address) {
-        await handleLogin(address)
-      }
-    })
-  }, [handleLogin, signMessage])
-  useEffect(() => {
-    StellarWalletsKit.on(KitEventType.DISCONNECT, async () => {
-      setConnectedAddress(undefined)
-    })
-  }, [])
-
-  useEffect(() => {
     if (typeof window !== "undefined") {
       StellarWalletsKit.init({
         theme: {
@@ -169,11 +191,30 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
           "font-family": "var(--font-sans)",
           border: "var(--border)",
         },
-        modules: [...defaultModules(), walletConnectModule],
+        modules: [
+          ...defaultModules(),
+          // walletConnectModule
+        ],
         network: Networks.TESTNET,
       })
     }
   }, [theme])
+
+  useEffect(() => {
+    StellarWalletsKit.on(KitEventType.STATE_UPDATED, async (event) => {
+      const address = event.payload.address
+      if (address && !isConnecting) {
+        await handleLogin(address)
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    StellarWalletsKit.on(KitEventType.DISCONNECT, async () => {
+      setConnectedAddress(undefined)
+    })
+  }, [])
 
   return (
     <WalletContext.Provider

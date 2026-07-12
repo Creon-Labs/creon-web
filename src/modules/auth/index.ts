@@ -9,3 +9,7 @@ export type { RegisterPayload, UserRole } from "./types/register.types"
 export { createAuthNonce, useCreateAuthNonce } from "./api/create-auth-nonce"
 export { login, useLogin } from "./api/login"
 export type { LoginResponse } from "./api/login"
+export type { AuthRole } from "./types/login.types"
+
+export { register, useRegister } from "./api/register"
+export type { RegisterResponse } from "./api/register"

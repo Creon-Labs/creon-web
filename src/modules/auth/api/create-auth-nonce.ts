@@ -11,7 +11,7 @@ const createAuthNonce = async (walletAddress: string) => {
     const res = await api.post<AuthNonceResponse>("/auth/challenge", {
       walletAddress,
     })
-    return res.data.message
+    return res.data?.message
   } catch {
     // TODO: handle error, eg. show toast notification
     return undefined

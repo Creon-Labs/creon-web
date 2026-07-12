@@ -3,7 +3,7 @@ export type UserRole = "ENTREPRENEUR" | "INVESTOR"
 export type RegisterFormValues = {
   role: UserRole
   displayName: string
-  email: string
+  email?: string
 }
 
 /**

@@ -84,7 +84,7 @@ function RoleCard({
       onClick={onSelect}
       className={cn(
         "relative flex flex-1 cursor-pointer flex-col gap-2 rounded-none border p-4 text-left transition-all duration-150",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
+        "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:outline-none",
         isSelected
           ? "border-primary bg-primary/5 text-foreground"
           : "border-input bg-transparent text-muted-foreground hover:border-foreground/30 hover:text-foreground"
@@ -109,7 +109,7 @@ function RoleCard({
           {icon}
         </span>
       </span>
-      <span className="text-sm font-medium leading-tight text-foreground">
+      <span className="text-sm leading-tight font-medium text-foreground">
         {label}
       </span>
       <span className="text-xs leading-relaxed text-muted-foreground">
@@ -175,7 +175,10 @@ export function RegisterForm({
             <span className="font-mono text-xs text-muted-foreground">
               {wallet.maskedAddress}
             </span>
-            <Badge variant="secondary" className="ml-auto text-[10px] bg-green-100 dark:bg-green-600/20 text-green-700 dark:text-green-100">
+            <Badge
+              variant="secondary"
+              className="ml-auto bg-green-100 text-[10px] text-green-700 dark:bg-green-600/20 dark:text-green-100"
+            >
               Connected
             </Badge>
           </div>

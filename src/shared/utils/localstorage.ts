@@ -3,13 +3,13 @@ const isServer = typeof window === "undefined"
 
 const getLocalStorage = (key: string, fallback?: string) => {
   if (isServer) return undefined
-  let theme
+  let item
   try {
-    theme = localStorage.getItem(key) || undefined
+    item = localStorage.getItem(key) || undefined
   } catch (e) {
     // Unsupported
   }
-  return theme || fallback
+  return item || fallback
 }
 
 const setLocalStorage = (key: string, value: string) => {
@@ -21,4 +21,13 @@ const setLocalStorage = (key: string, value: string) => {
   }
 }
 
-export { getLocalStorage, setLocalStorage }
+const deleteLocalStorage = (key: string) => {
+  if (isServer) return
+  try {
+    localStorage.removeItem(key)
+  } catch (e) {
+    // Unsupported
+  }
+}
+
+export { getLocalStorage, setLocalStorage, deleteLocalStorage }
