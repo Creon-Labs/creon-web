@@ -11,12 +11,12 @@ export const adminNavItems: SidebarNavItem[] = [
     icon: HouseIcon,
   },
   {
-    title: "Investments",
+    title: "KYC Management",
     href: "/admin/kyc",
     icon: UsersIcon,
   },
   {
-    title: "Settings",
+    title: "Campaigns Management",
     href: "/admin/campaigns",
     icon: RocketLaunchIcon,
   },
