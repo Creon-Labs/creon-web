@@ -4,6 +4,7 @@ import { AppContainer } from "@/shared/components/layouts/app-container"
 import { sidebarCookieState } from "@/shared/components/sections/sidebar/get-sidebar-cookie"
 import { InvestorHeader, InvestorSidebar } from "./_components/header-sidebar"
 import { InvestorAuthProvider } from "./_components/auth-provider"
+import { KycStatusAlert } from "@/modules/kyc"
 
 export default async function InvestorLayout({
   children,
@@ -18,7 +19,10 @@ export default async function InvestorLayout({
         <InvestorSidebar />
         <SidebarInset>
           <InvestorHeader />
-          <AppContainer>{children}</AppContainer>
+          <AppContainer>
+            <KycStatusAlert />
+            {children}
+          </AppContainer>
         </SidebarInset>
       </SidebarProvider>
     </InvestorAuthProvider>

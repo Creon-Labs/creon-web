@@ -1,16 +1,40 @@
-import type { Metadata } from "next"
-import Link from "next/link"
+"use client"
 import Image from "next/image"
+import Link from "next/link"
 
-import { KycPageClient } from "./kyc-page-client"
-
-export const metadata: Metadata = {
-  title: "Identity Verification (KYC) — Creon",
-  description:
-    "Complete your identity verification to start participating on the Creon platform.",
-}
+import { KycForm, useGetMyKycStatus } from "@/modules/kyc"
+import { notFound, useRouter } from "next/navigation"
+import { useCallback } from "react"
+import { useAuthMe } from "@/modules/auth"
 
 export default function KycPage() {
+  const router = useRouter()
+
+  const { data, isLoading } = useAuthMe({ config: { retry: false } })
+  const { data: kycData, isLoading: isKycLoading } = useGetMyKycStatus()
+
+  const handleSuccess = useCallback(() => {
+    if (data?.roles?.includes("ENTREPRENEUR")) {
+      router.push("/entrepreneur")
+    }
+
+    if (data?.roles?.includes("INVESTOR")) {
+      router.push("/investor")
+    }
+  }, [router, data?.roles])
+
+  if (isLoading || isKycLoading) {
+    return (
+      <div className="flex min-h-screen w-full items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    )
+  }
+
+  if (!data || kycData?.submittedAt) {
+    notFound()
+  }
+
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-6 sm:p-10">
       <main className="w-full max-w-md">
@@ -20,12 +44,12 @@ export default function KycPage() {
           className="mb-8 flex items-center self-start"
           aria-label="Creon — Home"
         >
-          <Image 
-            src="/logo-text.svg" 
-            alt="Creon Logo" 
-            width={96} 
-            height={32} 
-            className="dark:invert" 
+          <Image
+            src="/logo-text.svg"
+            alt="Creon Logo"
+            width={96}
+            height={32}
+            className="dark:invert"
           />
         </Link>
 
@@ -39,8 +63,7 @@ export default function KycPage() {
           </p>
         </header>
 
-        {/* KYC form client wrapper */}
-        <KycPageClient />
+        <KycForm onSuccess={handleSuccess} />
       </main>
     </div>
   )
