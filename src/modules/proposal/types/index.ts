@@ -1,9 +1,5 @@
 export type ProposalStatus =
-  | "DRAFT"
-  | "SUBMITTED"
-  | "UNDER_REVIEW"
-  | "APPROVED"
-  | "REJECTED"
+  "DRAFT" | "SUBMITTED" | "UNDER_REVIEW" | "APPROVED" | "REJECTED"
 
 export type MilestoneStatus =
   | "DRAFT"

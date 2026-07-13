@@ -11,7 +11,7 @@ export function KycPageClient() {
   // Called by KycForm after a successful submission.
   // Redirect the user to the dashboard so they can see their PENDING status.
   const handleSuccess = useCallback(() => {
-    router.refresh()
+    router.back()
   }, [router])
 
   return <KycForm onSuccess={handleSuccess} />

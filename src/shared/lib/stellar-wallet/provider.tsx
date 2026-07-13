@@ -23,6 +23,7 @@ import { Route } from "next"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { ApiError } from "../api-client"
+import { useQueryClient } from "@tanstack/react-query"
 // import { walletConnectModule } from "./wc-module"
 
 type SignTransactionOptions = {
@@ -62,6 +63,8 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
 
   const [connectedAddress, setConnectedAddress] = useState<string>()
   const [isConnecting, setIsConnecting] = useState<boolean>(false)
+
+  const queryClient = useQueryClient()
 
   const router = useRouter()
 
@@ -215,7 +218,9 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     StellarWalletsKit.on(KitEventType.DISCONNECT, async () => {
       setConnectedAddress(undefined)
+      queryClient.invalidateQueries()
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

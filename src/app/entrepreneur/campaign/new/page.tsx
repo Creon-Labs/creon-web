@@ -1,6 +1,6 @@
 "use client"
 
-import { CreateProposalPage } from "@/modules/campaign"
+import { CreateProposalPage } from "@/modules/proposal/"
 import { AppContainer } from "@/shared/components/layouts/app-container"
 
 export default function Page() {

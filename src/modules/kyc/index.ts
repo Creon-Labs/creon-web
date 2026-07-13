@@ -1,6 +1,7 @@
 // Components
 export type { KycFormProps } from "./components/kyc-form"
 export { KycForm } from "./components/kyc-form"
+export { KycStatusAlert } from "./components/kyc-status-alert"
 
 // Schemas
 export { kycSchema } from "./schemas/kyc.schema"

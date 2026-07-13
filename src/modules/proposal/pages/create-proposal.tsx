@@ -6,7 +6,7 @@ import Link from "next/link"
 import { Button } from "@shadcn-ui/button"
 import { Badge } from "@shadcn-ui/badge"
 
-import { CreateProposalForm } from "../components/proposal-form/create-proposal-form"
+import { CreateProposalForm } from "../components/forms/create-proposal"
 
 export function CreateProposalPage() {
   return (

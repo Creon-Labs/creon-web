@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { queryOptions, useQuery } from "@tanstack/react-query"
 import { api, ApiResponse } from "@/shared/lib/api-client"
 import { QueryConfig } from "@/shared/lib/react-query/query-config"
 import { KycProfile } from "../types"
@@ -28,10 +28,11 @@ export const getMyKycStatus = async () => {
 // Query options factory
 // ---------------------------------------------------------------------------
 
-export const getMyKycStatusQueryOptions = () => ({
-  queryKey: ["kyc", "me"] as const,
-  queryFn: () => getMyKycStatus(),
-})
+export const getMyKycStatusQueryOptions = () =>
+  queryOptions({
+    queryKey: ["kyc", "me"] as const,
+    queryFn: () => getMyKycStatus(),
+  })
 
 // ---------------------------------------------------------------------------
 // Query hook

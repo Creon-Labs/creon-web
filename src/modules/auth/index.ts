@@ -12,4 +12,3 @@ export type { LoginResponse } from "./api/login"
 export type { AuthRole } from "./types/login.types"
 
 export { register, useRegister } from "./api/register"
-export type { RegisterResponse } from "./api/register"
