@@ -2,7 +2,8 @@ import { SidebarInset, SidebarProvider } from "@shadcn-ui/sidebar"
 
 import { AppContainer } from "@/shared/components/layouts/app-container"
 import { sidebarCookieState } from "@/shared/components/sections/sidebar/get-sidebar-cookie"
-import { AdminHeader, AdminSidebar } from "./header-sidebar"
+import { AdminHeader, AdminSidebar } from "./_components/header-sidebar"
+import { AdminAuthProvider } from "./_components/auth-provider"
 
 export default async function InvestorLayout({
   children,
@@ -12,12 +13,14 @@ export default async function InvestorLayout({
   const defaultOpen = await sidebarCookieState()
 
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
-      <AdminSidebar />
-      <SidebarInset>
-        <AdminHeader />
-        <AppContainer>{children}</AppContainer>
-      </SidebarInset>
-    </SidebarProvider>
+    <AdminAuthProvider>
+      <SidebarProvider defaultOpen={defaultOpen}>
+        <AdminSidebar />
+        <SidebarInset>
+          <AdminHeader />
+          <AppContainer>{children}</AppContainer>
+        </SidebarInset>
+      </SidebarProvider>
+    </AdminAuthProvider>
   )
 }

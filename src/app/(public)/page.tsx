@@ -5,12 +5,13 @@ import { Button } from "@shadcn-ui/button"
 import { Input } from "@shadcn-ui/input"
 import Link from "next/link"
 import { useState } from "react"
-import { toast } from "sonner"
 
 export default function Page() {
   const { signMessage } = useStellarWallet()
   const [message, setMessage] = useState<string>("")
   const [signResult, setSignResult] = useState<string | null>(null)
+
+
 
   const handleSignMessage = async () => {
     try {

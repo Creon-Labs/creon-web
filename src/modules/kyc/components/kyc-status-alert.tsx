@@ -1,26 +1,26 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import {
-  WarningCircleIcon,
-  ClockIcon,
-  XCircleIcon,
-  ProhibitIcon,
   ArrowRightIcon,
+  ClockIcon,
+  ProhibitIcon,
+  WarningCircleIcon,
+  XCircleIcon,
 } from "@phosphor-icons/react"
+import { useRouter } from "next/navigation"
 
 import {
   Alert,
-  AlertTitle,
-  AlertDescription,
   AlertAction,
+  AlertDescription,
+  AlertTitle,
 } from "@shadcn-ui/alert"
 import { Button } from "@shadcn-ui/button"
 
+import { useAuthMe } from "@/modules/auth"
+import { ApiError } from "@/shared/lib/api-client"
 import { useGetMyKycStatus } from "../api/get-kyc-status"
 import type { KycStatus } from "../types"
-import { ApiError } from "@/shared/lib/api-client"
-import { useStellarWallet } from "@/shared/lib/stellar-wallet"
 
 // ---------------------------------------------------------------------------
 // Config per status
@@ -99,7 +99,7 @@ const ALERT_CONFIG: Record<
  * Renders nothing when KYC is APPROVED or data is loading.
  */
 export function KycStatusAlert() {
-  const { connectedAddress } = useStellarWallet()
+  const { data } = useAuthMe()
 
   const router = useRouter()
   const {
@@ -108,7 +108,7 @@ export function KycStatusAlert() {
     isError,
     error,
   } = useGetMyKycStatus({
-    config: { enabled: !!connectedAddress, retry: false },
+    config: { enabled: !!data, retry: false },
   })
 
   // Determine which config to show

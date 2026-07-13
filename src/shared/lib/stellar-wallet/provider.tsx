@@ -18,12 +18,17 @@ import {
   SwkAppLightTheme,
 } from "@creit-tech/stellar-wallets-kit/types"
 
-import { createAuthNonce, login as loginApi } from "@/modules/auth"
+import {
+  authMe,
+  createAuthNonce,
+  login as loginApi,
+  useLogout,
+} from "@/modules/auth"
+import { useQueryClient } from "@tanstack/react-query"
 import { Route } from "next"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { ApiError } from "../api-client"
-import { useQueryClient } from "@tanstack/react-query"
 // import { walletConnectModule } from "./wc-module"
 
 type SignTransactionOptions = {
@@ -68,6 +73,8 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
 
   const router = useRouter()
 
+  const { mutate: logout } = useLogout()
+
   const disconnect = useCallback(
     async ({ redirect }: { redirect?: Route } = {}) => {
       await StellarWalletsKit.disconnect()
@@ -98,11 +105,18 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
     []
   )
 
+  const handleAuthMe = useCallback(async () => {
+    try {
+      const data = await authMe()
+      return data
+    } catch (error) {
+      console.error("Failed to fetch auth me:", error)
+    }
+  }, [])
+
   const handleLogin = useCallback(
     async (address: string) => {
       try {
-        setIsConnecting(true)
-
         // Get Nonce from Backend
         // TODO: implement Single Responsibility later for this function
         const nonce = await (async () => {
@@ -178,8 +192,6 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
           description: "Something went wrong, please try again later.",
         })
         await disconnect()
-      } finally {
-        setIsConnecting(false)
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -207,9 +219,19 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     StellarWalletsKit.on(KitEventType.STATE_UPDATED, async (event) => {
+      setIsConnecting(true)
       const address = event.payload.address
-      if (address && !isConnecting) {
-        await handleLogin(address)
+      try {
+        if (address) {
+          const auth = await handleAuthMe()
+          if (!auth?.id) {
+            await handleLogin(address)
+          } else {
+            setConnectedAddress(address)
+          }
+        }
+      } finally {
+        setIsConnecting(false)
       }
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -219,8 +241,9 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
     StellarWalletsKit.on(KitEventType.DISCONNECT, async () => {
       setConnectedAddress(undefined)
       queryClient.invalidateQueries()
+      logout(undefined)
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

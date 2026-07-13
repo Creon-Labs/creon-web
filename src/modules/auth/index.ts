@@ -12,3 +12,8 @@ export type { LoginResponse } from "./api/login"
 export type { AuthRole } from "./types/login.types"
 
 export { register, useRegister } from "./api/register"
+
+export { logout, useLogout } from "./api/logout"
+
+export { authMe, authMeQueryOptions, useAuthMe } from "./api/auth-me"
+export type { UserProfile } from "./types/auth-me.types"

@@ -1,5 +1,6 @@
+import { StackedCardsIllustration } from "@/shared/assets/stacked-card"
 import { useStellarWallet } from "@/shared/lib/stellar-wallet"
-import { EmptyIcon, PlusIcon } from "@phosphor-icons/react"
+import { PlusIcon } from "@phosphor-icons/react"
 import { Button } from "@shadcn-ui/button"
 import {
   Empty,
@@ -37,8 +38,8 @@ export function ProposalList() {
       <div>
         <Empty className="border border-dashed">
           <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <EmptyIcon />
+            <EmptyMedia>
+              <StackedCardsIllustration />
             </EmptyMedia>
             <EmptyTitle>No campaigns have been submitted yet</EmptyTitle>
             <EmptyDescription>

@@ -15,10 +15,12 @@ export type LoginPayload = {
 
 export type LoginResponse = ApiResponse<AuthPrincipalResponse>
 
-export const login = async (data: LoginPayload) => {
+export const login = async (
+  data: LoginPayload
+): Promise<AuthPrincipalResponse> => {
   const res = await api.post<LoginResponse>("/auth/login", data)
 
-  return res.data
+  return res.data!
 }
 
 type UseLoginOptions = {
@@ -27,7 +29,10 @@ type UseLoginOptions = {
 
 export const useLogin = ({ config }: UseLoginOptions = {}) => {
   return useMutation({
-    mutationFn: login,
     ...config,
+    mutationFn: login,
+    onSuccess: async (...args) => {
+      config?.onSuccess?.(...args)
+    },
   })
 }
