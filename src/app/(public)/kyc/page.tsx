@@ -34,7 +34,11 @@ export default function KycPage() {
     )
   }
 
-  if (!data || kycData?.submittedAt) {
+  if (
+    !data ||
+    kycData?.status === "APPROVED" ||
+    kycData?.status === "PENDING"
+  ) {
     notFound()
   }
 
