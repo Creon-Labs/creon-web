@@ -6,12 +6,15 @@ import { KycForm, useGetMyKycStatus } from "@/modules/kyc"
 import { notFound, useRouter } from "next/navigation"
 import { useCallback } from "react"
 import { useAuthMe } from "@/modules/auth"
+import { Spinner } from "@shadcn-ui/spinner"
 
 export default function KycPage() {
   const router = useRouter()
 
-  const { data, isLoading } = useAuthMe({ config: { retry: false } })
-  const { data: kycData, isLoading: isKycLoading } = useGetMyKycStatus()
+  const { data, isLoading } = useAuthMe()
+  const { data: kycData, isLoading: isKycLoading } = useGetMyKycStatus({
+    config: { retry: false },
+  })
 
   const handleSuccess = useCallback(() => {
     if (data?.roles?.includes("ENTREPRENEUR")) {
@@ -25,8 +28,8 @@ export default function KycPage() {
 
   if (isLoading || isKycLoading) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center">
-        <p>Loading...</p>
+      <div className="flex h-dvh w-full items-center justify-center">
+        <Spinner className="size-5" />
       </div>
     )
   }

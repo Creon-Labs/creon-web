@@ -17,8 +17,8 @@ import {
 } from "@shadcn-ui/alert"
 import { Button } from "@shadcn-ui/button"
 
-import { useAuthMe } from "@/modules/auth"
 import { ApiError } from "@/shared/lib/api-client"
+import { useMemo } from "react"
 import { useGetMyKycStatus } from "../api/get-kyc-status"
 import type { KycStatus } from "../types"
 
@@ -99,41 +99,41 @@ const ALERT_CONFIG: Record<
  * Renders nothing when KYC is APPROVED or data is loading.
  */
 export function KycStatusAlert() {
-  const { data } = useAuthMe()
-
   const router = useRouter()
   const {
     data: kycProfile,
     isLoading,
     isError,
     error,
+    
   } = useGetMyKycStatus({
-    config: { enabled: !!data, retry: false },
+    config: { retry: false, refetchOnMount: false, staleTime: 60 * 1000 }, // 1 minute
   })
 
   // Determine which config to show
-  let configKey: keyof typeof ALERT_CONFIG | null = null
+  const configKey: keyof typeof ALERT_CONFIG | null | undefined =
+    useMemo(() => {
+      if (isError) {
+        // 404 → user has never submitted KYC
+        const isNotFound = error instanceof ApiError && error.status === 404
+        if (isNotFound) {
+          return "NOT_SUBMITTED"
+        } else {
+          // Unknown error — don't block the UI
+          return null
+        }
+      } else if (kycProfile) {
+        if (
+          kycProfile.status === "PENDING" ||
+          kycProfile.status === "REJECTED" ||
+          kycProfile.status === "REVOKED"
+        ) {
+          return kycProfile.status
+        }
+      }
+    }, [error, isError, kycProfile])
 
   if (isLoading) return null
-
-  if (isError) {
-    // 404 → user has never submitted KYC
-    const isNotFound = error instanceof ApiError && error.status === 404
-    if (isNotFound) {
-      configKey = "NOT_SUBMITTED"
-    } else {
-      // Unknown error — don't block the UI
-      return null
-    }
-  } else if (kycProfile) {
-    if (
-      kycProfile.status === "PENDING" ||
-      kycProfile.status === "REJECTED" ||
-      kycProfile.status === "REVOKED"
-    ) {
-      configKey = kycProfile.status
-    }
-  }
 
   if (!configKey) return null
 
