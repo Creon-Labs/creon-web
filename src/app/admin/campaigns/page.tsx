@@ -1,13 +1,11 @@
-"use client"
+import { Metadata } from "next"
+import { AdminCampaignsView } from "@/modules/admin"
 
-import { usePageTitle } from "@/shared/components/sections/app-header"
+export const metadata: Metadata = {
+  title: "Campaign Proposals Review - Creon Admin",
+  description: "Manage funding proposals from entrepreneurs and monitor active campaigns.",
+}
 
-export default function Page() {
-  usePageTitle("Campaigns")
-
-  return (
-    <>
-      <p>Admin Campaigns</p>
-    </>
-  )
+export default function AdminCampaignsPage() {
+  return <AdminCampaignsView />
 }

@@ -50,3 +50,8 @@ export type { RejectProposalInput } from "./api/reject-proposal"
 // Campaigns — mutations
 export { cancelCampaign, useCancelCampaign } from "./api/cancel-campaign"
 export type { CancelCampaignInput } from "./api/cancel-campaign"
+
+// UI Components
+export { AdminKycView } from "./components/kyc/admin-kyc-view"
+export { AdminCampaignsView } from "./components/campaigns/admin-campaigns-view"
+

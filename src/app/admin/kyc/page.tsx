@@ -1,13 +1,11 @@
-"use client"
+import { Metadata } from "next"
+import { AdminKycView } from "@/modules/admin"
 
-import { usePageTitle } from "@/shared/components/sections/app-header"
+export const metadata: Metadata = {
+  title: "KYC Review - Creon Admin",
+  description: "Manage user Identity Verification (KYC) submissions.",
+}
 
-export default function Page() {
-  usePageTitle("User KYC")
-  
-  return (
-    <>
-      <p>Admin KYC</p>
-    </>
-  )
+export default function AdminKycPage() {
+  return <AdminKycView />
 }
