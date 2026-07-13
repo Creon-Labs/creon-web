@@ -1,28 +1,27 @@
 "use client"
 
 import { ArrowLeftIcon } from "@phosphor-icons/react"
-import Link from "next/link"
 
-import { Button } from "@shadcn-ui/button"
 import { Badge } from "@shadcn-ui/badge"
+import { Button } from "@shadcn-ui/button"
 
+import { useRouter } from "next/navigation"
 import { CreateProposalForm } from "../components/forms/create-proposal"
 
 export function CreateProposalPage() {
+  const router = useRouter()
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 pb-16">
       {/* ── Page Header ─────────────────────────────────────────────── */}
       <div className="flex flex-col gap-4">
         <Button
-          asChild
           variant="ghost"
           size="sm"
           className="-ml-2 w-fit text-muted-foreground hover:text-foreground"
+          onClick={() => router.back()}
         >
-          <Link href="/entrepreneur">
-            <ArrowLeftIcon data-icon="inline-start" />
-            Back to Campaigns
-          </Link>
+          <ArrowLeftIcon data-icon="inline-start" />
+          Back
         </Button>
 
         <div className="flex flex-col gap-2">

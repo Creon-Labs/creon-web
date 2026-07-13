@@ -1,6 +1,6 @@
 "use client"
 
-import { CaretUpDownIcon, CheckIcon, PlusIcon } from "@phosphor-icons/react"
+import { CaretUpDownIcon, PlusIcon } from "@phosphor-icons/react"
 import { Button } from "@shadcn-ui/button"
 import {
   Command,
@@ -9,32 +9,27 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@shadcn-ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@shadcn-ui/popover"
-import { useParams, useRouter } from "next/navigation"
+import { Popover, PopoverContent, PopoverTrigger } from "@shadcn-ui/popover"
 import type { Route } from "next"
+import { useParams, useRouter } from "next/navigation"
 import { useState } from "react"
 
-import { CampaignStatusBadge } from "./status-badge"
-import { CampaignItem } from "../types"
-import { cn } from "@/shared/utils/cn"
 import ImageWithFallback from "@/shared/components/primitives/image-with-fallback"
+import { cn } from "@/shared/utils/cn"
+import { Proposal } from "../types"
+import { ProposalStatusBadge } from "./status-badge"
 
-type CampaignSwitcherPopoverProps = {
-  campaigns: CampaignItem[]
+type ProposalSwitcherPopoverProps = {
+  proposals: Proposal[]
   /** The title to show on the trigger button (current campaign or page title) */
   title: string
 }
 
-export function CampaignSwitcherPopover({
-  campaigns,
+export function ProposalSwitcherPopover({
+  proposals,
   title,
-}: CampaignSwitcherPopoverProps) {
+}: ProposalSwitcherPopoverProps) {
   const [open, setOpen] = useState(false)
   const router = useRouter()
   const params = useParams<{ campaignId: string }>()
@@ -63,31 +58,27 @@ export function CampaignSwitcherPopover({
           />
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        className="w-80 p-0"
-        align="start"
-        sideOffset={8}
-      >
+      <PopoverContent className="w-80 p-0" align="start" sideOffset={8}>
         <Command>
-          <CommandInput placeholder="Cari campaign..." />
+          <CommandInput placeholder="Search..." />
           <CommandList>
-            <CommandEmpty>Tidak ada campaign ditemukan.</CommandEmpty>
-            <CommandGroup heading="Campaign Saya">
-              {campaigns.map((campaign) => {
-                const isActive = campaign.id === activeCampaignId
+            <CommandEmpty>No campaign proposal found.</CommandEmpty>
+            <CommandGroup>
+              {proposals.map((proposal) => {
+                const isActive = proposal.id === activeCampaignId
                 return (
                   <CommandItem
-                    key={campaign.id}
-                    value={`${campaign.id} ${campaign.title}`}
-                    onSelect={() => handleSelect(campaign.id)}
+                    key={proposal.id}
+                    value={`${proposal.id} ${proposal.businessName}`}
+                    onSelect={() => handleSelect(proposal.id)}
                     data-checked={isActive}
                     className="gap-2.5 py-2"
                   >
                     {/* Thumbnail */}
                     <div className="size-8 shrink-0 overflow-hidden rounded-sm border border-border/60">
                       <ImageWithFallback
-                        src={campaign.imageUrl}
-                        alt={campaign.title}
+                        src={"/none.jpg"}
+                        alt={proposal.businessName}
                         width={32}
                         height={32}
                         className="size-full object-cover"
@@ -102,41 +93,30 @@ export function CampaignSwitcherPopover({
                           isActive && "text-foreground"
                         )}
                       >
-                        {campaign.title}
+                        {proposal.businessName}
                       </span>
-                      <CampaignStatusBadge
-                        status={campaign.status}
+                      <ProposalStatusBadge
+                        status={proposal.status}
                         size="sm"
-                        className="w-fit"
+                        className="w-fit border-none bg-transparent! p-0"
                       />
                     </div>
-
-                    {/* Active checkmark */}
-                    <CheckIcon
-                      className={cn(
-                        "ml-auto size-3.5 shrink-0 transition-opacity",
-                        isActive ? "opacity-100" : "opacity-0"
-                      )}
-                      weight="bold"
-                    />
                   </CommandItem>
                 )
               })}
             </CommandGroup>
 
-            <CommandSeparator />
-
             {/* Quick action to create a new campaign */}
-            <CommandGroup>
+            <CommandGroup className="sticky bottom-0 border-t border-border bg-popover">
               <CommandItem
                 onSelect={() => {
                   setOpen(false)
-                  router.push("/entrepreneur/campaigns" as Route)
+                  router.push("/entrepreneur/campaign/new")
                 }}
-                className="gap-2 text-muted-foreground"
+                className="cursor-pointer gap-2 text-muted-foreground"
               >
                 <PlusIcon className="size-3.5" weight="bold" />
-                <span>Buat campaign baru</span>
+                <span>New Campaign Proposal</span>
               </CommandItem>
             </CommandGroup>
           </CommandList>

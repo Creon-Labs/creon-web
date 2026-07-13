@@ -1,8 +1,10 @@
 "use client"
 
+import { SidebarGroup, SidebarMenu, useSidebar } from "@shadcn-ui/sidebar"
 import { useParams } from "next/navigation"
-import { SidebarMenu, useSidebar } from "@shadcn-ui/sidebar"
 
+import { ProposalSwitcherPopover } from "@/modules/proposal"
+import { useGetProposals } from "@/modules/proposal/"
 import { AppHeader } from "@/shared/components/sections/app-header"
 import {
   AppSidebar,
@@ -13,8 +15,7 @@ import {
   entrepreneurStaticNavItems,
   getEntrepreneurNavItems,
 } from "@/shared/constants/nav-entrepreneur"
-import { CampaignSwitcherPopover } from "@/modules/campaign"
-import { mockCampaigns } from "@/modules/campaign"
+import { useIsMobile } from "@/shared/hooks/use-mobile"
 
 // Mock user — replace with real auth data when auth module is ready
 const MOCK_USER = {
@@ -29,6 +30,14 @@ export function EntrepreneurSidebar(props: EntrepreneurSidebarProps) {
   const params = useParams<{ campaignId?: string }>()
   const campaignId = params?.campaignId
 
+  const isMobile = useIsMobile()
+
+  const { data: proposals } = useGetProposals()
+
+  // Look up the active campaign name by its ID
+  const activeCampaign = proposals?.find((c) => c.id === campaignId)
+  const triggerLabel = activeCampaign?.businessName ?? "Select Campaign"
+
   // Build the nav groups based on whether we're inside a campaign context
   const navGroups = campaignId
     ? [
@@ -41,6 +50,20 @@ export function EntrepreneurSidebar(props: EntrepreneurSidebarProps) {
   return (
     <AppSidebar
       navGroups={navGroups}
+      topContent={
+        <>
+          {isMobile && (
+            <SidebarGroup>
+              <div>
+                <ProposalSwitcherPopover
+                  proposals={proposals ?? []}
+                  title={triggerLabel}
+                />
+              </div>
+            </SidebarGroup>
+          )}
+        </>
+      }
       footer={
         <SidebarMenu>
           <SidebarUserMenu user={MOCK_USER} />
@@ -63,19 +86,23 @@ export function EntrepreneurCampaignHeader() {
   const params = useParams<{ campaignId?: string }>()
   const campaignId = params?.campaignId
 
+  const { data: proposals } = useGetProposals()
+
   // Look up the active campaign name by its ID
-  const activeCampaign = mockCampaigns.find((c) => c.id === campaignId)
-  const triggerLabel = activeCampaign?.title ?? "Select Campaign"
+  const activeCampaign = proposals?.find((c) => c.id === campaignId)
+  const triggerLabel = activeCampaign?.businessName ?? "Select Campaign"
 
   return (
-    <AppHeader
-      toggleSidebar={toggleSidebar}
-      titleSlot={
-        <CampaignSwitcherPopover
-          campaigns={mockCampaigns}
-          title={triggerLabel}
-        />
-      }
-    />
+    <>
+      <AppHeader
+        toggleSidebar={toggleSidebar}
+        titleSlot={
+          <ProposalSwitcherPopover
+            proposals={proposals ?? []}
+            title={triggerLabel}
+          />
+        }
+      />
+    </>
   )
 }

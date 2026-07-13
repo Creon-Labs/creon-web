@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { FormProvider } from "react-hook-form"
 import { useRouter } from "next/navigation"
 import {
@@ -9,9 +10,12 @@ import {
   ListChecksIcon,
   FloppyDiskIcon,
   PaperPlaneTiltIcon,
+  WarningCircleIcon,
 } from "@phosphor-icons/react"
+import { toast } from "sonner"
 
 import { useHookForm } from "@/shared/lib/hook-form"
+import { ApiError } from "@/shared/lib/api-client"
 import { cn } from "@/shared/utils/cn"
 import {
   Field,
@@ -37,6 +41,8 @@ import { Spinner } from "@shadcn-ui/spinner"
 import { createProposalSchema } from "../../utils/proposal-schema"
 import type { CreateProposalFormValues } from "../../utils/proposal-schema"
 import { MilestonesField } from "./milestones-field"
+import { useCreateProposal } from "../../api/create-proposal"
+import { useSubmitProposal } from "../../api/submit-proposal"
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -102,6 +108,15 @@ function FormSection({
 export function CreateProposalForm() {
   const router = useRouter()
 
+  // Track which button triggered the async action so each shows its own spinner
+  const [activeAction, setActiveAction] = useState<"draft" | "submit" | null>(
+    null,
+  )
+  const [formError, setFormError] = useState<string | null>(null)
+
+  const { mutateAsync: createProposal } = useCreateProposal()
+  const { mutateAsync: submitProposal } = useSubmitProposal()
+
   const form = useHookForm<typeof createProposalSchema>({
     schema: createProposalSchema,
     defaultValues: {
@@ -127,19 +142,74 @@ export function CreateProposalForm() {
     handleSubmit,
     setValue,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = form
 
   const requestedAmount = watch("requestedAmount")
 
-  function onSaveDraft(data: CreateProposalFormValues) {
-    // TODO: call createProposal API (saves as DRAFT)
-    console.log("[Draft]", data)
+  const isBusy = activeAction !== null
+
+  async function onSaveDraft(data: CreateProposalFormValues) {
+    setFormError(null)
+    setActiveAction("draft")
+    try {
+      await createProposal({
+        businessName: data.businessName,
+        businessDescription: data.businessDescription,
+        category: data.category,
+        location: data.location || undefined,
+        requestedAmount: data.requestedAmount,
+        lockPeriodDays: Number(data.lockPeriodDays),
+        milestones: data.milestones,
+      })
+      toast.success("Draft saved!", {
+        description: "Your proposal has been saved as a draft.",
+      })
+      router.replace("/entrepreneur")
+    } catch (err) {
+      const message =
+        err instanceof ApiError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Failed to save draft. Please try again."
+      setFormError(message)
+    } finally {
+      setActiveAction(null)
+    }
   }
 
-  function onSubmit(data: CreateProposalFormValues) {
-    // TODO: call createProposal API then submitProposal API
-    console.log("[Submit]", data)
+  async function onSubmit(data: CreateProposalFormValues) {
+    setFormError(null)
+    setActiveAction("submit")
+    try {
+      const proposal = await createProposal({
+        businessName: data.businessName,
+        businessDescription: data.businessDescription,
+        category: data.category,
+        location: data.location || undefined,
+        requestedAmount: data.requestedAmount,
+        lockPeriodDays: Number(data.lockPeriodDays),
+        milestones: data.milestones,
+      })
+      if (!proposal) throw new Error("Failed to create proposal.")
+      await submitProposal({ id: proposal.id })
+      toast.success("Proposal submitted!", {
+        description:
+          "Your proposal has been submitted and is now under review.",
+      })
+      router.replace("/entrepreneur")
+    } catch (err) {
+      const message =
+        err instanceof ApiError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Failed to submit proposal. Please try again."
+      setFormError(message)
+    } finally {
+      setActiveAction(null)
+    }
   }
 
   return (
@@ -325,12 +395,26 @@ export function CreateProposalForm() {
         <Separator />
 
         {/* ── Actions ────────────────────────────────────────────────── */}
+        {formError && (
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="flex items-start gap-2 rounded-none border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-sm text-destructive"
+          >
+            <WarningCircleIcon
+              weight="fill"
+              className="mt-0.5 size-4 shrink-0"
+            />
+            <span>{formError}</span>
+          </div>
+        )}
+
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
           <Button
             type="button"
             variant="outline"
             className="w-full sm:w-auto"
-            disabled={isSubmitting}
+            disabled={isBusy}
             onClick={() => router.back()}
           >
             Cancel
@@ -340,10 +424,10 @@ export function CreateProposalForm() {
             type="button"
             variant="secondary"
             className="w-full sm:w-auto"
-            disabled={isSubmitting}
+            disabled={isBusy}
             onClick={handleSubmit(onSaveDraft)}
           >
-            {isSubmitting ? (
+            {activeAction === "draft" ? (
               <Spinner data-icon="inline-start" />
             ) : (
               <FloppyDiskIcon data-icon="inline-start" />
@@ -355,9 +439,9 @@ export function CreateProposalForm() {
             type="submit"
             form="create-proposal-form"
             className="w-full sm:w-auto"
-            disabled={isSubmitting}
+            disabled={isBusy}
           >
-            {isSubmitting ? (
+            {activeAction === "submit" ? (
               <Spinner data-icon="inline-start" />
             ) : (
               <PaperPlaneTiltIcon data-icon="inline-start" />

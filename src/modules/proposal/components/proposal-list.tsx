@@ -1,5 +1,6 @@
+"use client"
+
 import { StackedCardsIllustration } from "@/shared/assets/stacked-card"
-import { useStellarWallet } from "@/shared/lib/stellar-wallet"
 import { PlusIcon } from "@phosphor-icons/react"
 import { Button } from "@shadcn-ui/button"
 import {
@@ -15,13 +16,8 @@ import { useGetProposals } from "../api/get-proposals"
 import { ProposalCard, ProposalCardSkeleton } from "./proposal-card"
 
 export function ProposalList() {
-  const { connectedAddress } = useStellarWallet()
   const router = useRouter()
-  const { data, isLoading } = useGetProposals({
-    config: {
-      enabled: !!connectedAddress,
-    },
-  })
+  const { data, isLoading } = useGetProposals()
 
   if (isLoading) {
     return (
@@ -63,15 +59,26 @@ export function ProposalList() {
   }
   return (
     <Container>
-      <ProposalCard
-        id="1"
-        title="Lorem Ipsum Dolor Sit Amet"
-        description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab, veritatis laboriosam? Ad quibusdam explicabo nihil quae nam, saepe perferendis quasi, aut quisquam, voluptate eveniet? Facere quaerat voluptatum eaque dolor deserunt?"
-        imageUrl="/temp/kopi-online.webp"
-        goalAmount={10_000}
-        raisedAmount={1_000}
-        variant={"entr.DRAFT"}
-      />
+      <Button
+        onClick={() => router.push("/entrepreneur/campaign/new")}
+        variant={"outline"}
+        className="h-10 border-dashed"
+      >
+        <PlusIcon /> New Campaign Proposal
+      </Button>
+      <div className="grid gap-4">
+        {data.map((proposal) => (
+          <ProposalCard
+            key={proposal.id}
+            id={proposal.id}
+            title={proposal.businessName}
+            description={proposal.businessDescription}
+            imageUrl={"/none.jpg"}
+            goalAmount={Number(proposal.requestedAmount)}
+            variant={`entr.${proposal.status}`}
+          />
+        ))}
+      </div>
     </Container>
   )
 }

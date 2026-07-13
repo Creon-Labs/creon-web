@@ -51,6 +51,9 @@ export type AppSidebarProps = {
   /** Slot for the footer area (e.g. user profile, logout button). */
   footer?: React.ReactNode
 
+  /** Optional slot for content above the nav groups (e.g. a search bar). */
+  topContent?: React.ReactNode
+
   /** Additional className forwarded to the root <Sidebar> element. */
   className?: string
 
@@ -64,9 +67,14 @@ export type AppSidebarProps = {
 // ─── Logo ─────────────────────────────────────────────────────────────────────
 
 function AppSidebarLogo() {
+  const pathname = usePathname()
+  const firstPathSegment = pathname.split("/")[1]
   return (
     <>
-      <div className="flex items-center gap-0.5">
+      <Link
+        href={`/${firstPathSegment}` as Route}
+        className="flex items-center gap-0.5"
+      >
         <Image
           src="/logo-icon.svg"
           alt="Creon"
@@ -78,7 +86,7 @@ function AppSidebarLogo() {
         <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">
           Creon
         </span>
-      </div>
+      </Link>
     </>
   )
 }
@@ -128,6 +136,7 @@ function AppSidebarNavItem({ item }: { item: AppSidebarNavItem }) {
 export function AppSidebar({
   navGroups,
   footer,
+  topContent,
   className,
   sidebarProps,
 }: AppSidebarProps) {
@@ -150,6 +159,7 @@ export function AppSidebar({
 
       {/* ── Content ── */}
       <SidebarContent>
+        {topContent && topContent}
         {navGroups.map((group, groupIndex) => (
           <SidebarGroup key={groupIndex}>
             {group.label && (
