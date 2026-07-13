@@ -8,6 +8,8 @@ export const authMeQueryOptions = () =>
   queryOptions({
     queryKey: ["auth", "me"] as const,
     queryFn: authMe,
+    staleTime: Infinity,
+    retry: false,
   })
 
 type UseGetAuthMeOptions = {
@@ -16,7 +18,7 @@ type UseGetAuthMeOptions = {
 
 export const useAuthMe = ({ config }: UseGetAuthMeOptions = {}) => {
   return useQuery({
-    ...authMeQueryOptions(),
     ...config,
+    ...authMeQueryOptions(),
   })
 }

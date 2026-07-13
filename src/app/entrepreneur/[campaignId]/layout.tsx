@@ -2,7 +2,7 @@ import { SidebarInset, SidebarProvider } from "@shadcn-ui/sidebar"
 
 import { AppContainer } from "@/shared/components/layouts/app-container"
 import { sidebarCookieState } from "@/shared/components/sections/sidebar/get-sidebar-cookie"
-import { EntrepreneurCampaignHeader, EntrepreneurSidebar } from "../header-sidebar"
+import { EntrepreneurCampaignHeader, EntrepreneurSidebar } from "../_components/header-sidebar"
 
 export default async function EntrepreneurLayout({
   children,
