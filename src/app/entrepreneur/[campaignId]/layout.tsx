@@ -13,7 +13,8 @@ export default async function EntrepreneurLayout({
   params,
 }: {
   children: React.ReactNode
-} & PageProps<"/entrepreneur/[campaignId]">) {
+  params: Promise<{ campaignId: string }>
+}) {
   const defaultOpen = await sidebarCookieState()
 
   const campaignId = (await params).campaignId
