@@ -18,18 +18,13 @@ export default async function EntrepreneurLayout({
 
   const campaignId = (await params).campaignId
 
-
   return (
     <ProposalCheckProvider campaignId={campaignId}>
       <SidebarProvider defaultOpen={defaultOpen}>
         <EntrepreneurSidebar />
         <SidebarInset>
           <EntrepreneurCampaignHeader />
-          <AppContainer>
-            {/* TODO: Render proposal status alert here (on top of AppContainer) */}
-
-            {children}
-            </AppContainer>
+          <AppContainer>{children}</AppContainer>
         </SidebarInset>
       </SidebarProvider>
     </ProposalCheckProvider>
