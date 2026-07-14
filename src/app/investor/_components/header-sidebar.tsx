@@ -10,12 +10,6 @@ import {
 import { SidebarUserMenu } from "@/shared/components/sections/sidebar/sidebar-user-menu"
 import { investorNavItems } from "@/shared/constants/nav-investor"
 
-const MOCK_USER = {
-  name: "Investor User",
-  email: "investor@creon.id",
-  avatarUrl: undefined,
-}
-
 type InvestorSidebarWrapper = Omit<AppSidebarProps, "navGroups" | "footer">
 
 export function InvestorSidebar(props: InvestorSidebarWrapper) {
@@ -24,7 +18,7 @@ export function InvestorSidebar(props: InvestorSidebarWrapper) {
       navGroups={[{ items: investorNavItems }]}
       footer={
         <SidebarMenu>
-          <SidebarUserMenu user={MOCK_USER} />
+          <SidebarUserMenu />
         </SidebarMenu>
       }
       {...props}

@@ -1,11 +1,10 @@
 import {
-  ChartBarIcon,
   GearSixIcon,
   HouseIcon,
   RocketLaunchIcon,
   ShareNetworkIcon,
   TargetIcon,
-  VaultIcon,
+  VaultIcon
 } from "@phosphor-icons/react/dist/ssr"
 import { Route } from "next"
 

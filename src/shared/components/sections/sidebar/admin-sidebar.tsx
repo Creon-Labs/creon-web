@@ -6,13 +6,6 @@ import { adminNavItems } from "@/shared/constants/nav-admin"
 import { AppSidebar, AppSidebarProps } from "./app-sidebar"
 import { SidebarUserMenu } from "./sidebar-user-menu"
 
-// Mock user — replace with real auth data when auth module is ready
-const MOCK_USER = {
-  name: "Super Admin",
-  email: "admin@creon.id",
-  avatarUrl: undefined,
-}
-
 type AdminSidebarProps = Omit<AppSidebarProps, "navGroups" | "footer">
 
 /**
@@ -25,7 +18,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
       navGroups={[{ items: adminNavItems }]}
       footer={
         <SidebarMenu>
-          <SidebarUserMenu user={MOCK_USER} />
+          <SidebarUserMenu />
         </SidebarMenu>
       }
       {...props}

@@ -1,25 +1,26 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { FormProvider, Controller } from "react-hook-form"
 import {
   BuildingsIcon,
-  CurrencyCircleDollarIcon,
   ClockIcon,
-  ListChecksIcon,
-  FloppyDiskIcon,
-  PaperPlaneTiltIcon,
-  WarningCircleIcon,
+  CurrencyCircleDollarIcon,
   FileArrowUpIcon,
+  FloppyDiskIcon,
+  ListChecksIcon,
+  PaperPlaneTiltIcon,
   PencilSimpleIcon,
-  XIcon,
   TrashIcon,
+  WarningCircleIcon,
+  XIcon,
 } from "@phosphor-icons/react"
+import { useEffect, useState } from "react"
+import { Controller, FormProvider } from "react-hook-form"
 import { toast } from "sonner"
 
-import { useHookForm } from "@/shared/lib/hook-form"
 import { ApiError } from "@/shared/lib/api-client"
+import { useHookForm } from "@/shared/lib/hook-form"
 import { cn } from "@/shared/utils/cn"
+import { Button } from "@shadcn-ui/button"
 import {
   Field,
   FieldDescription,
@@ -28,9 +29,6 @@ import {
   FieldLabel,
 } from "@shadcn-ui/field"
 import { Input } from "@shadcn-ui/input"
-import { Textarea } from "@shadcn-ui/textarea"
-import { Button } from "@shadcn-ui/button"
-import { Separator } from "@shadcn-ui/separator"
 import {
   Select,
   SelectContent,
@@ -39,17 +37,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@shadcn-ui/select"
-import { Spinner } from "@shadcn-ui/spinner"
+import { Separator } from "@shadcn-ui/separator"
 import { Skeleton } from "@shadcn-ui/skeleton"
+import { Spinner } from "@shadcn-ui/spinner"
+import { Textarea } from "@shadcn-ui/textarea"
 
-import { createProposalSchema } from "../../schema/proposal-schema"
-import type { CreateProposalFormValues } from "../../schema/proposal-schema"
-import { MilestonesField } from "./milestones-field"
 import { useGetProposalById } from "../../api/get-proposal-by-id"
-import { useUpdateProposal } from "../../api/update-proposal"
-import { useSubmitProposal } from "../../api/submit-proposal"
-import { useUploadProposalMedia } from "../../api/upload-proposal-media"
 import { useRemoveProposalMedia } from "../../api/remove-proposal-media"
+import { useSubmitProposal } from "../../api/submit-proposal"
+import { useUpdateProposal } from "../../api/update-proposal"
+import { useUploadProposalMedia } from "../../api/upload-proposal-media"
+import type { CreateProposalFormValues } from "../../schema/proposal-schema"
+import { createProposalSchema } from "../../schema/proposal-schema"
+import { MilestonesField } from "./milestones-field"
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -172,6 +172,7 @@ export function EditProposalForm({ proposalId }: EditProposalFormProps) {
       reset({
         businessName: proposal.businessName,
         businessDescription: proposal.businessDescription,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         category: proposal.category || (proposal as any).businessCategory || "",
         location: proposal.location || "",
         requestedAmount: proposal.requestedAmount,
@@ -194,9 +195,9 @@ export function EditProposalForm({ proposalId }: EditProposalFormProps) {
   if (isLoading) {
     return (
       <div className="flex flex-col gap-8">
-        <Skeleton className="h-[200px] w-full" />
-        <Skeleton className="h-[200px] w-full" />
-        <Skeleton className="h-[200px] w-full" />
+        <Skeleton className="h-50 w-full" />
+        <Skeleton className="h-50 w-full" />
+        <Skeleton className="h-50 w-full" />
       </div>
     )
   }
@@ -365,7 +366,9 @@ export function EditProposalForm({ proposalId }: EditProposalFormProps) {
                   name="category"
                   render={({ field }) => (
                     <Field data-invalid={!!errors.category || undefined}>
-                      <FieldLabel htmlFor="category">Business Category</FieldLabel>
+                      <FieldLabel htmlFor="category">
+                        Business Category
+                      </FieldLabel>
                       <Select
                         value={field.value}
                         onValueChange={field.onChange}
@@ -385,11 +388,17 @@ export function EditProposalForm({ proposalId }: EditProposalFormProps) {
                                 {cat}
                               </SelectItem>
                             ))}
-                            {field.value && !(BUSINESS_CATEGORIES as readonly string[]).includes(field.value) && (
-                              <SelectItem key={field.value} value={field.value}>
-                                {field.value}
-                              </SelectItem>
-                            )}
+                            {field.value &&
+                              !(
+                                BUSINESS_CATEGORIES as readonly string[]
+                              ).includes(field.value) && (
+                                <SelectItem
+                                  key={field.value}
+                                  value={field.value}
+                                >
+                                  {field.value}
+                                </SelectItem>
+                              )}
                           </SelectGroup>
                         </SelectContent>
                       </Select>

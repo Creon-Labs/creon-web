@@ -13,6 +13,7 @@ import { H5, Text } from "@/shared/components/primitives/typography"
 
 import type { Milestone } from "../types"
 import { MilestoneStatusBadge } from "./milestone-status-badge"
+import { Route } from "next"
 
 type MilestoneCardProps = {
   milestone: Milestone
@@ -104,10 +105,9 @@ export function MilestoneCard({
         )}
 
         <Button variant="outline" className="w-full" asChild>
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           <Link
             href={
-              `/entrepreneur/${milestone.campaignId}/milestones/${milestone.id}` as any
+              `/entrepreneur/${milestone.campaignId}/milestones/${milestone.id}` as Route
             }
           >
             Details

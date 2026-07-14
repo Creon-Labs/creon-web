@@ -10,12 +10,6 @@ import {
 import { SidebarUserMenu } from "@/shared/components/sections/sidebar/sidebar-user-menu"
 import { adminNavItems } from "@/shared/constants/nav-admin"
 
-const MOCK_USER = {
-  name: "Admin User",
-  email: "admin@creon.id",
-  avatarUrl: undefined,
-}
-
 type AdminSidebarWrapper = Omit<AppSidebarProps, "navGroups" | "footer">
 
 export function AdminSidebar(props: AdminSidebarWrapper) {
@@ -24,7 +18,7 @@ export function AdminSidebar(props: AdminSidebarWrapper) {
       navGroups={[{ items: adminNavItems }]}
       footer={
         <SidebarMenu>
-          <SidebarUserMenu user={MOCK_USER} />
+          <SidebarUserMenu />
         </SidebarMenu>
       }
       {...props}

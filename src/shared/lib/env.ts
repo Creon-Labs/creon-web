@@ -4,6 +4,7 @@ import z from "zod"
 export const env = createEnv({
   server: {
     SECRET_KEY: z.string().min(1),
+    IMAGE_REMOTE_URL: z.string().url(),
   },
   client: {
     NEXT_PUBLIC_BASE_API_URL: z.url(),
