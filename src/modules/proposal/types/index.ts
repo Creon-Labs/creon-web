@@ -58,6 +58,17 @@ export type ProposalMilestone = {
   releaseTxHash?: string | null
 }
 
+export type ProposalMedia = {
+  id: string
+  kind: "IMAGE" | "DOCUMENT"
+  mimeType: string
+  originalName?: string | null
+  sizeBytes: number
+  sortOrder: number
+  url: string
+  createdAt: string
+}
+
 export type Proposal = {
   id: string
   businessName: string
@@ -71,4 +82,5 @@ export type Proposal = {
   createdAt: string
   updatedAt: string
   milestones: ProposalMilestone[]
+  media?: ProposalMedia[]
 }

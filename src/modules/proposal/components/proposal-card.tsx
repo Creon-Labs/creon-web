@@ -6,19 +6,17 @@ import ImageWithFallback from "@/shared/components/primitives/image-with-fallbac
 import { cn } from "@/shared/utils/cn"
 import { formatUsd } from "@/shared/utils/format-usd"
 import {
-  DotsThreeOutlineVerticalIcon,
-  TimerIcon,
-  UsersIcon,
+  UsersIcon
 } from "@phosphor-icons/react"
 import { Badge } from "@shadcn-ui/badge"
-import { Button } from "@shadcn-ui/button"
 import { Card, CardContent, CardFooter } from "@shadcn-ui/card"
 import { Progress } from "@shadcn-ui/progress"
 
 import { H5, Text } from "@/shared/components/primitives/typography"
+import { Skeleton } from "@shadcn-ui/skeleton"
+import { Route } from "next"
 import { ProposalStatus } from "../types"
 import { ProposalStatusBadge } from "./status-badge"
-import { Skeleton } from "@shadcn-ui/skeleton"
 
 type CardVariant = {
   public: string
@@ -75,19 +73,19 @@ const proposalCardFooterVariants = cva<{
 
 type ProposalCardProps = VariantProps<typeof proposalCardVariants> & {
   id: string
-  imageUrl: string
   title: string
   description: string
+  imageUrl: string
   goalAmount?: number
   investorsCount?: number
   raisedAmount?: number
   endAt?: string
   className?: string
+  href: string
   renderFooter?: () => React.ReactNode
 }
 
 function ProposalCard({
-  id,
   imageUrl,
   title,
   description,
@@ -95,6 +93,7 @@ function ProposalCard({
   raisedAmount = 0,
   investorsCount = 0,
   variant = "public",
+  href,
   className,
   renderFooter,
 }: ProposalCardProps) {
@@ -109,7 +108,7 @@ function ProposalCard({
       className={cn(proposalCardVariants({ variant, className }))}
     >
       {/* Card Content */}
-      <Link href={`/entrepreneur/${id}/overview`} className="block">
+      <Link href={href as Route} className="block">
         <CardContent className="group flex flex-col gap-0 overflow-clip sm:flex-row sm:gap-4">
           {/* Status Badge */}
           {isEntrepreneurCard && (
@@ -131,7 +130,7 @@ function ProposalCard({
           </div>
 
           <div className="w-full space-y-2.5 p-2 pb-4 sm:relative sm:py-2 sm:pl-0">
-            {isEntrepreneurCard && (
+            {/* {isEntrepreneurCard && (
               <Button
                 onClick={(e) => e.preventDefault()}
                 variant={"ghost"}
@@ -140,7 +139,7 @@ function ProposalCard({
               >
                 <DotsThreeOutlineVerticalIcon weight="fill" />
               </Button>
-            )}
+            )} */}
 
             {/* Campaign Badges */}
             <div className="flex flex-wrap items-center gap-2">
@@ -159,10 +158,10 @@ function ProposalCard({
                 {investorsCount} Investors
               </Badge>
               {/* End Date Badge */}
-              <Badge size={"md"} variant={"outline"} className="font-semibold">
+              {/* <Badge size={"md"} variant={"outline"} className="font-semibold">
                 <TimerIcon weight="bold" />
                 {"Not started yet"}
-              </Badge>
+              </Badge> */}
             </div>
 
             {/* Campaign Title and Description */}

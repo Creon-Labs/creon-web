@@ -11,6 +11,7 @@ import {
   FloppyDiskIcon,
   PaperPlaneTiltIcon,
   WarningCircleIcon,
+  FileArrowUpIcon,
 } from "@phosphor-icons/react"
 import { toast } from "sonner"
 
@@ -43,6 +44,7 @@ import type { CreateProposalFormValues } from "../../schema/proposal-schema"
 import { MilestonesField } from "./milestones-field"
 import { useCreateProposal } from "../../api/create-proposal"
 import { useSubmitProposal } from "../../api/submit-proposal"
+import { useUploadProposalMedia } from "../../api/upload-proposal-media"
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -116,6 +118,7 @@ export function CreateProposalForm() {
 
   const { mutateAsync: createProposal } = useCreateProposal()
   const { mutateAsync: submitProposal } = useSubmitProposal()
+  const { mutateAsync: uploadProposalMedia } = useUploadProposalMedia()
 
   const form = useHookForm<typeof createProposalSchema>({
     schema: createProposalSchema,
@@ -134,6 +137,8 @@ export function CreateProposalForm() {
           amount: "",
         },
       ],
+      images: [],
+      documents: [],
     },
   })
 
@@ -149,11 +154,24 @@ export function CreateProposalForm() {
 
   const isBusy = activeAction !== null
 
+  async function handleMediaUpload(proposalId: string, data: CreateProposalFormValues) {
+    const hasImages = data.images && data.images.length > 0
+    const hasDocuments = data.documents && data.documents.length > 0
+
+    if (hasImages || hasDocuments) {
+      await uploadProposalMedia({
+        id: proposalId,
+        images: data.images,
+        documents: data.documents,
+      })
+    }
+  }
+
   async function onSaveDraft(data: CreateProposalFormValues) {
     setFormError(null)
     setActiveAction("draft")
     try {
-      await createProposal({
+      const proposal = await createProposal({
         businessName: data.businessName,
         businessDescription: data.businessDescription,
         category: data.category,
@@ -162,6 +180,10 @@ export function CreateProposalForm() {
         lockPeriodDays: Number(data.lockPeriodDays),
         milestones: data.milestones,
       })
+      if (!proposal) throw new Error("Failed to create proposal.")
+      
+      await handleMediaUpload(proposal.id, data)
+
       toast.success("Draft saved!", {
         description: "Your proposal has been saved as a draft.",
       })
@@ -193,6 +215,9 @@ export function CreateProposalForm() {
         milestones: data.milestones,
       })
       if (!proposal) throw new Error("Failed to create proposal.")
+
+      await handleMediaUpload(proposal.id, data)
+
       await submitProposal({ id: proposal.id })
       toast.success("Proposal submitted!", {
         description:
@@ -390,6 +415,81 @@ export function CreateProposalForm() {
           description="Define the staged release schedule. Funds are only released after each milestone is approved by investors through a vote."
         >
           <MilestonesField requestedAmount={requestedAmount} />
+        </FormSection>
+
+        <Separator />
+
+        {/* ── 5. Media (Optional) ─────────────────────────────────────────── */}
+        <FormSection
+          icon={FileArrowUpIcon}
+          title="Media & Documents"
+          description="Upload gallery images and PDF documents to support your proposal."
+        >
+          <FieldGroup>
+            {/* Images */}
+            <Field data-invalid={!!errors.images || undefined}>
+              <FieldLabel htmlFor="images">
+                Gallery Images{" "}
+                <span className="font-normal text-muted-foreground">
+                  (optional)
+                </span>
+              </FieldLabel>
+              <Input
+                id="images"
+                type="file"
+                accept="image/jpeg, image/png, image/webp"
+                multiple
+                aria-invalid={!!errors.images}
+                onChange={(e) => {
+                  if (e.target.files) {
+                    setValue("images", Array.from(e.target.files), {
+                      shouldValidate: true,
+                    })
+                  } else {
+                    setValue("images", [], { shouldValidate: true })
+                  }
+                }}
+              />
+              <FieldDescription>
+                Max 5 images (JPEG, PNG, WebP). Max 5MB per file.
+              </FieldDescription>
+              {errors.images && (
+                <FieldError>{errors.images.message}</FieldError>
+              )}
+            </Field>
+
+            {/* Documents */}
+            <Field data-invalid={!!errors.documents || undefined}>
+              <FieldLabel htmlFor="documents">
+                Supporting Documents{" "}
+                <span className="font-normal text-muted-foreground">
+                  (optional)
+                </span>
+              </FieldLabel>
+              <Input
+                id="documents"
+                type="file"
+                accept="application/pdf"
+                multiple
+                aria-invalid={!!errors.documents}
+                onChange={(e) => {
+                  if (e.target.files) {
+                    setValue("documents", Array.from(e.target.files), {
+                      shouldValidate: true,
+                    })
+                  } else {
+                    setValue("documents", [], { shouldValidate: true })
+                  }
+                }}
+              />
+              <FieldDescription>
+                Max 3 PDF documents. Max 5MB per file.
+              </FieldDescription>
+              {errors.documents && (
+                <FieldError>{errors.documents.message}</FieldError>
+              )}
+            </Field>
+          </FieldGroup>
         </FormSection>
 
         <Separator />

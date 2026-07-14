@@ -1,6 +1,6 @@
 "use client"
 
-import { BellIcon, CaretLeftIcon, ListIcon } from "@phosphor-icons/react"
+import { CaretLeftIcon, ListIcon } from "@phosphor-icons/react"
 import { Button } from "@shadcn-ui/button"
 import { Skeleton } from "@shadcn-ui/skeleton"
 import { usePathname, useRouter } from "next/navigation"
@@ -9,6 +9,9 @@ import { create } from "zustand"
 import { ConnectButton } from "../../lib/stellar-wallet"
 import { ComposedBreadcrumb } from "../blocks/composed-breadcrumb"
 import { H5 } from "../primitives/typography"
+import { Avatar, AvatarFallback } from "@shadcn-ui/avatar"
+import { UserPopover } from "./user-popover"
+import { useAuthMe } from "@/modules/auth"
 
 type HeaderState = {
   title: string | string[] | null
@@ -35,10 +38,22 @@ export function AppHeader(props: {
   toggleSidebar?: () => void
   /** Optional custom element rendered in place of the default title text */
   titleSlot?: React.ReactNode
+  userAvatar?: boolean
 }) {
   const pathname = usePathname()
   const router = useRouter()
   const { title, pathname: titlePathname } = useHeaderStore()
+
+  const { data: userData } = useAuthMe({
+    config: { enabled: props.userAvatar },
+  })
+
+  const initials = userData?.displayName
+    ?.split(" ")
+    .slice(0, 2)
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
 
   const isStale = pathname !== titlePathname
 
@@ -88,10 +103,19 @@ export function AppHeader(props: {
       )}
 
       <div className="flex items-center gap-4">
-        <Button variant={"ghost"} size={"icon"}>
-          <BellIcon />
-        </Button>
         <ConnectButton />
+        {props.userAvatar && (
+          <UserPopover
+            isTriggerNotButton
+            sideOffset={12}
+            align="end"
+            trigger={
+              <Avatar className="size-8">
+                <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+              </Avatar>
+            }
+          />
+        )}
       </div>
     </header>
   )

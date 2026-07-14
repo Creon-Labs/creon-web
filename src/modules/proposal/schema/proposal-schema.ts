@@ -57,6 +57,14 @@ export const createProposalSchema = z.object({
   milestones: z
     .array(milestoneSchema)
     .min(1, "At least one milestone is required"),
+  images: z
+    .array(z.custom<File>((val) => val instanceof File, "Must be a file"))
+    .max(5, "Maximum 5 images allowed")
+    .optional(),
+  documents: z
+    .array(z.custom<File>((val) => val instanceof File, "Must be a file"))
+    .max(3, "Maximum 3 documents allowed")
+    .optional(),
 })
 
 export type CreateProposalFormValues = z.input<typeof createProposalSchema>

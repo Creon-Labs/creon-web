@@ -13,7 +13,7 @@ export default function Page() {
 
   return (
     <>
-      <AppHeader />
+      <AppHeader userAvatar />
 
       <AppContainer>
         <KycStatusAlert />

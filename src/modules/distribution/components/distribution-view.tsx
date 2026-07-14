@@ -1,24 +1,24 @@
 "use client"
 
-import { useParams } from "next/navigation"
-import { Skeleton } from "@shadcn-ui/skeleton"
-import { DistributeProfitDialog } from "./distribute-profit-dialog"
-import { DistributionStats } from "./distribution-stats"
-import { DistributionHistoryTable } from "./distribution-history-table"
-import { useGetCampaignDistributions } from "../api/get-campaign-distributions"
 import { Button } from "@shadcn-ui/button"
+import { Skeleton } from "@shadcn-ui/skeleton"
+import { useGetCampaignDistributions } from "../api/get-campaign-distributions"
+import { DistributeProfitDialog } from "./distribute-profit-dialog"
+import { DistributionHistoryTable } from "./distribution-history-table"
+import { DistributionStats } from "./distribution-stats"
 
-export function DistributionView() {
-  const params = useParams<{ campaignId: string }>()
-  const campaignId = params?.campaignId || ""
-
+export function DistributionView({
+  campaignId,
+}: {
+  campaignId: string | null
+}) {
   const {
     data: distributions = [],
     isLoading,
     isError,
     refetch,
   } = useGetCampaignDistributions({
-    campaignId,
+    campaignId: campaignId ?? "",
     config: {
       enabled: !!campaignId,
     },
@@ -36,7 +36,7 @@ export function DistributionView() {
           </p>
         </div>
         <DistributeProfitDialog
-          campaignId={campaignId}
+          campaignId={campaignId ?? ""}
           onDistributeSuccess={() => refetch()}
         />
       </div>

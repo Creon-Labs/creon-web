@@ -19,7 +19,7 @@ const ImageWithFallback = ({
 
   return (
     <>
-      {isError && !fallbackSrc ? (
+      {(isError && !fallbackSrc) || !src ? (
         <div
           role="img"
           aria-label="Image failed to load"

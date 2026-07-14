@@ -67,17 +67,25 @@ export function ProposalList() {
         <PlusIcon /> New Campaign Proposal
       </Button>
       <div className="grid gap-4">
-        {data.map((proposal) => (
-          <ProposalCard
-            key={proposal.id}
-            id={proposal.id}
-            title={proposal.businessName}
-            description={proposal.businessDescription}
-            imageUrl={"/none.jpg"}
-            goalAmount={Number(proposal.requestedAmount)}
-            variant={`entr.${proposal.status}`}
-          />
-        ))}
+        {data.map((proposal) => {
+          const imageUrl =
+            proposal.media?.find((media) => media.kind === "IMAGE")?.url || ""
+          return (
+            <ProposalCard
+              key={proposal.id}
+              id={proposal.id}
+              title={proposal.businessName}
+              description={proposal.businessDescription}
+              imageUrl={imageUrl}
+              goalAmount={Number(proposal.requestedAmount)}
+              investorsCount={0}
+              raisedAmount={0}
+              endAt={"Null"}
+              variant={`entr.${proposal.status}`}
+              href={`/entrepreneur/${proposal.id}/overview`}
+            />
+          )
+        })}
       </div>
     </Container>
   )
