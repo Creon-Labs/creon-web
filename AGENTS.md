@@ -345,6 +345,7 @@ Environment variables are validated with `@t3-oss/env-nextjs`. Add new vars to t
 | `NEXT_PUBLIC_BASE_URL`         | ✅       | Public app URL (used in WalletConnect metadata)                                          |
 | `NEXT_PUBLIC_REOWN_PROJECT_ID` | ✅       | Reown (WalletConnect) project ID — get one at [cloud.reown.com](https://cloud.reown.com) |
 | `SECRET_KEY`                   | ✅       | Server-side secret (session signing, etc.)                                               |
+| `IMAGE_REMOTE_URL`             | ✅       | Remote Image URL for remotePattern next.js                                               |
 
 ---
 
