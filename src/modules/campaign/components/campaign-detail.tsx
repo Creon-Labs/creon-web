@@ -3,10 +3,19 @@
 import { useGetCampaignById } from "../api/get-campaign-by-id"
 import { formatUsd } from "@/shared/utils/format-usd"
 import { Skeleton } from "@/shared/components/shadcn-ui/skeleton"
-import { Alert, AlertDescription, AlertTitle } from "@/shared/components/shadcn-ui/alert"
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/shared/components/shadcn-ui/alert"
 import { Badge } from "@/shared/components/shadcn-ui/badge"
 import { Progress } from "@/shared/components/shadcn-ui/progress"
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/shadcn-ui/card"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/shared/components/shadcn-ui/card"
 import Image from "next/image"
 
 interface CampaignDetailProps {
@@ -14,7 +23,12 @@ interface CampaignDetailProps {
 }
 
 export function CampaignDetail({ campaignId }: CampaignDetailProps) {
-  const { data: campaign, isLoading, isError, error } = useGetCampaignById({
+  const {
+    data: campaign,
+    isLoading,
+    isError,
+    error,
+  } = useGetCampaignById({
     id: campaignId,
   })
 
@@ -23,7 +37,7 @@ export function CampaignDetail({ campaignId }: CampaignDetailProps) {
       <div className="space-y-6">
         <Skeleton className="h-64 w-full" />
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="md:col-span-2 space-y-4">
+          <div className="space-y-4 md:col-span-2">
             <Skeleton className="h-10 w-3/4" />
             <Skeleton className="h-20 w-full" />
           </div>
@@ -40,7 +54,8 @@ export function CampaignDetail({ campaignId }: CampaignDetailProps) {
       <Alert variant="destructive">
         <AlertTitle>Error loading campaign details</AlertTitle>
         <AlertDescription>
-          {error?.message || "Failed to fetch campaign details. Please try again later."}
+          {error?.message ||
+            "Failed to fetch campaign details. Please try again later."}
         </AlertDescription>
       </Alert>
     )
@@ -50,14 +65,16 @@ export function CampaignDetail({ campaignId }: CampaignDetailProps) {
     return (
       <Alert>
         <AlertTitle>Not Found</AlertTitle>
-        <AlertDescription>The requested campaign could not be found.</AlertDescription>
+        <AlertDescription>
+          The requested campaign could not be found.
+        </AlertDescription>
       </Alert>
     )
   }
 
   const title = campaign.projectToken?.assetCode || "Unknown Campaign"
   const coverMedia = campaign.media.find((m) => m.kind === "IMAGE")
-  
+
   const goal = parseFloat(campaign.goalAmount)
   const raised = parseFloat(campaign.raisedAmount)
   const progressPercent = goal > 0 ? Math.min((raised / goal) * 100, 100) : 0
@@ -65,7 +82,7 @@ export function CampaignDetail({ campaignId }: CampaignDetailProps) {
   return (
     <div className="space-y-8">
       {/* Hero Image */}
-      <div className="relative aspect-[21/9] w-full overflow-hidden bg-muted border">
+      <div className="relative aspect-[21/9] w-full overflow-hidden border bg-muted">
         {coverMedia ? (
           <Image
             src={coverMedia.url}
@@ -83,11 +100,13 @@ export function CampaignDetail({ campaignId }: CampaignDetailProps) {
 
       <div className="grid gap-8 md:grid-cols-3">
         {/* Main Content */}
-        <div className="md:col-span-2 space-y-6">
+        <div className="space-y-6 md:col-span-2">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
             <div className="mt-2 flex flex-wrap gap-2">
-              <Badge variant="secondary">{campaign.status.replace("_", " ")}</Badge>
+              <Badge variant="secondary">
+                {campaign.status.replace("_", " ")}
+              </Badge>
               {campaign.unlockStatus && (
                 <Badge variant="outline">Unlock: {campaign.unlockStatus}</Badge>
               )}
@@ -102,24 +121,29 @@ export function CampaignDetail({ campaignId }: CampaignDetailProps) {
               <p>
                 <strong>Contract Address:</strong>{" "}
                 {campaign.contractAddress ? (
-                  <span className="break-all font-mono text-foreground">{campaign.contractAddress}</span>
+                  <span className="font-mono break-all text-foreground">
+                    {campaign.contractAddress}
+                  </span>
                 ) : (
                   "Pending deployment"
                 )}
               </p>
               {campaign.startAt && (
                 <p>
-                  <strong>Start Date:</strong> {new Date(campaign.startAt).toLocaleDateString()}
+                  <strong>Start Date:</strong>{" "}
+                  {new Date(campaign.startAt).toLocaleDateString()}
                 </p>
               )}
               {campaign.endAt && (
                 <p>
-                  <strong>End Date:</strong> {new Date(campaign.endAt).toLocaleDateString()}
+                  <strong>End Date:</strong>{" "}
+                  {new Date(campaign.endAt).toLocaleDateString()}
                 </p>
               )}
               {campaign.lockEndAt && (
                 <p>
-                  <strong>Lock End Date:</strong> {new Date(campaign.lockEndAt).toLocaleDateString()}
+                  <strong>Lock End Date:</strong>{" "}
+                  {new Date(campaign.lockEndAt).toLocaleDateString()}
                 </p>
               )}
             </CardContent>
@@ -137,7 +161,7 @@ export function CampaignDetail({ campaignId }: CampaignDetailProps) {
                 <div className="text-3xl font-bold text-primary">
                   {formatUsd(raised)}
                 </div>
-                <div className="text-sm text-muted-foreground mt-1">
+                <div className="mt-1 text-sm text-muted-foreground">
                   raised of {formatUsd(goal)} goal
                 </div>
               </div>

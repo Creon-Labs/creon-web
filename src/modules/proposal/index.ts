@@ -11,3 +11,9 @@ export { ProposalSwitcherPopover } from "./components/proposal-switcher-popover"
 export { ProposalStatusBadge } from "./components/status-badge"
 
 export { useUploadProposalMedia } from "./api/upload-proposal-media"
+
+export { useUpdateProposal } from "./api/update-proposal"
+
+export { useRemoveProposalMedia } from "./api/remove-proposal-media"
+
+export { EditProposalForm } from "./components/forms/edit-proposal"

@@ -95,7 +95,10 @@ export function InvestmentHistory() {
                       {inv.campaignId}
                     </TableCell>
                     <TableCell>
-                      {formatUsd(Number(inv.amount), { showSymbol: false })} <span className="text-muted-foreground text-xs">USDT</span>
+                      {formatUsd(Number(inv.amount), { showSymbol: false })}{" "}
+                      <span className="text-xs text-muted-foreground">
+                        USDT
+                      </span>
                     </TableCell>
                     <TableCell>
                       <Badge

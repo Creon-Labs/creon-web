@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { FormProvider } from "react-hook-form"
+import { FormProvider, Controller } from "react-hook-form"
 import { useRouter } from "next/navigation"
 import {
   BuildingsIcon,
@@ -154,7 +154,10 @@ export function CreateProposalForm() {
 
   const isBusy = activeAction !== null
 
-  async function handleMediaUpload(proposalId: string, data: CreateProposalFormValues) {
+  async function handleMediaUpload(
+    proposalId: string,
+    data: CreateProposalFormValues
+  ) {
     const hasImages = data.images && data.images.length > 0
     const hasDocuments = data.documents && data.documents.length > 0
 
@@ -181,7 +184,7 @@ export function CreateProposalForm() {
         milestones: data.milestones,
       })
       if (!proposal) throw new Error("Failed to create proposal.")
-      
+
       await handleMediaUpload(proposal.id, data)
 
       toast.success("Draft saved!", {
@@ -267,34 +270,44 @@ export function CreateProposalForm() {
             </Field>
 
             {/* Category */}
-            <Field data-invalid={!!errors.category || undefined}>
-              <FieldLabel htmlFor="category">Business Category</FieldLabel>
-              <Select
-                onValueChange={(val) =>
-                  setValue("category", val, { shouldValidate: true })
-                }
-              >
-                <SelectTrigger
-                  id="category"
-                  aria-invalid={!!errors.category}
-                  className="w-full"
-                >
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {BUSINESS_CATEGORIES.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              {errors.category && (
-                <FieldError>{errors.category.message}</FieldError>
+            <Controller
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <Field data-invalid={!!errors.category || undefined}>
+                  <FieldLabel htmlFor="category">Business Category</FieldLabel>
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger
+                      id="category"
+                      aria-invalid={!!errors.category}
+                      className="w-full"
+                    >
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {BUSINESS_CATEGORIES.map((cat) => (
+                          <SelectItem key={cat} value={cat}>
+                            {cat}
+                          </SelectItem>
+                        ))}
+                        {field.value && !(BUSINESS_CATEGORIES as readonly string[]).includes(field.value) && (
+                          <SelectItem key={field.value} value={field.value}>
+                            {field.value}
+                          </SelectItem>
+                        )}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {errors.category && (
+                    <FieldError>{errors.category.message}</FieldError>
+                  )}
+                </Field>
               )}
-            </Field>
+            />
 
             {/* Location */}
             <Field data-invalid={!!errors.location || undefined}>

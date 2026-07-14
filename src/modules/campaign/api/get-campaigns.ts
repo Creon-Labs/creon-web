@@ -4,9 +4,7 @@ import { QueryConfig } from "@/shared/lib/react-query"
 import { Campaign } from "../types"
 
 export const getCampaigns = (): Promise<Campaign[]> => {
-  return api
-    .get<ApiResponse<Campaign[]>>(`/campaigns`)
-    .then((res) => res.data!)
+  return api.get<ApiResponse<Campaign[]>>(`/campaigns`).then((res) => res.data!)
 }
 
 export const getCampaignsQueryOptions = () =>

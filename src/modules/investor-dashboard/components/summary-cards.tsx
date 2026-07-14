@@ -49,7 +49,10 @@ export function SummaryCards() {
             <Skeleton className="h-7 w-24" />
           ) : (
             <div className="text-2xl font-bold">
-              {formatUsd(totalInvestment, { showSymbol: false })} <span className="text-sm font-normal text-muted-foreground">USDT</span>
+              {formatUsd(totalInvestment, { showSymbol: false })}{" "}
+              <span className="text-sm font-normal text-muted-foreground">
+                USDT
+              </span>
             </div>
           )}
         </CardContent>
@@ -67,7 +70,10 @@ export function SummaryCards() {
             <Skeleton className="h-7 w-24" />
           ) : (
             <div className="text-2xl font-bold">
-              {formatUsd(totalRevenue, { showSymbol: false })} <span className="text-sm font-normal text-muted-foreground">USDT</span>
+              {formatUsd(totalRevenue, { showSymbol: false })}{" "}
+              <span className="text-sm font-normal text-muted-foreground">
+                USDT
+              </span>
             </div>
           )}
         </CardContent>
@@ -85,7 +91,10 @@ export function SummaryCards() {
             <Skeleton className="h-7 w-24" />
           ) : (
             <div className="text-2xl font-bold">
-              {formatUsd(totalRefund, { showSymbol: false })} <span className="text-sm font-normal text-muted-foreground">USDT</span>
+              {formatUsd(totalRefund, { showSymbol: false })}{" "}
+              <span className="text-sm font-normal text-muted-foreground">
+                USDT
+              </span>
             </div>
           )}
         </CardContent>

@@ -101,7 +101,10 @@ export function DistributionHistory() {
                       {claim.distribution?.campaignId || "-"}
                     </TableCell>
                     <TableCell>
-                      {formatUsd(Number(claim.amount), { showSymbol: false })} <span className="text-muted-foreground text-xs">USDT</span>
+                      {formatUsd(Number(claim.amount), { showSymbol: false })}{" "}
+                      <span className="text-xs text-muted-foreground">
+                        USDT
+                      </span>
                     </TableCell>
                     <TableCell>{claim.shareAmount}</TableCell>
                     <TableCell>

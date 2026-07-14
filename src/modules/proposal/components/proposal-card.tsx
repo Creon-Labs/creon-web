@@ -5,9 +5,7 @@ import { OutlineUSDC } from "@/shared/assets/usdc-outline"
 import ImageWithFallback from "@/shared/components/primitives/image-with-fallback"
 import { cn } from "@/shared/utils/cn"
 import { formatUsd } from "@/shared/utils/format-usd"
-import {
-  UsersIcon
-} from "@phosphor-icons/react"
+import { UsersIcon } from "@phosphor-icons/react"
 import { Badge } from "@shadcn-ui/badge"
 import { Card, CardContent, CardFooter } from "@shadcn-ui/card"
 import { Progress } from "@shadcn-ui/progress"

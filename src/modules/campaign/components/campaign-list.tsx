@@ -11,7 +11,11 @@ import {
   EmptyMedia,
 } from "@/shared/components/shadcn-ui/empty"
 import { Skeleton } from "@/shared/components/shadcn-ui/skeleton"
-import { Alert, AlertDescription, AlertTitle } from "@/shared/components/shadcn-ui/alert"
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/shared/components/shadcn-ui/alert"
 
 export function CampaignList() {
   const { data: campaigns, isLoading, isError, error } = useGetCampaigns()
@@ -39,7 +43,8 @@ export function CampaignList() {
       <Alert variant="destructive">
         <AlertTitle>Error loading campaigns</AlertTitle>
         <AlertDescription>
-          {error?.message || "Failed to fetch campaigns. Please try again later."}
+          {error?.message ||
+            "Failed to fetch campaigns. Please try again later."}
         </AlertDescription>
       </Alert>
     )
@@ -47,14 +52,15 @@ export function CampaignList() {
 
   if (!campaigns || campaigns.length === 0) {
     return (
-      <Empty className="py-20 border">
+      <Empty className="border py-20">
         <EmptyHeader>
           <EmptyMedia>
             <StackedCardsIllustration />
           </EmptyMedia>
           <EmptyTitle>No Campaigns Found</EmptyTitle>
           <EmptyDescription>
-            There are currently no active campaigns available for investment. Check back later!
+            There are currently no active campaigns available for investment.
+            Check back later!
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
