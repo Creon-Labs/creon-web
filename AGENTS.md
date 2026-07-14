@@ -1,4 +1,5 @@
 <!-- BEGIN:nextjs-agent-rules -->
+
 # This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
@@ -13,6 +14,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 **Creon** is a Web3 crowdfunding platform for Indonesian micro, small, and medium enterprises (UMKM), built on the **Stellar network**. It connects entrepreneurs who need capital with investors who want to fund them.
 
 Key technologies:
+
 - **Next.js 16** (App Router, React 19, TypeScript)
 - **Tailwind CSS v4** + **shadcn/ui** (`radix-lyra` style preset)
 - **TanStack Query v5** for server-state management
@@ -105,15 +107,16 @@ src/
 
 Every feature module under `src/modules/<name>/` must follow this structure:
 
-| Folder | Purpose |
-|--------|---------|
-| `api/` | API request functions (using `api` wrapper) and TanStack Query hooks (`useQuery`, `useMutation`) |
-| `components/` | React components that belong exclusively to this module |
-| `hooks/` | Custom React hooks scoped to this module |
-| `stores/` | Zustand state stores for this module |
-| `types/` | TypeScript interfaces and types used within this module |
-| `utils/` | Pure utility/helper functions for this module |
-| `index.ts` | **Public barrel export** — the only file other modules may import from |
+| Folder        | Purpose                                                                                          |
+| ------------- | ------------------------------------------------------------------------------------------------ |
+| `api/`        | API request functions (using `api` wrapper) and TanStack Query hooks (`useQuery`, `useMutation`) |
+| `components/` | React components that belong exclusively to this module                                          |
+| `hooks/`      | Custom React hooks scoped to this module                                                         |
+| `schema/`     | data schema (using zod), can be used for form schema or other                                    |
+| `stores/`     | Zustand state stores for this module                                                             |
+| `types/`      | TypeScript interfaces and types used within this module                                          |
+| `utils/`      | Pure utility/helper functions for this module                                                    |
+| `index.ts`    | **Public barrel export** — the only file other modules may import from                           |
 
 > **Rule:** all exports intended to be used outside the module must be re-exported from `index.ts`. Internal files are private implementation details.
 
@@ -134,6 +137,7 @@ import { useAuthUser } from "@/modules/auth/hooks/use-auth-user"
 ESLint enforces this with the custom `local/no-cross-module-deep-imports` rule (see [`eslint.config.mjs`](./eslint.config.mjs)). A module may freely import from its own subfolders.
 
 **Path aliases:**
+
 - `@/*` → `src/*`
 - `@shadcn-ui/*` → `src/shared/components/shadcn-ui/*`
 
@@ -200,6 +204,7 @@ const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/campaigns`)
 ```
 
 The wrapper (`api.get`, `api.post`, `api.put`, `api.patch`, `api.delete`) handles:
+
 - **Base URL** injection from `env.NEXT_PUBLIC_BASE_API_URL`
 - **Content-Type / Accept** headers
 - **Cookie forwarding** for SSR (server-side requests)
@@ -209,13 +214,13 @@ The wrapper (`api.get`, `api.post`, `api.put`, `api.patch`, `api.delete`) handle
 
 ### `RequestOptions` reference
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `params` | `Record<string, string \| number \| boolean \| undefined \| null>` | — | Query string parameters (nulls/undefineds are stripped) |
-| `cache` | `RequestCache` | `"no-store"` | Next.js fetch cache strategy |
-| `next` | `NextFetchRequestConfig` | — | Next.js ISR/revalidation config |
-| `headers` | `Record<string, string>` | — | Extra headers merged on top of defaults |
-| `signal` | `AbortSignal` | — | Cancellation signal |
+| Option    | Type                                                               | Default      | Description                                             |
+| --------- | ------------------------------------------------------------------ | ------------ | ------------------------------------------------------- |
+| `params`  | `Record<string, string \| number \| boolean \| undefined \| null>` | —            | Query string parameters (nulls/undefineds are stripped) |
+| `cache`   | `RequestCache`                                                     | `"no-store"` | Next.js fetch cache strategy                            |
+| `next`    | `NextFetchRequestConfig`                                           | —            | Next.js ISR/revalidation config                         |
+| `headers` | `Record<string, string>`                                           | —            | Extra headers merged on top of defaults                 |
+| `signal`  | `AbortSignal`                                                      | —            | Cancellation signal                                     |
 
 ---
 
@@ -225,7 +230,7 @@ Wrap every endpoint in a named function inside the module's `api/` folder. **Do 
 
 ```ts
 // src/modules/campaign/api/get-campaign-by-id.ts
-import { api } from "@/shared/lib/api-client"
+import { api, type ApiResponse } from "@/shared/lib/api-client"
 import { Campaign } from "../types"
 
 export type GetCampaignByIdInput = {
@@ -235,19 +240,19 @@ export type GetCampaignByIdInput = {
 export const getCampaignById = ({
   id,
 }: GetCampaignByIdInput): Promise<Campaign> => {
-  return api.get<Campaign>(`/campaigns/${id}`)
+  return api.get<ApiResponse<Campaign>>(`/campaigns/${id}`).then((res)=>res.data)
 }
 ```
 
 ```ts
 // src/modules/campaign/api/create-campaign.ts
-import { api } from "@/shared/lib/api-client"
+import { api, type ApiResponse } from "@/shared/lib/api-client"
 import { Campaign, CreateCampaignInput } from "../types"
 
 export const createCampaign = (
   data: CreateCampaignInput
 ): Promise<Campaign> => {
-  return api.post<Campaign>("/campaigns", data)
+  return api.post<ApiResponse<Campaign>>("/campaigns", data).then((res)=>res.data)
 }
 ```
 
@@ -258,18 +263,18 @@ export const createCampaign = (
 If the API function is consumed by a **Client Component**, also create a TanStack Query hook in the same `api/` folder.
 Use the utility types from [`src/shared/lib/react-query/query-config.ts`](./src/shared/lib/react-query/query-config.ts):
 
-| Type utility | Use for |
-|---|---|
-| `QueryConfig<T>` | Typing the `config` param of a `useQuery` hook |
-| `MutationConfig<T>` | Typing the `config` param of a `useMutation` hook |
+| Type utility         | Use for                                                |
+| -------------------- | ------------------------------------------------------ |
+| `QueryConfig<T>`     | Typing the `config` param of a `useQuery` hook         |
+| `MutationConfig<T>`  | Typing the `config` param of a `useMutation` hook      |
 | `ApiFnReturnType<T>` | Extracting the resolved return type of an API function |
 
 **`useQuery` hook example:**
 
 ```ts
 // src/modules/campaign/api/get-campaign-by-id.ts
-import { useQuery } from "@tanstack/react-query"
-import { api } from "@/shared/lib/api-client"
+import { useQuery, queryOptions } from "@tanstack/react-query"
+import { api, type ApiResponse } from "@/shared/lib/api-client"
 import { QueryConfig } from "@/shared/lib/react-query"
 import { Campaign } from "../types"
 
@@ -277,10 +282,11 @@ export type GetCampaignByIdInput = { id: string }
 
 export const getCampaignById = ({
   id,
-}: GetCampaignByIdInput): Promise<Campaign> =>
-  api.get<Campaign>(`/campaigns/${id}`)
+}: GetCampaignByIdInput): Promise<Campaign> => {
+  return api.get<ApiResponse<Campaign>>(`/campaigns/${id}`).then((res)=>res.data)
+}
 
-export const getCampaignByIdQueryOptions = ({ id }: GetCampaignByIdInput) => ({
+export const getCampaignByIdQueryOptions = ({ id }: GetCampaignByIdInput) => queryOptions({
   queryKey: ["campaigns", id],
   queryFn: () => getCampaignById({ id }),
 })
@@ -305,13 +311,13 @@ export const useGetCampaignById = ({
 ```ts
 // src/modules/campaign/api/create-campaign.ts
 import { useMutation } from "@tanstack/react-query"
-import { api } from "@/shared/lib/api-client"
+import { api, type ApiResponse } from "@/shared/lib/api-client"
 import { MutationConfig } from "@/shared/lib/react-query"
 import { Campaign, CreateCampaignInput } from "../types"
 
 export const createCampaign = (
   data: CreateCampaignInput
-): Promise<Campaign> => api.post<Campaign>("/campaigns", data)
+): Promise<ApiResponse<Campaign>> => api.post<Campaign>("/campaigns", data).then((res)=>res.data)
 
 type UseCreateCampaignOptions = {
   config?: MutationConfig<typeof createCampaign>
@@ -333,22 +339,22 @@ export const useCreateCampaign = ({ config }: UseCreateCampaignOptions = {}) => 
 
 Environment variables are validated with `@t3-oss/env-nextjs`. Add new vars to the env schema (in `src/shared/lib/env.ts` or equivalent) **before** using them — raw `process.env` access is not allowed.
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `NEXT_PUBLIC_BASE_API_URL` | ✅ | Backend REST API base URL |
-| `NEXT_PUBLIC_BASE_URL` | ✅ | Public app URL (used in WalletConnect metadata) |
-| `NEXT_PUBLIC_REOWN_PROJECT_ID` | ✅ | Reown (WalletConnect) project ID — get one at [cloud.reown.com](https://cloud.reown.com) |
-| `SECRET_KEY` | ✅ | Server-side secret (session signing, etc.) |
+| Variable                       | Required | Description                                                                              |
+| ------------------------------ | -------- | ---------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_BASE_API_URL`     | ✅       | Backend REST API base URL                                                                |
+| `NEXT_PUBLIC_BASE_URL`         | ✅       | Public app URL (used in WalletConnect metadata)                                          |
+| `NEXT_PUBLIC_REOWN_PROJECT_ID` | ✅       | Reown (WalletConnect) project ID — get one at [cloud.reown.com](https://cloud.reown.com) |
+| `SECRET_KEY`                   | ✅       | Server-side secret (session signing, etc.)                                               |
 
 ---
 
 ## Stellar Wallet Integration
 
-Creon menggunakan `@creit-tech/stellar-wallets-kit` (JSR: `jsr:^2.5.0`) untuk koneksi multi-wallet di Stellar network. Konfigurasi wallet (provider, WalletConnect module, dan UI button) sudah di-setup di `src/shared/lib/stellar-wallet/` dan **tidak perlu diubah**.
+Creon uses `@creit-tech/stellar-wallets-kit` (JSR: `jsr:^2.5.0`) for multi-wallet connections on the Stellar network. The wallet configuration (provider, WalletConnect module, and UI button) is already setup in `src/shared/lib/stellar-wallet/` and **does not need to be changed**.
 
-### Menggunakan wallet state — `useStellarWallet`
+### Using wallet state — `useStellarWallet`
 
-Gunakan hook `useStellarWallet` di client component untuk mengakses state wallet. Jangan import `StellarWalletsKit` secara langsung di dalam komponen.
+Use the `useStellarWallet` hook in the client component to access the wallet state. Do not import `StellarWalletsKit` directly within the component.
 
 ```tsx
 "use client"
@@ -358,15 +364,15 @@ function MyComponent() {
   const { connectedAddress, disconnect, signTransaction, signAuthEntry, signMessage } =
     useStellarWallet()
 
-  // connectedAddress — string | undefined, undefined jika belum connect
-  // disconnect()     — putus koneksi wallet aktif
-  // signTransaction(xdr, opts?) — tanda tangani Stellar transaction XDR
-  // signAuthEntry(authEntry, opts?) — tanda tangani Soroban auth entry
-  // signMessage(message, opts?)     — tanda tangani pesan arbitrer
+// connectedAddress — string | undefined, undefined if not yet connected
+// disconnect() — disconnect the active wallet
+// signTransaction(xdr, opts?) — sign a Stellar XDR transaction
+// signAuthEntry(authEntry, opts?) — sign a Soroban auth entry
+// signMessage(message, opts?) — sign an arbitrary message
 }
 ```
 
-### Menambahkan tombol Connect Wallet
+### Added Connect Wallet button
 
 ```tsx
 import { ConnectButton } from "@/shared/lib/stellar-wallet"
@@ -374,9 +380,9 @@ import { ConnectButton } from "@/shared/lib/stellar-wallet"
 <ConnectButton variant="default" size="default" />
 ```
 
-`ConnectButton` menerima semua props variant/size dari shadcn `Button`. Jika wallet sudah terhubung, button otomatis menampilkan Stellar logo dan alamat wallet yang di-mask.
+`ConnectButton` accepts all variant/size props from the `Button` shader. Once the wallet is connected, the button automatically displays the Stellar logo and the masked wallet address.
 
-> **Catatan:** Wallet hanya berjalan di sisi client. Jangan gunakan `useStellarWallet` di Server Component.
+> **Note:** The wallet only runs on the client side. Do not use `useStellarWallet` in the Server Component.
 
 ---
 
@@ -400,3 +406,19 @@ import { ConnectButton } from "@/shared/lib/stellar-wallet"
 - **Zod v4** has breaking API changes from v3. Refer to Zod v4 docs.
 - shadcn style preset is `radix-lyra` (not the default `new-york` or `default`). Do not change the style in `components.json`.
 - **Wallet operations are client-side only** — never call `useStellarWallet` in Server Components.
+
+---
+
+## Frontend Flows
+
+All frontend flows involving interaction with the backend and Stellar wallet are documented in [`docs/FRONTEND-FLOWS.md`](./docs/FRONTEND-FLOWS.md). **Always refer to this document before implementing any new features or UI that interact with the backend.**
+
+Key principles to remember:
+- **Authentication**: Uses Wallet Signature (SEP-53), not passwords. JWT is stored as an `httpOnly` cookie. All requests needing auth must include `credentials: "include"`. There are no refresh tokens; if expired, prompt login again.
+- **Relay Pattern (prepare → sign → submit)**: Any on-chain action (invest, deposit profit, claim) requires 3 steps: `prepare` (get XDR) → `sign` (Wallet signs XDR exactly as returned) → `submit` (backend verifies and submits with platform fee-bump). User never pays network fees.
+- **Roles & KYC**: Users can be `ENTREPRENEUR` and/or `INVESTOR`. KYC is per-user, not per-role.
+- **Auto-deploy**: Campaigns are auto-deployed when approved by admins. Check `deployStatus === "LIVE"` before allowing investments.
+- **XDR Signing**: Wallets sign exact XDR payloads returned by the backend. Do not modify the XDR before signing.
+- **Standardized Errors**: Follows standard Nest HTTP exceptions `{ statusCode, message, error, data: null }` (It has been wrapped in `ApiResponse` at `src/shared/lib/api-client.ts`). 400 is for validation, 401 for auth, 403 for role/KYC blocks, 404 for not found, 409 for conflicts. Use `statusCode` and `data` for logic branching, not `message`.
+
+For status cheat-sheets and exact flow sequences (Register, KYC, Proposal, Invest, Dividends, Milestone Voting, Refunds, Faucet), consult [`docs/FRONTEND-FLOWS.md`](./docs/FRONTEND-FLOWS.md).

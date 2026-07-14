@@ -23,7 +23,7 @@ import { Badge } from "@shadcn-ui/badge"
 import { Separator } from "@shadcn-ui/separator"
 import { Alert } from "@shadcn-ui/alert"
 
-import type { CreateProposalFormValues } from "../../utils/proposal-schema"
+import type { CreateProposalFormValues } from "../../schema/proposal-schema"
 
 // ---------------------------------------------------------------------------
 // MilestoneAmountSummary

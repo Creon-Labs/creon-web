@@ -38,8 +38,8 @@ import {
 } from "@shadcn-ui/select"
 import { Spinner } from "@shadcn-ui/spinner"
 
-import { createProposalSchema } from "../../utils/proposal-schema"
-import type { CreateProposalFormValues } from "../../utils/proposal-schema"
+import { createProposalSchema } from "../../schema/proposal-schema"
+import type { CreateProposalFormValues } from "../../schema/proposal-schema"
 import { MilestonesField } from "./milestones-field"
 import { useCreateProposal } from "../../api/create-proposal"
 import { useSubmitProposal } from "../../api/submit-proposal"
