@@ -20,3 +20,17 @@ export type CampaignHolding = {
   /** Stellar ledger sequence at which this balance was last synced */
   updatedLedger: number
 }
+
+export type HoldingCampaignStatus = "PENDING_DEPLOYMENT" | "ACTIVE" | "LOCKED" | "GOAL_REACHED" | "COMPLETED" | "CANCELLED"
+
+export type Holding = {
+  campaignId: string
+  balance: string
+  updatedLedger: number
+  campaign?: {
+    status: HoldingCampaignStatus
+    projectToken: {
+      assetCode: string
+    } | null
+  }
+}

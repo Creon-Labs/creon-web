@@ -13,6 +13,11 @@ export {
   useGetCampaignHoldings,
 } from "./api/get-campaign-holdings"
 export type { GetCampaignHoldingsInput } from "./api/get-campaign-holdings"
+export {
+  getMyHoldings,
+  getMyHoldingsQueryOptions,
+  useGetMyHoldings,
+} from "./api/get-my-holdings"
 
 // Types
-export type { CampaignHolding } from "./types"
+export type { CampaignHolding, Holding, HoldingCampaignStatus } from "./types"
