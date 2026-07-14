@@ -1,2 +1,5 @@
 export * from "./types"
+export * from "./api/get-campaign-distributions"
+export * from "./api/prepare-distribution-deposit"
+export * from "./api/submit-distribution-deposit"
 export * from "./components/distribution-view"

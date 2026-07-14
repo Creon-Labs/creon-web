@@ -1,6 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import { z } from "zod"
+import { toast } from "sonner"
+import { Spinner } from "@phosphor-icons/react"
 import {
   Dialog,
   DialogContent,
@@ -21,18 +24,106 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@shadcn-ui/input-group"
+import { useHookForm } from "@/shared/lib/hook-form"
+import { useStellarWallet } from "@/shared/lib/stellar-wallet"
+import { usePrepareDistributionDeposit } from "../api/prepare-distribution-deposit"
+import { useSubmitDistributionDeposit } from "../api/submit-distribution-deposit"
 
-export function DistributeProfitDialog() {
+const schema = z.object({
+  amount: z
+    .string()
+    .min(1, { message: "Amount is required" })
+    .regex(/^\d+(\.\d{1,7})?$/, {
+      message: "Invalid amount format (up to 7 decimals)",
+    })
+    .refine((val) => parseFloat(val) > 0, {
+      message: "Amount must be greater than 0",
+    }),
+})
+
+type DistributeProfitFormValues = z.infer<typeof schema>
+
+interface DistributeProfitDialogProps {
+  campaignId: string
+  onDistributeSuccess?: () => void
+}
+
+export function DistributeProfitDialog({
+  campaignId,
+  onDistributeSuccess,
+}: DistributeProfitDialogProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const { signTransaction, connectedAddress } = useStellarWallet()
 
-  // This is a UI-only component. API implementation will be added later.
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsOpen(false)
+  const form = useHookForm({
+    schema,
+    defaultValues: {
+      amount: "",
+    },
+  })
+
+  const { mutateAsync: prepareDeposit, isPending: isPreparing } =
+    usePrepareDistributionDeposit()
+  const { mutateAsync: submitDeposit, isPending: isSubmitting } =
+    useSubmitDistributionDeposit()
+
+  const [isSigning, setIsSigning] = useState(false)
+
+  const isLoading = isPreparing || isSigning || isSubmitting
+
+  const onSubmit = async (data: DistributeProfitFormValues) => {
+    if (!connectedAddress) {
+      toast.error("Wallet not connected", {
+        description: "Please connect your wallet first.",
+      })
+      return
+    }
+
+    try {
+      // 1. Prepare
+      const { xdr } = await prepareDeposit({
+        campaignId,
+        data: { amount: data.amount },
+      })
+
+      // 2. Sign
+      setIsSigning(true)
+      const { signedTxXdr: signedXdr } = await signTransaction(xdr)
+      setIsSigning(false)
+
+      // 3. Submit
+      await submitDeposit({
+        campaignId,
+        data: { signedXdr },
+      })
+
+      toast.success("Profit distributed", {
+        description: "The distribution transaction has been submitted.",
+      })
+
+      setIsOpen(false)
+      form.reset()
+      onDistributeSuccess?.()
+    } catch (error: unknown) {
+      setIsSigning(false)
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to distribute profit. Please try again."
+      toast.error("Distribution failed", {
+        description: errorMessage,
+      })
+    }
+  }
+
+  const handleOpenChange = (open: boolean) => {
+    if (isLoading) return
+    setIsOpen(open)
+    if (!open) {
+      form.reset()
+    }
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button>Distribute Profit</Button>
       </DialogTrigger>
@@ -45,23 +136,25 @@ export function DistributeProfitDialog() {
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="mt-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-4">
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="amount">Distribution Amount</FieldLabel>
               <InputGroup>
-                <InputGroupAddon align="inline-start">
-                  USDC
-                </InputGroupAddon>
+                <InputGroupAddon align="inline-start">USDC</InputGroupAddon>
                 <InputGroupInput
                   id="amount"
-                  type="number"
+                  type="text"
                   placeholder="0.00"
-                  min="0"
-                  step="0.01"
-                  required
+                  {...form.register("amount")}
+                  disabled={isLoading}
                 />
               </InputGroup>
+              {form.formState.errors.amount && (
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.amount.message}
+                </p>
+              )}
               <FieldDescription>
                 This amount will be distributed proportionally based on shares.
               </FieldDescription>
@@ -71,11 +164,25 @@ export function DistributeProfitDialog() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleOpenChange(false)}
+                disabled={isLoading}
               >
                 Cancel
               </Button>
-              <Button type="submit">Prepare Transaction</Button>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Spinner className="mr-2 h-4 w-4 animate-spin" />
+                    {isPreparing
+                      ? "Preparing..."
+                      : isSigning
+                        ? "Waiting for Wallet..."
+                        : "Submitting..."}
+                  </>
+                ) : (
+                  "Distribute Profit"
+                )}
+              </Button>
             </div>
           </FieldGroup>
         </form>

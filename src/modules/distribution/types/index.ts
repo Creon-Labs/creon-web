@@ -14,3 +14,16 @@ export interface ProfitDistribution {
   distributedAt: string
   createdAt: string
 }
+
+export type DepositProfitRequest = {
+  amount: string
+}
+
+export type PrepareDepositResponse = {
+  campaignId: string
+  xdr: string
+}
+
+export type SubmitSignedTxRequest = {
+  signedXdr: string
+}
