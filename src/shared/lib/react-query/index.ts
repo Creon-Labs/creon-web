@@ -1,2 +1,2 @@
-export * from './query-config';
-export * from './query-provider';
+export * from "./query-config"
+export * from "./query-provider"

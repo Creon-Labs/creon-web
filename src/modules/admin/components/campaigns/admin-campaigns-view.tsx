@@ -21,24 +21,37 @@ import { Spinner } from "@/shared/components/shadcn-ui/spinner"
 export function AdminCampaignsView() {
   const [status, setStatus] = React.useState<ProposalStatus>("SUBMITTED")
 
-  const { data, isLoading, isError, error } = useGetAdminProposalList({ status })
+  const { data, isLoading, isError, error } = useGetAdminProposalList({
+    status,
+  })
 
   // Dialog states
-  const [approveProposal, setApproveProposal] = React.useState<AdminProposalItem | null>(null)
-  const [rejectProposal, setRejectProposal] = React.useState<AdminProposalItem | null>(null)
-  const [cancelCampaign, setCancelCampaign] = React.useState<AdminProposalItem | null>(null)
+  const [approveProposal, setApproveProposal] =
+    React.useState<AdminProposalItem | null>(null)
+  const [rejectProposal, setRejectProposal] =
+    React.useState<AdminProposalItem | null>(null)
+  const [cancelCampaign, setCancelCampaign] =
+    React.useState<AdminProposalItem | null>(null)
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Campaign Proposals Review</h2>
-          <p className="text-muted-foreground">Manage funding proposals from entrepreneurs and monitor active campaigns.</p>
+          <h2 className="text-2xl font-bold tracking-tight">
+            Campaign Proposals Review
+          </h2>
+          <p className="text-muted-foreground">
+            Manage funding proposals from entrepreneurs and monitor active
+            campaigns.
+          </p>
         </div>
       </div>
 
       <div className="flex flex-col gap-4">
-        <Tabs value={status} onValueChange={(v) => setStatus(v as ProposalStatus)}>
+        <Tabs
+          value={status}
+          onValueChange={(v) => setStatus(v as ProposalStatus)}
+        >
           <TabsList>
             <TabsTrigger value="SUBMITTED">Submitted</TabsTrigger>
             <TabsTrigger value="UNDER_REVIEW">Under Review</TabsTrigger>
@@ -48,12 +61,12 @@ export function AdminCampaignsView() {
         </Tabs>
 
         {isLoading ? (
-          <div className="flex items-center justify-center p-12 border border-dashed text-muted-foreground">
+          <div className="flex items-center justify-center border border-dashed p-12 text-muted-foreground">
             <Spinner className="mr-2" />
             <span>Loading data...</span>
           </div>
         ) : isError ? (
-          <div className="border border-destructive/50 bg-destructive/10 p-4 text-destructive rounded-md text-sm">
+          <div className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
             Failed to load data: {error.message}
           </div>
         ) : (

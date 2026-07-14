@@ -12,23 +12,33 @@ export function DistributionView() {
   const params = useParams<{ campaignId: string }>()
   const campaignId = params?.campaignId || ""
 
-  const { data: distributions = [], isLoading, isError, refetch } = useGetCampaignDistributions({
+  const {
+    data: distributions = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useGetCampaignDistributions({
     campaignId,
     config: {
       enabled: !!campaignId,
-    }
+    },
   })
 
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Dividends & Returns</h2>
-          <p className="text-muted-foreground mt-1 text-sm">
+          <h2 className="text-2xl font-bold tracking-tight">
+            Dividends & Returns
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
             Manage profit distribution to your campaign investors.
           </p>
         </div>
-        <DistributeProfitDialog campaignId={campaignId} onDistributeSuccess={() => refetch()} />
+        <DistributeProfitDialog
+          campaignId={campaignId}
+          onDistributeSuccess={() => refetch()}
+        />
       </div>
 
       {isLoading ? (
@@ -55,7 +65,10 @@ export function DistributionView() {
                 ))}
               </div>
               {[1, 2, 3].map((row) => (
-                <div key={row} className="flex gap-4 border-b px-4 py-4 last:border-0">
+                <div
+                  key={row}
+                  className="flex gap-4 border-b px-4 py-4 last:border-0"
+                >
                   {[1, 2, 3, 4, 5].map((i) => (
                     <Skeleton key={i} className="h-4 flex-1" />
                   ))}
@@ -65,12 +78,16 @@ export function DistributionView() {
           </div>
         </div>
       ) : isError ? (
-        <div className="flex min-h-75 flex-col items-center gap-2 justify-center border border-destructive border-dashed p-8 text-center bg-destructive/5 animate-in fade-in-50">
-          <h3 className="text-lg font-semibold text-destructive">Failed to load distributions</h3>
-          <p className=" text-sm text-muted-foreground">
+        <div className="flex min-h-75 animate-in flex-col items-center justify-center gap-2 border border-dashed border-destructive bg-destructive/5 p-8 text-center fade-in-50">
+          <h3 className="text-lg font-semibold text-destructive">
+            Failed to load distributions
+          </h3>
+          <p className="text-sm text-muted-foreground">
             There was an error fetching your distribution history.
           </p>
-          <Button variant={"outline"} onClick={() => refetch()}>Retry</Button>
+          <Button variant={"outline"} onClick={() => refetch()}>
+            Retry
+          </Button>
         </div>
       ) : (
         <>

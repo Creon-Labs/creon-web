@@ -19,10 +19,9 @@ export const rejectKyc = async ({
   reason,
 }: RejectKycInput): Promise<AdminKycRejectResponse> => {
   return api
-    .post<{ data: AdminKycRejectResponse }>(
-      `/admin/kyc/${userId}/reject`,
-      { reason }
-    )
+    .post<{ data: AdminKycRejectResponse }>(`/admin/kyc/${userId}/reject`, {
+      reason,
+    })
     .then((res) => res.data)
 }
 

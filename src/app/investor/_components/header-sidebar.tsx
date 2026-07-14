@@ -5,7 +5,7 @@ import { SidebarMenu, useSidebar } from "@shadcn-ui/sidebar"
 import { AppHeader } from "@/shared/components/sections/app-header"
 import {
   AppSidebar,
-  AppSidebarProps
+  AppSidebarProps,
 } from "@/shared/components/sections/sidebar"
 import { SidebarUserMenu } from "@/shared/components/sections/sidebar/sidebar-user-menu"
 import { investorNavItems } from "@/shared/constants/nav-investor"

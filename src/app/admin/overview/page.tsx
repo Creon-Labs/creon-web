@@ -3,8 +3,8 @@
 import { usePageTitle } from "@/shared/components/sections/app-header"
 
 export default function Page() {
-    usePageTitle("Overview")
-  
+  usePageTitle("Overview")
+
   return (
     <>
       <p>Admin Overview</p>

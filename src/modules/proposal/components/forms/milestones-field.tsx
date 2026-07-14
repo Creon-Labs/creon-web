@@ -45,7 +45,8 @@ function MilestoneAmountSummary({
     return sum + (isNaN(v) ? 0 : v)
   }, 0)
 
-  const isBalanced = !isNaN(target) && target > 0 && Math.abs(total - target) < 0.0000001
+  const isBalanced =
+    !isNaN(target) && target > 0 && Math.abs(total - target) < 0.0000001
   const diff = total - target
 
   if (!target || isNaN(target)) return null
@@ -66,9 +67,8 @@ function MilestoneAmountSummary({
           <>Milestone amounts sum correctly to {requestedAmount} USDC</>
         ) : (
           <>
-            Milestone amounts sum to{" "}
-            <strong>{total.toFixed(7)}</strong> USDC — must equal{" "}
-            <strong>{requestedAmount}</strong> USDC (
+            Milestone amounts sum to <strong>{total.toFixed(7)}</strong> USDC —
+            must equal <strong>{requestedAmount}</strong> USDC (
             {diff > 0 ? "+" : ""}
             {diff.toFixed(7)} USDC remaining)
           </>
@@ -155,7 +155,7 @@ export function MilestonesField({ requestedAmount }: MilestonesFieldProps) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <DotsSixVerticalIcon className="size-4 text-muted-foreground" />
-                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                     Milestone {index + 1}
                   </span>
                 </div>
@@ -185,9 +185,7 @@ export function MilestonesField({ requestedAmount }: MilestonesFieldProps) {
 
               <FieldGroup>
                 {/* Title */}
-                <Field
-                  data-invalid={!!milestoneErrors?.title || undefined}
-                >
+                <Field data-invalid={!!milestoneErrors?.title || undefined}>
                   <FieldLabel htmlFor={`milestone-${index}-title`}>
                     Title
                   </FieldLabel>
@@ -224,9 +222,7 @@ export function MilestonesField({ requestedAmount }: MilestonesFieldProps) {
                 </Field>
 
                 {/* Amount */}
-                <Field
-                  data-invalid={!!milestoneErrors?.amount || undefined}
-                >
+                <Field data-invalid={!!milestoneErrors?.amount || undefined}>
                   <FieldLabel htmlFor={`milestone-${index}-amount`}>
                     Amount (USDC)
                   </FieldLabel>

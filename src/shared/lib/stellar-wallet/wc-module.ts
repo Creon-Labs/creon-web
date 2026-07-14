@@ -1,6 +1,6 @@
-import { WalletConnectModule } from '@creit-tech/stellar-wallets-kit/modules/wallet-connect';
+import { WalletConnectModule } from "@creit-tech/stellar-wallets-kit/modules/wallet-connect"
 
-import { env } from '../env';
+import { env } from "../env"
 
 const walletConnectModule = new WalletConnectModule({
   projectId: env.NEXT_PUBLIC_REOWN_PROJECT_ID,

@@ -14,7 +14,9 @@ export type UseClaimRefundOptions = Omit<
 
 export const useClaimRefund = (options?: UseClaimRefundOptions) => {
   const { signTransaction } = useStellarWallet()
-  const [step, setStep] = useState<"IDLE" | "PREPARING" | "SIGNING" | "SUBMITTING">("IDLE")
+  const [step, setStep] = useState<
+    "IDLE" | "PREPARING" | "SIGNING" | "SUBMITTING"
+  >("IDLE")
 
   const mutation = useMutation<RefundClaim, Error, PrepareRefundClaimInput>({
     mutationFn: async ({ refundId }) => {

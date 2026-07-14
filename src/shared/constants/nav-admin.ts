@@ -1,7 +1,5 @@
 import { RocketLaunchIcon, UsersIcon } from "@phosphor-icons/react"
-import {
-  HouseIcon
-} from "@phosphor-icons/react/dist/ssr"
+import { HouseIcon } from "@phosphor-icons/react/dist/ssr"
 import { SidebarNavItem } from "../types"
 
 export const adminNavItems: SidebarNavItem[] = [

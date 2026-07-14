@@ -40,4 +40,3 @@ export type KycSubmitResponse = {
   status: KycStatus
   submittedAt: string
 }
-

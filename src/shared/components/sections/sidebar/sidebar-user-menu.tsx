@@ -1,10 +1,6 @@
 "use client"
 
-import {
-  CaretUpDownIcon,
-  SignOutIcon,
-  UserIcon,
-} from "@phosphor-icons/react"
+import { CaretUpDownIcon, SignOutIcon, UserIcon } from "@phosphor-icons/react"
 import { Avatar, AvatarFallback, AvatarImage } from "@shadcn-ui/avatar"
 import {
   DropdownMenu,
@@ -14,7 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@shadcn-ui/dropdown-menu"
-import { SidebarMenuButton, SidebarMenuItem, useSidebar } from "@shadcn-ui/sidebar"
+import {
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@shadcn-ui/sidebar"
 
 export type SidebarUserMenuProps = {
   user: {

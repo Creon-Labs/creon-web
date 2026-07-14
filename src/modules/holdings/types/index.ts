@@ -21,7 +21,13 @@ export type CampaignHolding = {
   updatedLedger: number
 }
 
-export type HoldingCampaignStatus = "PENDING_DEPLOYMENT" | "ACTIVE" | "LOCKED" | "GOAL_REACHED" | "COMPLETED" | "CANCELLED"
+export type HoldingCampaignStatus =
+  | "PENDING_DEPLOYMENT"
+  | "ACTIVE"
+  | "LOCKED"
+  | "GOAL_REACHED"
+  | "COMPLETED"
+  | "CANCELLED"
 
 export type Holding = {
   campaignId: string

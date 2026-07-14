@@ -20,7 +20,7 @@
 export function maskAddress(
   address: string,
   digit: number = 4,
-  lastDigit?: number,
+  lastDigit?: number
 ): string {
   const tail = lastDigit ?? digit
 

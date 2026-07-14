@@ -110,7 +110,7 @@ export function CreateProposalForm() {
 
   // Track which button triggered the async action so each shows its own spinner
   const [activeAction, setActiveAction] = useState<"draft" | "submit" | null>(
-    null,
+    null
   )
   const [formError, setFormError] = useState<string | null>(null)
 
@@ -371,8 +371,8 @@ export function CreateProposalForm() {
                 {...register("lockPeriodDays", { valueAsNumber: true })}
               />
               <FieldDescription>
-                Between 1 and 3,650 days (≈ 10 years). Recommended: 180 days
-                (6 months).
+                Between 1 and 3,650 days (≈ 10 years). Recommended: 180 days (6
+                months).
               </FieldDescription>
               {errors.lockPeriodDays && (
                 <FieldError>{errors.lockPeriodDays.message}</FieldError>

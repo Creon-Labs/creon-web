@@ -105,7 +105,11 @@ export function MilestoneCard({
 
         <Button variant="outline" className="w-full" asChild>
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          <Link href={`/entrepreneur/${milestone.campaignId}/milestones/${milestone.id}` as any}>
+          <Link
+            href={
+              `/entrepreneur/${milestone.campaignId}/milestones/${milestone.id}` as any
+            }
+          >
             Details
           </Link>
         </Button>

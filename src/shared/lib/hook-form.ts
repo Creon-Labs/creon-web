@@ -1,17 +1,17 @@
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from "@hookform/resolvers/zod"
 import {
   useForm,
   type FieldValues,
   type UseFormProps,
   type UseFormReturn,
-} from 'react-hook-form'
-import type * as z from 'zod'
+} from "react-hook-form"
+import type * as z from "zod"
 
 type HookFormSchema = z.ZodType<FieldValues, FieldValues>
 
 export type UseHookFormProps<TSchema extends HookFormSchema> = Omit<
   UseFormProps<z.input<TSchema>, unknown, z.output<TSchema>>,
-  'resolver'
+  "resolver"
 > & {
   schema: TSchema
 }

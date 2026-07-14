@@ -4,7 +4,9 @@ import { QueryConfig } from "@/shared/lib/react-query/query-config"
 import { Investment } from "../types"
 
 export const getMyInvestments = (): Promise<Investment[]> => {
-  return api.get<ApiResponse<Investment[]>>("/investments/mine").then((res) => res.data!)
+  return api
+    .get<ApiResponse<Investment[]>>("/investments/mine")
+    .then((res) => res.data!)
 }
 
 export const getMyInvestmentsQueryOptions = () =>

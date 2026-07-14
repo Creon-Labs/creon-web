@@ -41,11 +41,7 @@ export type AdminKycRevokeResponse = {
 // --- Proposals ---
 
 export type ProposalStatus =
-  | "DRAFT"
-  | "SUBMITTED"
-  | "UNDER_REVIEW"
-  | "APPROVED"
-  | "REJECTED"
+  "DRAFT" | "SUBMITTED" | "UNDER_REVIEW" | "APPROVED" | "REJECTED"
 
 export type AdminProposalItem = {
   id: string

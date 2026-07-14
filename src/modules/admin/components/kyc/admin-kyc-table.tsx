@@ -68,11 +68,16 @@ export function AdminKycTable({
             <TableRow key={item.userId}>
               <TableCell className="font-medium">
                 <div>{item.fullName}</div>
-                <div className="text-xs text-muted-foreground">{item.email}</div>
+                <div className="text-xs text-muted-foreground">
+                  {item.email}
+                </div>
               </TableCell>
               <TableCell className="font-mono text-xs">
                 <div className="flex items-center gap-2">
-                  <span>{item.walletAddress.slice(0, 6)}...{item.walletAddress.slice(-4)}</span>
+                  <span>
+                    {item.walletAddress.slice(0, 6)}...
+                    {item.walletAddress.slice(-4)}
+                  </span>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -88,9 +93,13 @@ export function AdminKycTable({
                 </div>
               </TableCell>
               <TableCell>
-                <div className="flex gap-1 flex-wrap">
+                <div className="flex flex-wrap gap-1">
                   {item.roles.map((r) => (
-                    <Badge key={r} variant="secondary" className="text-[10px] px-1.5 py-0 font-normal">
+                    <Badge
+                      key={r}
+                      variant="secondary"
+                      className="px-1.5 py-0 text-[10px] font-normal"
+                    >
                       {r}
                     </Badge>
                   ))}
@@ -98,7 +107,9 @@ export function AdminKycTable({
               </TableCell>
               <TableCell>{item.nationalId}</TableCell>
               <TableCell>
-                {item.submittedAt ? format(new Date(item.submittedAt), "dd MMM yyyy, HH:mm") : "-"}
+                {item.submittedAt
+                  ? format(new Date(item.submittedAt), "dd MMM yyyy, HH:mm")
+                  : "-"}
               </TableCell>
               <TableCell>
                 <KycStatusBadge status={item.status} />
@@ -118,7 +129,7 @@ export function AdminKycTable({
                       View Documents
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    
+
                     {item.status === "PENDING" && (
                       <>
                         <DropdownMenuItem onClick={() => onApprove(item)}>
@@ -152,11 +163,32 @@ export function AdminKycTable({
 function KycStatusBadge({ status }: { status: AdminKycItem["status"] }) {
   switch (status) {
     case "PENDING":
-      return <Badge variant="outline" className="text-amber-600 border-amber-600/30 bg-amber-50 dark:bg-amber-950/20">Pending</Badge>
+      return (
+        <Badge
+          variant="outline"
+          className="border-amber-600/30 bg-amber-50 text-amber-600 dark:bg-amber-950/20"
+        >
+          Pending
+        </Badge>
+      )
     case "APPROVED":
-      return <Badge variant="outline" className="text-emerald-600 border-emerald-600/30 bg-emerald-50 dark:bg-emerald-950/20">Approved</Badge>
+      return (
+        <Badge
+          variant="outline"
+          className="border-emerald-600/30 bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20"
+        >
+          Approved
+        </Badge>
+      )
     case "REJECTED":
-      return <Badge variant="outline" className="text-red-600 border-red-600/30 bg-red-50 dark:bg-red-950/20">Rejected</Badge>
+      return (
+        <Badge
+          variant="outline"
+          className="border-red-600/30 bg-red-50 text-red-600 dark:bg-red-950/20"
+        >
+          Rejected
+        </Badge>
+      )
     case "REVOKED":
       return <Badge variant="destructive">Revoked</Badge>
     default:

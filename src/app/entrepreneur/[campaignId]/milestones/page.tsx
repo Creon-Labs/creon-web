@@ -18,12 +18,18 @@ export default function Page({
   const resolvedParams = use(params)
   usePageTitle("Milestones")
 
-  const [selectedMilestoneId, setSelectedMilestoneId] = useState<string | null>(null)
+  const [selectedMilestoneId, setSelectedMilestoneId] = useState<string | null>(
+    null
+  )
 
-  const { data: milestones, isLoading, refetch, isFetching } =
-    useGetCampaignMilestones({ campaignId: resolvedParams.campaignId })
+  const {
+    data: milestones,
+    isLoading,
+    refetch,
+    isFetching,
+  } = useGetCampaignMilestones({ campaignId: resolvedParams.campaignId })
 
-    console.log({milestones});
+  console.log({ milestones })
 
   if (isLoading) return <MilestonesSkeleton />
 
@@ -38,7 +44,7 @@ export default function Page({
         onSubmitProgress={(milestoneId) => setSelectedMilestoneId(milestoneId)}
       />
 
-      <SubmitDisbursementDialog 
+      <SubmitDisbursementDialog
         milestoneId={selectedMilestoneId}
         onOpenChange={(open) => !open && setSelectedMilestoneId(null)}
       />

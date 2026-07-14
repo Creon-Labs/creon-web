@@ -20,7 +20,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/components/shadcn-ui/dialog"
-import { Field, FieldGroup, FieldLabel, FieldDescription } from "@/shared/components/shadcn-ui/field"
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldDescription,
+} from "@/shared/components/shadcn-ui/field"
 import { Textarea } from "@/shared/components/shadcn-ui/textarea"
 import { Spinner } from "@/shared/components/shadcn-ui/spinner"
 
@@ -67,7 +72,10 @@ export function ApproveProposalDialog({
         <DialogHeader>
           <DialogTitle>Approve Funding Proposal</DialogTitle>
           <DialogDescription>
-            You are about to approve the proposal <strong>{businessName}</strong>. This action will automatically create a campaign smart contract on the blockchain (running in background).
+            You are about to approve the proposal{" "}
+            <strong>{businessName}</strong>. This action will automatically
+            create a campaign smart contract on the blockchain (running in
+            background).
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -144,13 +152,16 @@ export function RejectProposalDialog({
         <DialogHeader>
           <DialogTitle>Reject Proposal</DialogTitle>
           <DialogDescription>
-            Reject funding proposal from <strong>{businessName}</strong>. Provide a reason for rejection to be sent to the entrepreneur.
+            Reject funding proposal from <strong>{businessName}</strong>.
+            Provide a reason for rejection to be sent to the entrepreneur.
           </DialogDescription>
         </DialogHeader>
         <form id="reject-proposal-form" onSubmit={onSubmit}>
           <FieldGroup>
             <Field data-invalid={!!form.formState.errors.reason}>
-              <FieldLabel htmlFor="reject-proposal-reason">Reason for Rejection</FieldLabel>
+              <FieldLabel htmlFor="reject-proposal-reason">
+                Reason for Rejection
+              </FieldLabel>
               <Textarea
                 id="reject-proposal-reason"
                 aria-invalid={!!form.formState.errors.reason}
@@ -158,7 +169,9 @@ export function RejectProposalDialog({
                 {...form.register("reason")}
               />
               {form.formState.errors.reason && (
-                <FieldDescription>{form.formState.errors.reason.message}</FieldDescription>
+                <FieldDescription>
+                  {form.formState.errors.reason.message}
+                </FieldDescription>
               )}
             </Field>
           </FieldGroup>
@@ -171,7 +184,12 @@ export function RejectProposalDialog({
           >
             Cancel
           </Button>
-          <Button type="submit" form="reject-proposal-form" variant="destructive" disabled={isPending}>
+          <Button
+            type="submit"
+            form="reject-proposal-form"
+            variant="destructive"
+            disabled={isPending}
+          >
             {isPending ? <Spinner data-icon="inline-start" /> : null}
             Reject Proposal
           </Button>
@@ -237,13 +255,18 @@ export function CancelCampaignDialog({
         <DialogHeader>
           <DialogTitle>Cancel Campaign (Refund)</DialogTitle>
           <DialogDescription>
-            This action will <strong>cancel the LIVE campaign</strong> for <strong>{businessName}</strong>, freeze the on-chain contract, and automatically initiate the refund process for investors. This action cannot be undone.
+            This action will <strong>cancel the LIVE campaign</strong> for{" "}
+            <strong>{businessName}</strong>, freeze the on-chain contract, and
+            automatically initiate the refund process for investors. This action
+            cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <form id="cancel-campaign-form" onSubmit={onSubmit}>
           <FieldGroup>
             <Field data-invalid={!!form.formState.errors.reason}>
-              <FieldLabel htmlFor="cancel-reason">Reason for Cancellation</FieldLabel>
+              <FieldLabel htmlFor="cancel-reason">
+                Reason for Cancellation
+              </FieldLabel>
               <Textarea
                 id="cancel-reason"
                 aria-invalid={!!form.formState.errors.reason}
@@ -251,7 +274,9 @@ export function CancelCampaignDialog({
                 {...form.register("reason")}
               />
               {form.formState.errors.reason && (
-                <FieldDescription>{form.formState.errors.reason.message}</FieldDescription>
+                <FieldDescription>
+                  {form.formState.errors.reason.message}
+                </FieldDescription>
               )}
             </Field>
           </FieldGroup>
@@ -264,7 +289,12 @@ export function CancelCampaignDialog({
           >
             Back
           </Button>
-          <Button type="submit" form="cancel-campaign-form" variant="destructive" disabled={isPending}>
+          <Button
+            type="submit"
+            form="cancel-campaign-form"
+            variant="destructive"
+            disabled={isPending}
+          >
             {isPending ? <Spinner data-icon="inline-start" /> : null}
             Confirm Cancel & Refund
           </Button>

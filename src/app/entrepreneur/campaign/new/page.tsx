@@ -10,7 +10,7 @@ import {
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
-  EmptyTitle
+  EmptyTitle,
 } from "@shadcn-ui/empty"
 import { Spinner } from "@shadcn-ui/spinner"
 import { useRouter } from "next/navigation"

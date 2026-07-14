@@ -17,13 +17,18 @@ export default function Page({
 
   usePageTitle("Milestone Detail")
 
-  const { data: milestone, isLoading } = useGetMilestone({ 
-    milestoneId: resolvedParams.milestoneId 
+  const { data: milestone, isLoading } = useGetMilestone({
+    milestoneId: resolvedParams.milestoneId,
   })
 
   if (isLoading) return <MilestoneDetailSkeleton />
 
-  if (!milestone) return <div className="text-center py-10 font-medium text-muted-foreground">Milestone not found</div>
+  if (!milestone)
+    return (
+      <div className="py-10 text-center font-medium text-muted-foreground">
+        Milestone not found
+      </div>
+    )
 
   return (
     <EntrepreneurMilestoneDetailPage

@@ -77,13 +77,14 @@ export function SubmitDisbursementDialog({
         <DialogHeader>
           <DialogTitle>Submit Progress</DialogTitle>
           <DialogDescription>
-            Upload proof of work/progress to request the next fund disbursement. This will start a voting period for investors.
+            Upload proof of work/progress to request the next fund disbursement.
+            This will start a voting period for investors.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <label className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
               Proof Document
             </label>
             <Input
@@ -112,7 +113,9 @@ export function SubmitDisbursementDialog({
               Cancel
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending && <UploadIcon className="mr-2 h-4 w-4 animate-bounce" />}
+              {isPending && (
+                <UploadIcon className="mr-2 h-4 w-4 animate-bounce" />
+              )}
               Submit
             </Button>
           </DialogFooter>

@@ -7,12 +7,7 @@ import {
   TrendUpIcon,
   UsersThreeIcon,
 } from "@phosphor-icons/react"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@shadcn-ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@shadcn-ui/card"
 
 import { cn } from "@/shared/utils/cn"
 import { Text } from "@/shared/components/primitives/typography"
@@ -55,7 +50,7 @@ function StatCard({
       <CardHeader className="pb-1">
         <div className="flex items-center gap-2">
           <span className={cn("size-4 shrink-0", iconColorClass)}>{icon}</span>
-          <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <CardTitle className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
             {label}
           </CardTitle>
         </div>
@@ -99,7 +94,8 @@ export function HoldingsStats({
     const balances = holdings.map((h) => parseBalance(h.balance))
     const totalSupply = balances.reduce((a, b) => a + b, 0)
     const topHolderBalance = Math.max(...balances)
-    const topHolderPct = totalSupply > 0 ? (topHolderBalance / totalSupply) * 100 : 0
+    const topHolderPct =
+      totalSupply > 0 ? (topHolderBalance / totalSupply) * 100 : 0
     const registeredCount = holdings.filter((h) => h.holder !== null).length
     const anonymousCount = holdings.length - registeredCount
 

@@ -55,7 +55,7 @@ export function AppHeader(props: {
           <Skeleton className="h-4 w-40" />
         ) : isStale ? null : !isArrayTitle ? (
           // Render custom slot if provided, otherwise fall back to plain title
-          props.titleSlot ?? <H5>{title}</H5>
+          (props.titleSlot ?? <H5>{title}</H5>)
         ) : (
           <div className="flex items-center gap-3">
             <Button

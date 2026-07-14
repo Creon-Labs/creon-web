@@ -34,7 +34,7 @@ const milestoneStatusBadgeVariants = cva(
     defaultVariants: {
       size: "md",
     },
-  },
+  }
 )
 
 const STATUS_LABELS: Record<MilestoneStatus, string> = {
@@ -48,8 +48,9 @@ const STATUS_LABELS: Record<MilestoneStatus, string> = {
   FAILED: "Failed",
 }
 
-export interface MilestoneStatusBadgeProps
-  extends VariantProps<typeof milestoneStatusBadgeVariants> {
+export interface MilestoneStatusBadgeProps extends VariantProps<
+  typeof milestoneStatusBadgeVariants
+> {
   status: MilestoneStatus
   className?: string
 }

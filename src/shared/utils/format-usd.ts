@@ -36,7 +36,7 @@ export type FormatUsdOptions = {
  */
 export function formatUsd(
   value: number,
-  options: FormatUsdOptions = {},
+  options: FormatUsdOptions = {}
 ): string {
   const {
     minimumFractionDigits = 0,

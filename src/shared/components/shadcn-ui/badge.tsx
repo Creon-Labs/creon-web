@@ -25,7 +25,7 @@ const badgeVariants = cva(
         default: "h-5 px-2 py-0.5 text-xs",
         md: "h-5.5 px-2.5 py-1 text-xs [&>svg]:size-3.5!",
         lg: "h-6 px-3 py-1 text-sm [&>svg]:size-4!",
-      }
+      },
     },
     defaultVariants: {
       variant: "default",
@@ -48,7 +48,7 @@ function Badge({
     <Comp
       data-slot="badge"
       data-variant={variant}
-      className={cn(badgeVariants({ variant, size}), className)}
+      className={cn(badgeVariants({ variant, size }), className)}
       {...props}
     />
   )

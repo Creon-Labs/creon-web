@@ -80,7 +80,11 @@ export function ComposedBreadcrumb({
             </BreadcrumbItem>
           ) : isLast ? (
             /* Last item is always the current page — never a link */
-            <BreadcrumbItem data-last-item={true} key={key} className={itemClassName}>
+            <BreadcrumbItem
+              data-last-item={true}
+              key={key}
+              className={itemClassName}
+            >
               <BreadcrumbPage className={pageClassName}>
                 {getLabel(item as BreadcrumbItemType)}
               </BreadcrumbPage>
@@ -98,7 +102,7 @@ export function ComposedBreadcrumb({
                     </BreadcrumbLink>
                   ) : (
                     <BreadcrumbPage
-                      className={cn("text-muted-foreground!" , pageClassName)}
+                      className={cn("text-muted-foreground!", pageClassName)}
                     >
                       {label}
                     </BreadcrumbPage>
@@ -115,7 +119,7 @@ export function ComposedBreadcrumb({
             <React.Fragment key={key}>
               {index > 0 && (
                 <BreadcrumbSeparator className={separatorClassName}>
-                  <DotOutlineIcon weight="fill"/>
+                  <DotOutlineIcon weight="fill" />
                 </BreadcrumbSeparator>
               )}
               {content}

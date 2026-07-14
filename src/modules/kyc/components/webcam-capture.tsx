@@ -28,7 +28,10 @@ type WebcamDialogInnerProps = {
   onOpenChange: (open: boolean) => void
 }
 
-function WebcamDialogInner({ onCapture, onOpenChange }: WebcamDialogInnerProps) {
+function WebcamDialogInner({
+  onCapture,
+  onOpenChange,
+}: WebcamDialogInnerProps) {
   const webcamRef = React.useRef<Webcam>(null)
   const [preview, setPreview] = React.useState<string | null>(null)
 
@@ -201,7 +204,7 @@ export function PhotoField({
           className={cn(
             "flex w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-none border border-dashed border-input py-8 text-muted-foreground transition-colors",
             "hover:border-foreground/30 hover:text-foreground",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+            "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:outline-none"
           )}
         >
           <span className="flex size-10 items-center justify-center rounded-none border border-input bg-muted">

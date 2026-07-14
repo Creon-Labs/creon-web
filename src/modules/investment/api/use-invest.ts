@@ -12,7 +12,9 @@ export type UseInvestOptions = Omit<
 
 export const useInvest = (options?: UseInvestOptions) => {
   const { signTransaction } = useStellarWallet()
-  const [step, setStep] = useState<"IDLE" | "PREPARING" | "SIGNING" | "SUBMITTING">("IDLE")
+  const [step, setStep] = useState<
+    "IDLE" | "PREPARING" | "SIGNING" | "SUBMITTING"
+  >("IDLE")
 
   const mutation = useMutation<Investment, Error, PrepareInvestmentInput>({
     mutationFn: async ({ campaignId, amount }) => {

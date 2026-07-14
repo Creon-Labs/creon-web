@@ -1,11 +1,7 @@
 "use client"
 
 import * as React from "react"
-import {
-  AdminKycItem,
-  KycStatus,
-  useGetAdminKycList,
-} from "@/modules/admin"
+import { AdminKycItem, KycStatus, useGetAdminKycList } from "@/modules/admin"
 
 import { AdminKycTable } from "./admin-kyc-table"
 import {
@@ -27,17 +23,23 @@ export function AdminKycView() {
   const { data, isLoading, isError, error } = useGetAdminKycList({ status })
 
   // Dialog states
-  const [approveUser, setApproveUser] = React.useState<AdminKycItem | null>(null)
+  const [approveUser, setApproveUser] = React.useState<AdminKycItem | null>(
+    null
+  )
   const [rejectUser, setRejectUser] = React.useState<AdminKycItem | null>(null)
   const [revokeUser, setRevokeUser] = React.useState<AdminKycItem | null>(null)
-  const [viewDocsUser, setViewDocsUser] = React.useState<AdminKycItem | null>(null)
+  const [viewDocsUser, setViewDocsUser] = React.useState<AdminKycItem | null>(
+    null
+  )
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">KYC Review</h2>
-          <p className="text-muted-foreground">Manage user Identity Verification (KYC) submissions.</p>
+          <p className="text-muted-foreground">
+            Manage user Identity Verification (KYC) submissions.
+          </p>
         </div>
       </div>
 
@@ -52,12 +54,12 @@ export function AdminKycView() {
         </Tabs>
 
         {isLoading ? (
-          <div className="flex items-center justify-center p-12 border border-dashed text-muted-foreground">
+          <div className="flex items-center justify-center border border-dashed p-12 text-muted-foreground">
             <Spinner className="mr-2" />
             <span>Loading data...</span>
           </div>
         ) : isError ? (
-          <div className="border border-destructive/50 bg-destructive/10 p-4 text-destructive rounded-md text-sm">
+          <div className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
             Failed to load data: {error.message}
           </div>
         ) : (

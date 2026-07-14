@@ -65,18 +65,25 @@ export function AdminCampaignsTable({
             <TableRow key={item.id}>
               <TableCell className="font-medium">
                 <div>{item.businessName}</div>
-                <div className="text-xs text-muted-foreground font-mono">
-                  {item.entrepreneur.walletAddress.slice(0, 6)}...{item.entrepreneur.walletAddress.slice(-4)}
+                <div className="font-mono text-xs text-muted-foreground">
+                  {item.entrepreneur.walletAddress.slice(0, 6)}...
+                  {item.entrepreneur.walletAddress.slice(-4)}
                 </div>
               </TableCell>
               <TableCell>
                 {item.category}
-                {item.location && <div className="text-xs text-muted-foreground">{item.location}</div>}
+                {item.location && (
+                  <div className="text-xs text-muted-foreground">
+                    {item.location}
+                  </div>
+                )}
               </TableCell>
               <TableCell>{item.requestedAmount}</TableCell>
               <TableCell>{item.lockPeriodDays} Days</TableCell>
               <TableCell>
-                {item.submittedAt ? format(new Date(item.submittedAt), "dd MMM yyyy") : "-"}
+                {item.submittedAt
+                  ? format(new Date(item.submittedAt), "dd MMM yyyy")
+                  : "-"}
               </TableCell>
               <TableCell>
                 <ProposalStatusBadge status={item.status} />
@@ -91,8 +98,9 @@ export function AdminCampaignsTable({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    
-                    {(item.status === "SUBMITTED" || item.status === "UNDER_REVIEW") && (
+
+                    {(item.status === "SUBMITTED" ||
+                      item.status === "UNDER_REVIEW") && (
                       <>
                         <DropdownMenuItem onClick={() => onApprove(item)}>
                           <Check className="mr-2 size-4 text-emerald-600" />
@@ -110,7 +118,9 @@ export function AdminCampaignsTable({
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => onCancel(item)}>
                           <WarningCircle className="mr-2 size-4 text-destructive" />
-                          <span className="text-destructive font-medium">Cancel (Refund)</span>
+                          <span className="font-medium text-destructive">
+                            Cancel (Refund)
+                          </span>
                         </DropdownMenuItem>
                       </>
                     )}
@@ -125,16 +135,41 @@ export function AdminCampaignsTable({
   )
 }
 
-function ProposalStatusBadge({ status }: { status: AdminProposalItem["status"] }) {
+function ProposalStatusBadge({
+  status,
+}: {
+  status: AdminProposalItem["status"]
+}) {
   switch (status) {
     case "DRAFT":
       return <Badge variant="secondary">Draft</Badge>
     case "SUBMITTED":
-      return <Badge variant="outline" className="text-blue-600 border-blue-600/30 bg-blue-50 dark:bg-blue-950/20">Submitted</Badge>
+      return (
+        <Badge
+          variant="outline"
+          className="border-blue-600/30 bg-blue-50 text-blue-600 dark:bg-blue-950/20"
+        >
+          Submitted
+        </Badge>
+      )
     case "UNDER_REVIEW":
-      return <Badge variant="outline" className="text-amber-600 border-amber-600/30 bg-amber-50 dark:bg-amber-950/20">Under Review</Badge>
+      return (
+        <Badge
+          variant="outline"
+          className="border-amber-600/30 bg-amber-50 text-amber-600 dark:bg-amber-950/20"
+        >
+          Under Review
+        </Badge>
+      )
     case "APPROVED":
-      return <Badge variant="outline" className="text-emerald-600 border-emerald-600/30 bg-emerald-50 dark:bg-emerald-950/20">Approved (Live)</Badge>
+      return (
+        <Badge
+          variant="outline"
+          className="border-emerald-600/30 bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20"
+        >
+          Approved (Live)
+        </Badge>
+      )
     case "REJECTED":
       return <Badge variant="destructive">Rejected</Badge>
     default:

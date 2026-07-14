@@ -22,7 +22,12 @@ export function EntrepreneurMilestoneDetailPage({
     <div className="flex flex-col gap-6">
       {/* Back navigation */}
       <div>
-        <Button variant="ghost" size="sm" asChild className="-ml-3 text-muted-foreground">
+        <Button
+          variant="ghost"
+          size="sm"
+          asChild
+          className="-ml-3 text-muted-foreground"
+        >
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           <Link href={`/entrepreneur/${campaignId}/milestones` as any}>
             <CaretLeftIcon className="mr-2 size-4" />

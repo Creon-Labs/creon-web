@@ -28,8 +28,6 @@ import {
 } from "@shadcn-ui/table"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@shadcn-ui/tooltip"
 
-
-
 import { cn } from "@/shared/utils/cn"
 import { Text } from "@/shared/components/primitives/typography"
 
@@ -126,9 +124,9 @@ function SortButton({
     <button
       onClick={() => onSort(sortKey)}
       className={cn(
-        "inline-flex cursor-pointer select-none items-center gap-1 transition-colors hover:text-foreground",
+        "inline-flex cursor-pointer items-center gap-1 transition-colors select-none hover:text-foreground",
         isActive ? "text-foreground" : "text-muted-foreground",
-        className,
+        className
       )}
     >
       {label}
@@ -200,14 +198,17 @@ export function HoldingsTable({
 }: HoldingsTableProps) {
   const totalBalance = useMemo(
     () => holdings.reduce((sum, h) => sum + parseBalance(h.balance), 0),
-    [holdings],
+    [holdings]
   )
 
   // Pre-compute ownership percentages keyed by address for O(1) access
   const ownershipMap = useMemo(() => {
     const map = new Map<string, number>()
     for (const h of holdings) {
-      map.set(h.address, totalBalance > 0 ? (parseBalance(h.balance) / totalBalance) * 100 : 0)
+      map.set(
+        h.address,
+        totalBalance > 0 ? (parseBalance(h.balance) / totalBalance) * 100 : 0
+      )
     }
     return map
   }, [holdings, totalBalance])
@@ -215,7 +216,7 @@ export function HoldingsTable({
   if (holdings.length === 0) {
     return (
       <Card>
-        <CardContent className="flex flex-col items-center justify-center py-16 gap-3">
+        <CardContent className="flex flex-col items-center justify-center gap-3 py-16">
           <UsersThreeIcon className="size-10 text-muted-foreground/40" />
           <Text variant="caption" className="text-center">
             There are no shareholders for this campaign yet.
@@ -301,7 +302,7 @@ export function HoldingsTable({
                   key={holding.address}
                   className={cn(
                     "transition-colors",
-                    rank <= 3 && "bg-muted/20 hover:bg-muted/30",
+                    rank <= 3 && "bg-muted/20 hover:bg-muted/30"
                   )}
                 >
                   {/* Rank */}
@@ -314,7 +315,7 @@ export function HoldingsTable({
                     <div className="flex flex-col gap-0.5">
                       <span className="font-medium">
                         {holding.holder ?? (
-                          <span className="italic text-muted-foreground">
+                          <span className="text-muted-foreground italic">
                             Anonymous
                           </span>
                         )}

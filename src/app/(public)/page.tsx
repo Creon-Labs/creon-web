@@ -11,8 +11,6 @@ export default function Page() {
   const [message, setMessage] = useState<string>("")
   const [signResult, setSignResult] = useState<string | null>(null)
 
-
-
   const handleSignMessage = async () => {
     try {
       const signature = await signMessage(message)

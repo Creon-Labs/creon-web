@@ -107,7 +107,9 @@ export function DistributeProfitDialog({
     } catch (error: unknown) {
       setIsSigning(false)
       const errorMessage =
-        error instanceof Error ? error.message : "Failed to distribute profit. Please try again."
+        error instanceof Error
+          ? error.message
+          : "Failed to distribute profit. Please try again."
       toast.error("Distribution failed", {
         description: errorMessage,
       })

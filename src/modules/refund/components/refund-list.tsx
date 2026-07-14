@@ -3,18 +3,34 @@
 import { useGetMyRefundClaims } from "../api/get-my-refund-claims"
 import { useClaimRefund } from "../api/use-claim-refund"
 import { RefundClaim } from "../types"
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@shadcn-ui/card"
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@shadcn-ui/card"
 import { Badge } from "@shadcn-ui/badge"
 import { Button } from "@shadcn-ui/button"
 import { Skeleton } from "@shadcn-ui/skeleton"
 import { toast } from "sonner"
 import { Spinner } from "@shadcn-ui/spinner"
-import { Empty, EmptyTitle, EmptyDescription, EmptyHeader, EmptyMedia } from "@shadcn-ui/empty"
+import {
+  Empty,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+} from "@shadcn-ui/empty"
 import { CheckCircle, XCircle, Clock, Tray } from "@phosphor-icons/react"
 
 // A sub-component to handle the claim action for a single refund claim
 function RefundClaimCard({ claim }: { claim: RefundClaim }) {
-  const { mutate: claimRefund, step, isPending } = useClaimRefund({
+  const {
+    mutate: claimRefund,
+    step,
+    isPending,
+  } = useClaimRefund({
     onSuccess: () => {
       toast.success("Refund successfully claimed!")
     },
@@ -32,7 +48,7 @@ function RefundClaimCard({ claim }: { claim: RefundClaim }) {
   }
 
   let statusBadge = (
-    <Badge variant="secondary" className="flex items-center gap-1 w-fit">
+    <Badge variant="secondary" className="flex w-fit items-center gap-1">
       <Clock weight="bold" className="size-3" />
       Pending
     </Badge>
@@ -40,14 +56,17 @@ function RefundClaimCard({ claim }: { claim: RefundClaim }) {
 
   if (isClaimed) {
     statusBadge = (
-      <Badge variant="default" className="flex items-center gap-1 w-fit bg-success hover:bg-success/90">
+      <Badge
+        variant="default"
+        className="flex w-fit items-center gap-1 bg-success hover:bg-success/90"
+      >
         <CheckCircle weight="fill" className="size-3" />
         Claimed
       </Badge>
     )
   } else if (isFailed) {
     statusBadge = (
-      <Badge variant="destructive" className="flex items-center gap-1 w-fit">
+      <Badge variant="destructive" className="flex w-fit items-center gap-1">
         <XCircle weight="fill" className="size-3" />
         Failed
       </Badge>
@@ -55,19 +74,19 @@ function RefundClaimCard({ claim }: { claim: RefundClaim }) {
   }
 
   return (
-    <Card className="flex flex-col h-full">
+    <Card className="flex h-full flex-col">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold truncate">
+        <CardTitle className="truncate text-lg font-semibold">
           Campaign ID: {claim.refund?.campaignId || "Unknown"}
         </CardTitle>
         {statusBadge}
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col gap-2">
-        <div className="flex justify-between items-center text-sm">
+      <CardContent className="flex flex-1 flex-col gap-2">
+        <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Share Amount</span>
           <span className="font-medium">{claim.shareAmount}</span>
         </div>
-        <div className="flex justify-between items-center text-sm">
+        <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Refund Entitlement</span>
           <span className="font-medium">{claim.amount} XLM</span>
         </div>
@@ -84,11 +103,11 @@ function RefundClaimCard({ claim }: { claim: RefundClaim }) {
             ? step === "PREPARING"
               ? "Preparing..."
               : step === "SIGNING"
-              ? "Awaiting Wallet..."
-              : "Submitting..."
+                ? "Awaiting Wallet..."
+                : "Submitting..."
             : isClaimed
-            ? "Already Claimed"
-            : "Claim Refund"}
+              ? "Already Claimed"
+              : "Claim Refund"}
         </Button>
       </CardFooter>
     </Card>
@@ -99,17 +118,17 @@ function RefundListSkeleton() {
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 6 }).map((_, i) => (
-        <Card key={i} className="flex flex-col h-full">
+        <Card key={i} className="flex h-full flex-col">
           <CardHeader className="gap-2">
             <Skeleton className="h-6 w-3/4" />
             <Skeleton className="h-5 w-24" />
           </CardHeader>
-          <CardContent className="flex-1 flex flex-col gap-4">
-            <div className="flex justify-between items-center">
+          <CardContent className="flex flex-1 flex-col gap-4">
+            <div className="flex items-center justify-between">
               <Skeleton className="h-4 w-24" />
               <Skeleton className="h-4 w-16" />
             </div>
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <Skeleton className="h-4 w-28" />
               <Skeleton className="h-4 w-20" />
             </div>
@@ -132,7 +151,7 @@ export function RefundList() {
 
   if (isError) {
     return (
-      <div className="flex justify-center items-center p-8 text-destructive text-center">
+      <div className="flex items-center justify-center p-8 text-center text-destructive">
         <p>Failed to load refunds. {error?.message}</p>
       </div>
     )
@@ -147,7 +166,8 @@ export function RefundList() {
           </EmptyMedia>
           <EmptyTitle>No Refunds Available</EmptyTitle>
           <EmptyDescription>
-            You do not have any pending or claimed refunds from cancelled campaigns at this time.
+            You do not have any pending or claimed refunds from cancelled
+            campaigns at this time.
           </EmptyDescription>
         </EmptyHeader>
       </Empty>

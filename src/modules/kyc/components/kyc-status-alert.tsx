@@ -105,7 +105,6 @@ export function KycStatusAlert() {
     isLoading,
     isError,
     error,
-    
   } = useGetMyKycStatus({
     config: { retry: false, refetchOnMount: false, staleTime: 60 * 1000 }, // 1 minute
   })

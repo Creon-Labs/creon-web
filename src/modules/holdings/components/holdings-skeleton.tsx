@@ -1,8 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@shadcn-ui/card"
+import { Card, CardContent, CardHeader } from "@shadcn-ui/card"
 import { Skeleton } from "@shadcn-ui/skeleton"
 import { Separator } from "@shadcn-ui/separator"
 
@@ -29,15 +25,15 @@ function StatSkeleton() {
 
 function TableRowSkeleton({ wide = false }: { wide?: boolean }) {
   return (
-    <div className="flex items-center gap-4 px-4 py-3.5 border-b last:border-0">
+    <div className="flex items-center gap-4 border-b px-4 py-3.5 last:border-0">
       <Skeleton className="h-5 w-8 rounded-md" />
-      <div className="flex flex-col gap-1.5 flex-1">
+      <div className="flex flex-1 flex-col gap-1.5">
         <Skeleton className="h-4 w-28" />
         <Skeleton className="h-3 w-20 md:hidden" />
       </div>
-      {wide && <Skeleton className="hidden md:block h-4 w-32" />}
-      <Skeleton className="h-4 w-20 ml-auto" />
-      <Skeleton className="hidden lg:block h-2 w-28 rounded-full" />
+      {wide && <Skeleton className="hidden h-4 w-32 md:block" />}
+      <Skeleton className="ml-auto h-4 w-20" />
+      <Skeleton className="hidden h-2 w-28 rounded-full lg:block" />
     </div>
   )
 }
@@ -69,12 +65,12 @@ export function HoldingsSkeleton() {
         <Separator className="mt-4" />
 
         {/* Table header */}
-        <div className="flex items-center gap-4 px-4 py-2.5 border-b">
+        <div className="flex items-center gap-4 border-b px-4 py-2.5">
           <Skeleton className="h-3.5 w-10" />
           <Skeleton className="h-3.5 w-16" />
-          <Skeleton className="hidden md:block h-3.5 w-28 ml-4" />
-          <Skeleton className="h-3.5 w-24 ml-auto" />
-          <Skeleton className="hidden lg:block h-3.5 w-24" />
+          <Skeleton className="ml-4 hidden h-3.5 w-28 md:block" />
+          <Skeleton className="ml-auto h-3.5 w-24" />
+          <Skeleton className="hidden h-3.5 w-24 lg:block" />
         </div>
 
         {/* Table rows */}
@@ -83,7 +79,7 @@ export function HoldingsSkeleton() {
         ))}
 
         {/* Footer */}
-        <div className="border-t px-4 py-3 flex justify-center">
+        <div className="flex justify-center border-t px-4 py-3">
           <Skeleton className="h-3 w-64" />
         </div>
       </Card>
