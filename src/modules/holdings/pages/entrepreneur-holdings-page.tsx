@@ -1,19 +1,15 @@
 "use client"
 
-import { useMemo, useState } from "react"
-import {
-  ArrowsClockwiseIcon,
-  InfoIcon,
-} from "@phosphor-icons/react"
-import { Alert, AlertDescription } from "@shadcn-ui/alert"
+import { ArrowsClockwiseIcon, InfoIcon } from "@phosphor-icons/react"
 import { Button } from "@shadcn-ui/button"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@shadcn-ui/tooltip"
+import { useMemo, useState } from "react"
 
 import { Text } from "@/shared/components/primitives/typography"
 
-import type { CampaignHolding } from "../types"
 import { HoldingsStats } from "../components/holdings-stats"
 import { HoldingsTable } from "../components/holdings-table"
+import type { CampaignHolding } from "../types"
 
 // ─── Sort helpers ─────────────────────────────────────────────────────────────
 
@@ -23,7 +19,7 @@ type SortDir = "asc" | "desc"
 function sortHoldings(
   holdings: CampaignHolding[],
   key: SortKey,
-  dir: SortDir,
+  dir: SortDir
 ): CampaignHolding[] {
   // "rank" is determined by balance descending, so we sort by balance
   const effectiveKey = key === "rank" ? "balance" : key
@@ -75,7 +71,7 @@ export function EntrepreneurHoldingsPage({
 
   const sortedHoldings = useMemo(
     () => sortHoldings(holdings, sortKey, sortDir),
-    [holdings, sortKey, sortDir],
+    [holdings, sortKey, sortDir]
   )
 
   function handleSort(key: SortKey) {
@@ -92,9 +88,7 @@ export function EntrepreneurHoldingsPage({
       {/* Page header */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-semibold leading-snug">
-            Cap Table
-          </h2>
+          <h2 className="text-xl leading-snug font-semibold">Cap Table</h2>
           <div className="flex items-center gap-1.5">
             <Text variant="caption">
               List of shareholders for token{" "}
@@ -110,7 +104,8 @@ export function EntrepreneurHoldingsPage({
               <TooltipContent className="max-w-xs">
                 <p className="text-xs">
                   This data is automatically updated by the ownership indexer
-                  which monitors ShareToken events on the Stellar/Soroban blockchain.
+                  which monitors ShareToken events on the Stellar/Soroban
+                  blockchain.
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -139,17 +134,6 @@ export function EntrepreneurHoldingsPage({
           )}
         </div>
       </div>
-
-      {/* Privacy notice */}
-      <Alert className="border-info/20 bg-info/5">
-        <InfoIcon className="size-4 text-info-foreground" />
-        <AlertDescription className="text-xs text-info-foreground/80">
-          Investor identities are masked according to Creon's privacy policy — names
-          are displayed as initials (e.g. <span className="font-mono">A*** S***</span>
-          ) and wallet addresses are truncated (e.g.{" "}
-          <span className="font-mono">GBXU…DOEK</span>).
-        </AlertDescription>
-      </Alert>
 
       {/* Stats overview */}
       <HoldingsStats holdings={holdings} tokenSymbol={tokenSymbol} />

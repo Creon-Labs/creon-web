@@ -25,7 +25,11 @@ export default async function EntrepreneurLayout({
         <EntrepreneurSidebar />
         <SidebarInset>
           <EntrepreneurCampaignHeader />
-          <AppContainer>{children}</AppContainer>
+          <AppContainer>
+            {/* TODO: Render proposal status alert here (on top of AppContainer) */}
+
+            {children}
+            </AppContainer>
         </SidebarInset>
       </SidebarProvider>
     </ProposalCheckProvider>

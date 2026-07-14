@@ -7,3 +7,5 @@ export { ProposalList } from "./components/proposal-list"
 export { useGetProposals } from "./api/get-proposals"
 
 export { ProposalSwitcherPopover } from "./components/proposal-switcher-popover"
+
+export { ProposalStatusBadge } from "./components/status-badge"

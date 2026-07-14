@@ -1,23 +1,25 @@
 "use client"
 
+import { useParams } from "next/navigation"
+
 import { usePageTitle } from "@/shared/components/sections/app-header"
 import {
   EntrepreneurHoldingsPage,
   HoldingsSkeleton,
-  mockHoldings,
+  useGetCampaignHoldings,
 } from "@/modules/holdings"
 
 export default function Page() {
   usePageTitle("Holdings")
 
-  // TODO: replace with useGetCampaignHoldings({ campaignId }) when API is ready.
-  // Example:
-  //   const { data: holdings, isLoading, refetch, isFetching } =
-  //     useGetCampaignHoldings({ campaignId })
-  //   if (isLoading) return <HoldingsSkeleton />
+  const { campaignId } = useParams<{ campaignId: string }>()
 
-  const holdings = mockHoldings
-  const isLoading = false
+  const {
+    data: holdings = [],
+    isLoading,
+    refetch,
+    isFetching,
+  } = useGetCampaignHoldings({ campaignId })
 
   if (isLoading) return <HoldingsSkeleton />
 
@@ -26,8 +28,9 @@ export default function Page() {
       holdings={holdings}
       tokenSymbol="USDT"
       lastUpdatedAt="Just now"
-      // onRefresh={refetch}
-      // isRefreshing={isFetching}
+      onRefresh={refetch}
+      isRefreshing={isFetching}
     />
   )
 }
+

@@ -16,6 +16,7 @@ import {
   getEntrepreneurNavItems,
 } from "@/shared/constants/nav-entrepreneur"
 import { useIsMobile } from "@/shared/hooks/use-mobile"
+import { ProposalStatusBadge } from "@/modules/proposal"
 
 // Mock user — replace with real auth data when auth module is ready
 const MOCK_USER = {
@@ -54,7 +55,13 @@ export function EntrepreneurSidebar(props: EntrepreneurSidebarProps) {
         <>
           {isMobile && (
             <SidebarGroup>
-              <div>
+              <div className="ml-2 flex flex-col pt-0.5">
+                {activeCampaign?.status && (
+                  <ProposalStatusBadge
+                    className="z-10 -mb-1.5 ml-1 h-fit border-none bg-transparent p-0 text-[10px]"
+                    status={activeCampaign?.status}
+                  />
+                )}
                 <ProposalSwitcherPopover
                   proposals={proposals ?? []}
                   title={triggerLabel}
@@ -97,10 +104,18 @@ export function EntrepreneurCampaignHeader() {
       <AppHeader
         toggleSidebar={toggleSidebar}
         titleSlot={
-          <ProposalSwitcherPopover
-            proposals={proposals ?? []}
-            title={triggerLabel}
-          />
+          <div className="flex flex-col pt-0.5">
+            {activeCampaign?.status && (
+              <ProposalStatusBadge
+                className="z-10 -mb-1.5 ml-1 h-fit border-none bg-transparent p-0 text-[10px]"
+                status={activeCampaign?.status}
+              />
+            )}
+            <ProposalSwitcherPopover
+              proposals={proposals ?? []}
+              title={triggerLabel}
+            />
+          </div>
         }
       />
     </>

@@ -49,12 +49,11 @@ export function ProposalSwitcherPopover({
           size="default"
           role="combobox"
           aria-expanded={open}
-          className="group h-9 max-w-80 gap-1.5 px-2 text-base font-semibold text-foreground hover:bg-muted/60"
+          className="group w-fit px-1 py-0 h-8 max-w-80 gap-1.5 text-sm font-semibold text-foreground hover:bg-muted/40 "
         >
           <span className="truncate">{title}</span>
           <CaretUpDownIcon
-            className="shrink-0 opacity-50 transition-transform group-data-[state=open]:rotate-180"
-            weight="bold"
+            className="shrink-0 opacity-50 transition-transform"
           />
         </Button>
       </PopoverTrigger>

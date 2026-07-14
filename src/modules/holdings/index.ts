@@ -6,8 +6,13 @@ export { HoldingsSkeleton } from "./components/holdings-skeleton"
 // Pages
 export { EntrepreneurHoldingsPage } from "./pages/entrepreneur-holdings-page"
 
-// Mock data (remove when API is wired up)
-export { mockHoldings } from "./components/mock-holdings"
+// API
+export {
+  getCampaignHoldings,
+  getCampaignHoldingsQueryOptions,
+  useGetCampaignHoldings,
+} from "./api/get-campaign-holdings"
+export type { GetCampaignHoldingsInput } from "./api/get-campaign-holdings"
 
 // Types
 export type { CampaignHolding } from "./types"

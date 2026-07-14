@@ -372,7 +372,7 @@ export function HoldingsTable({
       {/* Footer note */}
       <div className="border-t px-4 py-3">
         <Text variant="caption-sm" className="text-center">
-          Data is automatically updated by the ownership indexer · Investor identities are masked according to Creon's privacy policy
+          Data is automatically updated by the ownership indexer
         </Text>
       </div>
     </Card>
