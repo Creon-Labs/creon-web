@@ -15,5 +15,16 @@ export { register, useRegister } from "./api/register"
 
 export { logout, useLogout } from "./api/logout"
 
-export { authMe, authMeQueryOptions, useAuthMe } from "./api/auth-me"
+export {
+  authMe,
+  authMeQueryKey,
+  authMeQueryOptions,
+  useAuthMe,
+} from "./api/auth-me"
 export type { UserProfile } from "./types/auth-me.types"
+
+export {
+  completeWalletChallenge,
+  isExpiredOrUsedChallengeError,
+} from "./utils/wallet-challenge"
+export type { SignChallengeMessage } from "./utils/wallet-challenge"

@@ -20,6 +20,7 @@ import {
 
 import {
   authMe,
+  completeWalletChallenge,
   createAuthNonce,
   login as loginApi,
   useLogout,
@@ -117,44 +118,19 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
   const handleLogin = useCallback(
     async (address: string) => {
       try {
-        // Get Nonce from Backend
-        // TODO: implement Single Responsibility later for this function
-        const nonce = await (async () => {
-          try {
-            return await createAuthNonce(address)
-          } catch {
-            toast.error("Failed to login", {
-              description: "Failed to create auth nonce, please try again!",
-            })
-            await disconnect()
-            return null
-          }
-        })()
-
-        if (!nonce) return
-
-        // Sign Message
-        // TODO: implement Single Responsibility later for this function
-        const signedMessage = await (async () => {
-          try {
-            return (await signMessage(nonce)).signedMessage
-          } catch {
-            toast.error("Failed to sign message", {
-              description: "User rejected the signature request",
-            })
-            await disconnect()
-            return null
-          }
-        })()
-
-        if (!signedMessage) return
-
-        const data = await loginApi({
+        const data = await completeWalletChallenge({
           walletAddress: address,
-          signature: signedMessage,
+          getChallenge: createAuthNonce,
+          signMessage,
+          submit: (signature) =>
+            loginApi({ walletAddress: address, signature }),
+          onChallengeRetry: () => {
+            toast.info("Your signing challenge expired. Please sign again.")
+          },
         })
 
         setConnectedAddress(address)
+        await queryClient.invalidateQueries({ queryKey: ["auth", "me"] })
         toast.success("Login successful", {
           description: "You are now logged in",
         })
@@ -171,7 +147,7 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
         }
       } catch (error) {
         if (error instanceof ApiError) {
-          if (error.status == 404) {
+          if (error.statusCode === 401 || error.statusCode === 404) {
             router.push(`/register`)
             toast.warning("You are not registered yet!", {
               description: "Please register to continue ",
@@ -194,8 +170,7 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
         await disconnect()
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [disconnect, queryClient, router, signMessage]
   )
 
   useEffect(() => {

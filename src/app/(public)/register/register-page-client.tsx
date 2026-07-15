@@ -5,6 +5,7 @@ import { useCallback } from "react"
 import { toast } from "sonner"
 
 import {
+  completeWalletChallenge,
   createAuthNonce,
   RegisterForm,
   useRegister,
@@ -25,8 +26,8 @@ import { maskAddress } from "@/shared/utils/mask-address"
  */
 export function RegisterPageClient() {
   const router = useRouter()
-  const { connectedAddress, signMessage, disconnect } = useStellarWallet()
-  const stubWallet = {
+  const { connectedAddress, signMessage } = useStellarWallet()
+  const wallet = {
     address: connectedAddress ?? "",
     maskedAddress: maskAddress(connectedAddress ?? ""),
   }
@@ -35,43 +36,25 @@ export function RegisterPageClient() {
 
   const handleSubmit = useCallback(
     async (values: RegisterFormValues) => {
-      // Get Nonce from Backend
-      // TODO: implement Single Responsibility later for this function
-      const nonce = await (async () => {
-        try {
-          return await createAuthNonce(stubWallet.address)
-        } catch {
-          toast.error("Failed to login", {
-            description: "Failed to create auth nonce, please try again!",
-          })
-          await disconnect()
-          return null
-        }
-      })()
-
-      if (!nonce) return
-
-      // Sign Message
-      // TODO: implement Single Responsibility later for this function
-      const signature = await (async () => {
-        try {
-          return (await signMessage(nonce)).signedMessage
-        } catch {
-          toast.error("Failed to sign message", {
-            description: "User rejected the signature request",
-          })
-          await disconnect()
-          return null
-        }
-      })()
-
-      if (!signature) return
-
       try {
-        const data = await registerMutation.mutateAsync({
-          ...values,
-          walletAddress: stubWallet.address,
-          signature,
+        if (!wallet.address) {
+          toast.error("Connect a wallet before registering")
+          return
+        }
+
+        const data = await completeWalletChallenge({
+          walletAddress: wallet.address,
+          getChallenge: createAuthNonce,
+          signMessage,
+          submit: (signature) =>
+            registerMutation.mutateAsync({
+              ...values,
+              walletAddress: wallet.address,
+              signature,
+            }),
+          onChallengeRetry: () => {
+            toast.info("Your signing challenge expired. Please sign again.")
+          },
         })
 
         toast.success("Registration is successful")
@@ -98,13 +81,12 @@ export function RegisterPageClient() {
         toast.error("Something went wrong, please try again")
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [connectedAddress, registerMutation, router]
+    [registerMutation, router, signMessage, wallet.address]
   )
 
   return (
     <RegisterForm
-      wallet={stubWallet}
+      wallet={wallet}
       onSubmit={handleSubmit}
       isPending={registerMutation.isPending}
     />

@@ -6,16 +6,12 @@ type AuthNonceResponse = ApiResponse<{
   message: string
 }>
 
-const createAuthNonce = async (walletAddress: string) => {
-  try {
-    const res = await api.post<AuthNonceResponse>("/auth/challenge", {
-      walletAddress,
-    })
-    return res.data?.message
-  } catch {
-    // TODO: handle error, eg. show toast notification
-    return undefined
-  }
+const createAuthNonce = async (walletAddress: string): Promise<string> => {
+  const res = await api.post<AuthNonceResponse>("/auth/challenge", {
+    walletAddress,
+  })
+
+  return res.data.message
 }
 
 type UseCreateAuthNonceOptions = {

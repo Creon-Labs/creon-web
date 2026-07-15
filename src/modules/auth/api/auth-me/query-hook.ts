@@ -4,9 +4,11 @@ import { QueryConfig } from "@/shared/lib/react-query"
 import { queryOptions, useQuery } from "@tanstack/react-query"
 import { authMe } from "./api-function"
 
+export const authMeQueryKey = ["auth", "me"] as const
+
 export const authMeQueryOptions = () =>
   queryOptions({
-    queryKey: ["auth", "me"] as const,
+    queryKey: authMeQueryKey,
     queryFn: authMe,
     staleTime: Infinity,
     retry: false,

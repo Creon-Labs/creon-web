@@ -1,9 +1,10 @@
 import { api, type ApiResponse } from "@/shared/lib/api-client"
 import { MutationConfig } from "@/shared/lib/react-query"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import { RegisterPayload } from "../types/register.types"
 import { AuthRole } from "../types/login.types"
+import { authMeQueryKey } from "./auth-me"
 
 type AuthPrincipalResponse = {
   userId: string
@@ -24,8 +25,14 @@ type UseRegisterOptions = {
 }
 
 export const useRegister = ({ config }: UseRegisterOptions = {}) => {
+  const queryClient = useQueryClient()
+
   return useMutation({
-    mutationFn: register,
     ...config,
+    mutationFn: register,
+    onSuccess: async (...args) => {
+      await queryClient.invalidateQueries({ queryKey: authMeQueryKey })
+      config?.onSuccess?.(...args)
+    },
   })
 }

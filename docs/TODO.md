@@ -65,11 +65,11 @@ bergantung pada ID, status, dan bentuk response yang benar.
 
 ## Flow 1 — Register / Login
 
-- [ ] **Tambahkan retry challenge ketika challenge expired atau sudah dipakai.**
+- [x] **Tambahkan retry challenge ketika challenge expired atau sudah dipakai.**
   Challenge hanya berlaku lima menit dan satu kali pakai. Untuk error `401`,
   tampilkan pesan yang jelas dan mulai ulang flow dari `/auth/challenge`.
 
-- [ ] **Pastikan kegagalan challenge tidak ditelan di API function.**
+- [x] **Pastikan kegagalan challenge tidak ditelan di API function.**
   `createAuthNonce` saat ini mengubah semua error menjadi `undefined`, sehingga
   caller kehilangan status HTTP dan alasan kegagalan yang sebenarnya.
 
@@ -78,7 +78,7 @@ bergantung pada ID, status, dan bentuk response yang benar.
   untuk Freighter, xBull, dan wallet target lain, bukan raw message signature
   dengan format berbeda.
 
-- [ ] **Rapikan cache auth setelah login, register, dan logout.**
+- [x] **Rapikan cache auth setelah login, register, dan logout.**
   Cache `auth/me` sebaiknya di-set atau di-invalidate secara eksplisit agar role
   guard dan header tidak sesaat menampilkan state session lama.
 
