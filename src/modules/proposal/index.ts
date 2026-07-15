@@ -17,3 +17,5 @@ export { useUpdateProposal } from "./api/update-proposal"
 export { useRemoveProposalMedia } from "./api/remove-proposal-media"
 
 export { EditProposalForm } from "./components/forms/edit-proposal"
+
+export * from "./types"

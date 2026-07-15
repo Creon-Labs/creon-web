@@ -84,3 +84,9 @@ export type Proposal = {
   milestones: ProposalMilestone[]
   media?: ProposalMedia[]
 }
+
+export type ProposalWithFundingStats = Proposal & {
+  campaignId: string | null
+  investorCount: number
+  raisedAmount: string
+}

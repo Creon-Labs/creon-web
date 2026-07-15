@@ -168,6 +168,11 @@ components:
         - `COMPLETED` – campaign settled
         - `CANCELLED` – admin cancelled a problematic campaign; the contract is frozen (no more invest / milestone release) and a pro-rata refund of the remaining custody is opened
 
+    CampaignDeployStatus:
+      type: string
+      enum: [ PENDING, DEPLOYING_TOKEN, DEPLOYING_CAMPAIGN, WIRING, LIVE, FAILED ]
+      description: Asynchronous on-chain deployment progress for the campaign contracts.
+
     InvestmentStatus:
       type: string
       enum: [ PENDING, CONFIRMED, FAILED ]
@@ -887,9 +892,14 @@ components:
         - $ref: '#/components/schemas/Proposal'
         - type: object
           required:
+            - campaignId
             - investorCount
             - raisedAmount
           properties:
+            campaignId:
+              type: [ string, 'null' ]
+              format: uuid
+              description: Campaign created for an approved proposal; null before approval.
             investorCount:
               type: integer
               minimum: 0
@@ -919,6 +929,7 @@ components:
           updatedAt: '2026-07-02T08:00:00Z'
           milestones: []
           media: []
+          campaignId: 4bcc1852-e326-4a40-86e9-7be82fa46123
           investorCount: 12
           raisedAmount: "7500.25"
         - id: a5b94bce-bc3b-40d1-b047-839285afff9c
@@ -934,6 +945,7 @@ components:
           updatedAt: '2026-07-10T08:00:00Z'
           milestones: []
           media: []
+          campaignId: null
           investorCount: 0
           raisedAmount: "0"
 
@@ -981,7 +993,7 @@ components:
     Campaign:
       type: object
       description: Public campaign view (list + detail).
-      required: [ id, businessName, businessDescription, goalAmount, raisedAmount, status ]
+      required: [ id, businessName, businessDescription, goalAmount, raisedAmount, status, deployStatus ]
       properties:
         id:
           type: string
@@ -1009,6 +1021,8 @@ components:
           example: "2500.0000000"
         status:
           $ref: '#/components/schemas/CampaignStatus'
+        deployStatus:
+          $ref: '#/components/schemas/CampaignDeployStatus'
         lockEndAt:
           type: [ string, 'null' ]
           format: date-time
