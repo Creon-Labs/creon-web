@@ -185,18 +185,18 @@ bergantung pada ID, status, dan bentuk response yang benar.
 
 ## Flow 6 — Entrepreneur Deposit Profit
 
-- [ ] **Polling distribusi yang masih `PENDING`.**
+- [x] **Polling distribusi yang masih `PENDING`.**
       Setelah deposit berhasil, refresh otomatis `GET
 /campaigns/:campaignId/distributions` sampai distribusi menjadi `COMPLETED`
       atau `FAILED`. Jangan memberi kesan dividen sudah siap diklaim saat masih
       `PENDING`.
 
-- [ ] **Tampilkan field hasil snapshot secara kondisional.**
+- [x] **Tampilkan field hasil snapshot secara kondisional.**
       `totalShares`, `rewardPerShare`, dan `merkleRoot` belum tersedia selama
       pemrosesan. Gunakan loading/placeholder yang eksplisit, bukan angka nol yang
       bisa disalahartikan.
 
-- [ ] **Tambahkan penanganan trustline dan saldo USDC entrepreneur.**
+- [x] **Tambahkan penanganan trustline dan saldo USDC entrepreneur.**
       Deposit profit dapat gagal jika trustline atau saldo tidak mencukupi; tampilkan
       panduan yang dapat ditindaklanjuti.
 
