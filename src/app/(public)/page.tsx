@@ -16,10 +16,12 @@ import {
 } from "@phosphor-icons/react/ssr"
 import Image from "next/image"
 import Link from "next/link"
+import type { Route } from "next"
 
 import ImageWithFallback from "@/shared/components/primitives/image-with-fallback"
 import { ConnectButton } from "@/shared/lib/stellar-wallet"
 import { Badge } from "@shadcn-ui/badge"
+import { Button } from "@shadcn-ui/button"
 import {
   Card,
   CardContent,
@@ -160,6 +162,9 @@ export default function Page() {
           </nav>
 
           <div className="flex gap-2">
+            <Button asChild variant="outline" size="sm">
+              <Link href={"/faucet" as Route}>Test USDC</Link>
+            </Button>
             <ConnectButton size="sm" />
             <DashboardButton />
           </div>
