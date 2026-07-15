@@ -336,9 +336,12 @@ bergantung pada ID, status, dan bentuk response yang benar.
       Uji entrepreneur/investor/admin, session expired, KYC pending/rejected/revoked,
       serta akses resource milik user lain.
 
-- [ ] **Tambahkan E2E untuk happy path utama.**
+- [x] **Tambahkan E2E untuk happy path utama.**
       Minimal mencakup register, KYC, proposal, admin approval, deploy polling,
       invest, deposit/claim dividend, milestone voting, cancel/refund, dan faucet.
+      Driver API-to-testnet dan runbook tersedia di
+      [`TESTNET-VERIFICATION.md`](./TESTNET-VERIFICATION.md); helper kritisnya diuji
+      deterministik melalui `pnpm test:e2e`.
 
 - [ ] **Jalankan quality gate sebelum menutup TODO.**
       Jalankan `pnpm lint`, `pnpm typecheck`, dan `pnpm build`, lalu uji dengan

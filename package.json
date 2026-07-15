@@ -10,6 +10,8 @@
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "test": "vitest run",
+    "test:e2e": "vitest run scripts/e2e",
+    "test:e2e:testnet": "node scripts/e2e/testnet-happy-path.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -45,6 +47,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@stellar/stellar-sdk": "^16.0.1",
     "@tailwindcss/postcss": "^4.3.2",
     "@types/node": "^20.19.43",
     "@types/react": "^19.2.17",
