@@ -1,6 +1,9 @@
+"use client"
+
 import { useState } from "react"
-import { useMutation, UseMutationOptions } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useStellarWallet } from "@/shared/lib/stellar-wallet"
+import type { MutationConfig } from "@/shared/lib/react-query"
 import {
   assertCampaignCanAcceptInvestments,
   getCampaignById,
@@ -15,32 +18,34 @@ import { prepareInvestment } from "./prepare-investment"
 import { submitInvestment } from "./submit-investment"
 import { PrepareInvestmentInput, Investment } from "../types"
 
-export type UseInvestOptions = Omit<
-  UseMutationOptions<Investment, Error, PrepareInvestmentInput>,
-  "mutationFn"
->
+type InvestMutationFn = (input: PrepareInvestmentInput) => Promise<Investment>
 
-export const useInvest = (options?: UseInvestOptions) => {
+export type UseInvestOptions = {
+  config?: MutationConfig<InvestMutationFn>
+}
+
+export const useInvest = ({ config }: UseInvestOptions = {}) => {
   const { signTransaction } = useStellarWallet()
+  const queryClient = useQueryClient()
   const [step, setStep] = useState<
     "IDLE" | "PREPARING" | "SIGNING" | "SUBMITTING"
   >("IDLE")
 
   const mutation = useMutation<Investment, Error, PrepareInvestmentInput>({
+    ...config,
     mutationFn: async ({ campaignId, amount }) => {
       try {
+        setStep("PREPARING")
         const [kycProfile, campaign] = await Promise.all([
           getMyKycStatus(),
           getCampaignById({ id: campaignId }),
         ])
         assertKycApproved(kycProfile)
         assertCampaignCanAcceptInvestments(campaign)
-
-        setStep("PREPARING")
         const prepareRes = await prepareInvestment({ campaignId, amount })
 
         setStep("SIGNING")
-        // signTransaction prompts the wallet and returns the signed XDR
+        // Sign the exact XDR returned by the backend without modifying it.
         const { signedTxXdr } = await signTransaction(prepareRes.xdr)
 
         setStep("SUBMITTING")
@@ -49,17 +54,28 @@ export const useInvest = (options?: UseInvestOptions) => {
           signedXdr: signedTxXdr,
         })
 
+        if (submitRes.status === "CONFIRMED") {
+          await Promise.all([
+            queryClient.invalidateQueries({ queryKey: ["campaigns"] }),
+            queryClient.invalidateQueries({
+              queryKey: ["investments", "mine"],
+            }),
+            queryClient.invalidateQueries({ queryKey: ["holdings", "mine"] }),
+          ])
+        }
+
         return submitRes
       } catch (error) {
         if (isWhitelistSyncError(error)) {
-          throw new Error(WHITELIST_SYNC_MESSAGE, { cause: error })
+          const syncError = new Error(WHITELIST_SYNC_MESSAGE, { cause: error })
+          syncError.name = "InvestmentWhitelistSyncError"
+          throw syncError
         }
         throw error
       } finally {
         setStep("IDLE")
       }
     },
-    ...options,
   })
 
   return {
