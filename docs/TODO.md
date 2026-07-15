@@ -239,7 +239,7 @@ bergantung pada ID, status, dan bentuk response yang benar.
       tally, quorum, approval threshold, dan status campaign. Investor tanpa saham
       mendapat penjelasan 403 yang sesuai.
 
-- [ ] **Tampilkan mekanisme quorum extension/default-approve.**
+- [x] **Tampilkan mekanisme quorum extension/default-approve.**
       Jelaskan bahwa voting dapat diperpanjang satu kali dan akan default-approve
       bila quorum tetap tidak tercapai, agar perilaku sistem tidak mengejutkan user.
 

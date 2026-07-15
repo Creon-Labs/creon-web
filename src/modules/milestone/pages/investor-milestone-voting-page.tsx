@@ -25,6 +25,7 @@ import { useGetMilestone } from "../api/get-milestone"
 import { MilestoneDetailHeader } from "../components/milestone-detail-header"
 import { MilestoneDetailSkeleton } from "../components/milestone-detail-skeleton"
 import { MilestoneProofCard } from "../components/milestone-proof-card"
+import { MilestoneQuorumAlert } from "../components/milestone-quorum-alert"
 import { MilestoneTallyCard } from "../components/milestone-tally-card"
 import { MilestoneVoteCard } from "../components/milestone-vote-card"
 
@@ -122,6 +123,8 @@ export function InvestorMilestoneVotingPage({
       </Card>
 
       <MilestoneDetailHeader milestone={milestone} tokenSymbol="USDC" />
+
+      <MilestoneQuorumAlert milestone={milestone} />
 
       <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_24rem]">
         <div className="flex min-w-0 flex-col gap-6">
