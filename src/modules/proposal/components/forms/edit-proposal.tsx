@@ -41,6 +41,13 @@ import { Separator } from "@shadcn-ui/separator"
 import { Skeleton } from "@shadcn-ui/skeleton"
 import { Spinner } from "@shadcn-ui/spinner"
 import { Textarea } from "@shadcn-ui/textarea"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@shadcn-ui/card"
 
 import { useGetProposalById } from "../../api/get-proposal-by-id"
 import { useRemoveProposalMedia } from "../../api/remove-proposal-media"
@@ -48,7 +55,11 @@ import { useSubmitProposal } from "../../api/submit-proposal"
 import { useUpdateProposal } from "../../api/update-proposal"
 import { useUploadProposalMedia } from "../../api/upload-proposal-media"
 import type { CreateProposalFormValues } from "../../schema/proposal-schema"
-import { createProposalSchema } from "../../schema/proposal-schema"
+import {
+  createProposalSchema,
+  formatDecimalAmount,
+} from "../../schema/proposal-schema"
+import { ProposalStatusAlert } from "../proposal-status-alert"
 import { MilestonesField } from "./milestones-field"
 
 // ---------------------------------------------------------------------------
@@ -116,6 +127,37 @@ export interface EditProposalFormProps {
   proposalId: string
 }
 
+function ProposalFundingStats({
+  investorCount,
+  raisedAmount,
+}: {
+  investorCount: number
+  raisedAmount: string
+}) {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <Card>
+        <CardHeader>
+          <CardDescription>Funds raised</CardDescription>
+          <CardTitle>{formatDecimalAmount(raisedAmount)} USDC</CardTitle>
+        </CardHeader>
+        <CardContent className="text-xs text-muted-foreground">
+          Recorded from confirmed investments.
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardDescription>Historical investors</CardDescription>
+          <CardTitle>{investorCount}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-xs text-muted-foreground">
+          Unique investors with a confirmed investment.
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
 export function EditProposalForm({ proposalId }: EditProposalFormProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [activeAction, setActiveAction] = useState<"draft" | "submit" | null>(
@@ -126,8 +168,20 @@ export function EditProposalForm({ proposalId }: EditProposalFormProps) {
   const {
     data: proposal,
     isLoading,
+    isFetching,
     error,
-  } = useGetProposalById({ id: proposalId })
+    refetch,
+  } = useGetProposalById({
+    id: proposalId,
+    config: {
+      refetchInterval: (query) => {
+        const status = query.state.data?.status
+        return status === "SUBMITTED" || status === "UNDER_REVIEW"
+          ? 10_000
+          : false
+      },
+    },
+  })
 
   const { mutateAsync: updateProposal } = useUpdateProposal()
   const { mutateAsync: submitProposal } = useSubmitProposal()
@@ -153,6 +207,8 @@ export function EditProposalForm({ proposalId }: EditProposalFormProps) {
       ],
       images: [],
       documents: [],
+      existingImageCount: 0,
+      existingDocumentCount: 0,
     },
   })
 
@@ -168,12 +224,10 @@ export function EditProposalForm({ proposalId }: EditProposalFormProps) {
   // Reset form when data is loaded
   useEffect(() => {
     if (proposal) {
-      console.log("Loaded proposal data:", proposal)
       reset({
         businessName: proposal.businessName,
         businessDescription: proposal.businessDescription,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        category: proposal.category || (proposal as any).businessCategory || "",
+        category: proposal.category,
         location: proposal.location || "",
         requestedAmount: proposal.requestedAmount,
         lockPeriodDays: proposal.lockPeriodDays,
@@ -185,6 +239,11 @@ export function EditProposalForm({ proposalId }: EditProposalFormProps) {
         })),
         images: [],
         documents: [],
+        existingImageCount:
+          proposal.media?.filter((media) => media.kind === "IMAGE").length ?? 0,
+        existingDocumentCount:
+          proposal.media?.filter((media) => media.kind === "DOCUMENT").length ??
+          0,
       })
     }
   }, [proposal, reset])
@@ -331,6 +390,19 @@ export function EditProposalForm({ proposalId }: EditProposalFormProps) {
         )}
       </div>
 
+      <ProposalStatusAlert
+        proposal={proposal}
+        isRefreshing={isFetching}
+        onRefresh={() => {
+          void refetch()
+        }}
+      />
+
+      <ProposalFundingStats
+        investorCount={proposal.investorCount}
+        raisedAmount={proposal.raisedAmount}
+      />
+
       <FormProvider {...form}>
         <form
           id="edit-proposal-form"
@@ -338,7 +410,10 @@ export function EditProposalForm({ proposalId }: EditProposalFormProps) {
           noValidate
           className="flex flex-col gap-8"
         >
-          <fieldset disabled={!isEditing} className="group flex flex-col gap-8">
+          <fieldset
+            disabled={!isEditing || !isDraft}
+            className="group flex flex-col gap-8"
+          >
             {/* ── 1. Business Information ─────────────────────────────────── */}
             <FormSection
               icon={BuildingsIcon}
@@ -552,7 +627,7 @@ export function EditProposalForm({ proposalId }: EditProposalFormProps) {
                               {(media.sizeBytes / 1024).toFixed(1)} KB
                             </span>
                           </div>
-                          {isEditing && (
+                          {isEditing && isDraft && (
                             <Button
                               type="button"
                               variant="ghost"
@@ -659,7 +734,7 @@ export function EditProposalForm({ proposalId }: EditProposalFormProps) {
           )}
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-            {isEditing && (
+            {isEditing && isDraft && (
               <>
                 <Button
                   type="button"
@@ -685,6 +760,14 @@ export function EditProposalForm({ proposalId }: EditProposalFormProps) {
                         })),
                         images: [],
                         documents: [],
+                        existingImageCount:
+                          proposal.media?.filter(
+                            (media) => media.kind === "IMAGE"
+                          ).length ?? 0,
+                        existingDocumentCount:
+                          proposal.media?.filter(
+                            (media) => media.kind === "DOCUMENT"
+                          ).length ?? 0,
                       })
                     }
                   }}

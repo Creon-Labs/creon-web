@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { api, ApiResponse } from "@/shared/lib/api-client"
 import { MutationConfig } from "@/shared/lib/react-query/query-config"
-import { Proposal } from "../types"
+import { Proposal, ProposalWithFundingStats } from "../types"
 
 // --- API function ---
 
@@ -29,8 +29,11 @@ export const useSubmitProposal = ({
   return useMutation({
     mutationFn: submitProposal,
     onSuccess: (data) => {
-      // Update detail cache — status is now SUBMITTED, no edit allowed
-      queryClient.setQueryData(["proposals", data.id], data)
+      // Preserve read-only funding statistics, which write endpoints do not return.
+      queryClient.setQueryData<ProposalWithFundingStats | undefined>(
+        ["proposals", data.id],
+        (current) => (current ? { ...current, ...data } : current)
+      )
       // Invalidate list so status badge updates
       queryClient.invalidateQueries({ queryKey: ["proposals"] })
     },

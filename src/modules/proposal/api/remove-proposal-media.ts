@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { api, ApiResponse } from "@/shared/lib/api-client"
 import { MutationConfig } from "@/shared/lib/react-query/query-config"
-import { Proposal } from "../types"
+import { Proposal, ProposalWithFundingStats } from "../types"
 
 // --- API function ---
 
@@ -34,8 +34,11 @@ export const useRemoveProposalMedia = ({
   return useMutation({
     mutationFn: removeProposalMedia,
     onSuccess: (data, { id }) => {
-      // Update the specific proposal in cache
-      queryClient.setQueryData(["proposals", id], data)
+      // Preserve read-only funding statistics, which write endpoints do not return.
+      queryClient.setQueryData<ProposalWithFundingStats | undefined>(
+        ["proposals", id],
+        (current) => (current ? { ...current, ...data } : current)
+      )
       // Also invalidate the list
       queryClient.invalidateQueries({ queryKey: ["proposals"] })
     },

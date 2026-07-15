@@ -1,7 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { api, ApiResponse } from "@/shared/lib/api-client"
 import { MutationConfig } from "@/shared/lib/react-query/query-config"
-import { Proposal, UpdateProposalInput } from "../types"
+import {
+  Proposal,
+  ProposalWithFundingStats,
+  UpdateProposalInput,
+} from "../types"
 
 // --- API function ---
 
@@ -28,8 +32,11 @@ export const useUpdateProposal = ({
   return useMutation({
     mutationFn: updateProposal,
     onSuccess: (data) => {
-      // Update the specific proposal in cache to avoid a refetch
-      queryClient.setQueryData(["proposals", data.id], data)
+      // Preserve read-only funding statistics, which write endpoints do not return.
+      queryClient.setQueryData<ProposalWithFundingStats | undefined>(
+        ["proposals", data.id],
+        (current) => (current ? { ...current, ...data } : current)
+      )
       // Also invalidate the list so the summary card reflects changes
       queryClient.invalidateQueries({ queryKey: ["proposals"] })
     },

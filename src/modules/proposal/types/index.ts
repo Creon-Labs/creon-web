@@ -89,4 +89,6 @@ export type ProposalWithFundingStats = Proposal & {
   campaignId: string | null
   investorCount: number
   raisedAmount: string
+  /** Available when the proposal API includes the admin's rejection feedback. */
+  rejectionReason?: string | null
 }

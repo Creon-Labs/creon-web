@@ -154,11 +154,6 @@ function ProposalCard({
                 <UsersIcon weight="bold" />
                 {investorsCount} Investors
               </Badge>
-              {/* End Date Badge */}
-              {/* <Badge size={"md"} variant={"outline"} className="font-semibold">
-                <TimerIcon weight="bold" />
-                {"Not started yet"}
-              </Badge> */}
             </div>
 
             {/* Campaign Title and Description */}

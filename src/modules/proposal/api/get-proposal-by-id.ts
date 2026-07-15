@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { queryOptions, useQuery } from "@tanstack/react-query"
 import { api, ApiResponse } from "@/shared/lib/api-client"
 import { QueryConfig } from "@/shared/lib/react-query/query-config"
 import { ProposalWithFundingStats } from "../types"
@@ -19,10 +19,11 @@ export const getProposalById = async ({ id }: GetProposalByIdInput) => {
 
 // --- Query options factory ---
 
-export const getProposalByIdQueryOptions = ({ id }: GetProposalByIdInput) => ({
-  queryKey: ["proposals", id] as const,
-  queryFn: () => getProposalById({ id }),
-})
+export const getProposalByIdQueryOptions = ({ id }: GetProposalByIdInput) =>
+  queryOptions({
+    queryKey: ["proposals", id] as const,
+    queryFn: () => getProposalById({ id }),
+  })
 
 // --- Hook ---
 
