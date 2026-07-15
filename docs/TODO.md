@@ -15,7 +15,7 @@ integrasi dan perilaku pengguna, bukan hanya keberadaan file API atau komponen.
 | 4. Auto-deploy Campaign | Belum terintegrasi     | API campaign tersedia, tetapi model `deployStatus`, polling deploy, dan UI status campaign belum ada.                 |
 | 5. Investasi            | Selesai                 | Discover, detail, relay invest, pre-flight USDC, invalidasi portofolio, dan riwayat transaksi tersedia.                |
 | 6. Deposit Profit       | Sebagian selesai       | Relay dan riwayat distribusi tersedia; polling `PENDING` ke `COMPLETED` belum ada.                                    |
-| 7. Klaim Dividen        | Belum selesai          | Daftar entitlement tersedia, tetapi prepare-sign-submit dan tombol claim belum ada.                                   |
+| 7. Klaim Dividen        | Selesai                | API relay, tombol claim bergated, dan hasil klaim pada entitlement investor tersedia.                                  |
 | 8. Milestone & Voting   | Sebagian selesai       | Submit proof dan tampilan tally entrepreneur tersedia; voting investor dan polling release belum ada.                 |
 | 9. Cancel & Refund      | Sebagian besar selesai | Cancel admin dan relay claim refund tersedia; readiness gate, polling, dan copy nominal perlu diperbaiki.             |
 | 10. Faucet USDC         | Belum ada              | Belum ada API module maupun UI trustline/claim.                                                                       |
@@ -202,20 +202,20 @@ bergantung pada ID, status, dan bentuk response yang benar.
 
 ## Flow 7 — Investor Klaim Dividen
 
-- [ ] **Buat API prepare dan submit claim dividend.**
+- [x] **Buat API prepare dan submit claim dividend.**
       Implementasikan `POST /distributions/:distributionId/claim/prepare` dan
       `POST /distributions/:distributionId/claim` melalui API wrapper.
 
-- [ ] **Buat hook relay claim dividend.**
+- [x] **Buat hook relay claim dividend.**
       Susun prepare → sign exact XDR → submit seperti flow refund, lengkap dengan
       state proses, error, dan invalidasi query setelah sukses.
 
-- [ ] **Tambahkan tombol Claim pada entitlement investor.**
+- [x] **Tambahkan tombol Claim pada entitlement investor.**
       Tombol hanya boleh aktif ketika claim berstatus `PENDING` dan nested
       distribution berstatus `COMPLETED`. Distribution `PENDING` harus tampil
       sebagai “sedang diproses”, bukan dapat diklaim.
 
-- [ ] **Perjelas hasil klaim.**
+- [x] **Perjelas hasil klaim.**
       Setelah sukses, tampilkan status `CLAIMED`, tx hash, tanggal claim, dan
       informasi bahwa USDC langsung masuk wallet tanpa langkah withdraw lain.
 
