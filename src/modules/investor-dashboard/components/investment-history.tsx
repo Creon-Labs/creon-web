@@ -31,7 +31,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/shared/components/shadcn-ui/alert"
-import { formatUsd } from "@/shared/utils/format-usd"
+import { formatUsdcAmount } from "@/shared/utils/format-usdc"
 
 export function InvestmentHistory() {
   const { data: investments, isLoading, isError, error } = useGetMyInvestments()
@@ -57,7 +57,7 @@ export function InvestmentHistory() {
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             <Skeleton className="h-10 w-full" />
             <Skeleton className="h-10 w-full" />
             <Skeleton className="h-10 w-full" />
@@ -95,9 +95,9 @@ export function InvestmentHistory() {
                       {inv.campaignId}
                     </TableCell>
                     <TableCell>
-                      {formatUsd(Number(inv.amount), { showSymbol: false })}{" "}
+                      {formatUsdcAmount(inv.amount)}{" "}
                       <span className="text-xs text-muted-foreground">
-                        USDT
+                        USDC
                       </span>
                     </TableCell>
                     <TableCell>
