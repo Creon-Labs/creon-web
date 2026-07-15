@@ -306,22 +306,22 @@ bergantung pada ID, status, dan bentuk response yang benar.
 
 ## Konsistensi UI dan Domain
 
-- [ ] **Standarkan seluruh label aset menjadi USDC.**
+- [x] **Standarkan seluruh label aset menjadi USDC.**
       Beberapa komponen dashboard, holdings, milestone, dan refund masih memakai
       `USDT` atau `XLM`. Gunakan asset code dari API jika tersedia dan fallback
       `USDC` hanya bila diperlukan.
 
-- [ ] **Selesaikan halaman overview dan settings yang masih placeholder.**
+- [x] **Selesaikan halaman overview dan settings yang masih placeholder.**
       Ini mencakup overview admin, overview campaign entrepreneur, dan settings
       investor. Tentukan requirement minimal atau hapus sementara item navigasinya
       agar user tidak diarahkan ke halaman kosong.
 
-- [ ] **Konsisten memakai komponen feedback shadcn.**
+- [x] **Konsisten memakai komponen feedback shadcn.**
       Gunakan `Alert` untuk error/callout, `Empty` untuk data kosong, `Skeleton`
       untuk loading, `Badge` untuk status, dan `sonner` untuk feedback aksi.
       Seluruh dialog tetap harus mempunyai title yang dapat diakses.
 
-- [ ] **Buat helper status dan polling bersama.**
+- [x] **Buat helper status dan polling bersama.**
       Centralize interval, terminal state, badge, dan copy untuk deploy,
       distribution, milestone, refund, serta KYC agar setiap halaman tidak membuat
       interpretasi status yang berbeda.
