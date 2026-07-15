@@ -70,6 +70,10 @@ export function ProposalList() {
         {data.map((proposal) => {
           const imageUrl =
             proposal.media?.find((media) => media.kind === "IMAGE")?.url || ""
+          const href = proposal.campaignId
+            ? `/entrepreneur/${proposal.campaignId}/overview`
+            : `/entrepreneur/proposals/${proposal.id}`
+
           return (
             <ProposalCard
               key={proposal.id}
@@ -78,11 +82,10 @@ export function ProposalList() {
               description={proposal.businessDescription}
               imageUrl={imageUrl}
               goalAmount={Number(proposal.requestedAmount)}
-              investorsCount={0}
-              raisedAmount={0}
-              endAt={"Null"}
+              investorsCount={proposal.investorCount}
+              raisedAmount={Number(proposal.raisedAmount)}
               variant={`entr.${proposal.status}`}
-              href={`/entrepreneur/${proposal.id}/overview`}
+              href={href}
             />
           )
         })}

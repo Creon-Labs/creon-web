@@ -17,11 +17,11 @@ import { useState } from "react"
 
 import ImageWithFallback from "@/shared/components/primitives/image-with-fallback"
 import { cn } from "@/shared/utils/cn"
-import { Proposal } from "../types"
+import { ProposalWithFundingStats } from "../types"
 import { ProposalStatusBadge } from "./status-badge"
 
 type ProposalSwitcherPopoverProps = {
-  proposals: Proposal[]
+  proposals: ProposalWithFundingStats[]
   /** The title to show on the trigger button (current campaign or page title) */
   title: string
 }
@@ -36,9 +36,12 @@ export function ProposalSwitcherPopover({
 
   const activeCampaignId = params?.campaignId
 
-  const handleSelect = (campaignId: string) => {
+  const handleSelect = (proposal: ProposalWithFundingStats) => {
     setOpen(false)
-    router.push(`/entrepreneur/${campaignId}/overview` as Route)
+    const href = proposal.campaignId
+      ? `/entrepreneur/${proposal.campaignId}/overview`
+      : `/entrepreneur/proposals/${proposal.id}`
+    router.push(href as Route)
   }
 
   return (
@@ -62,12 +65,12 @@ export function ProposalSwitcherPopover({
             <CommandEmpty>No campaign proposal found.</CommandEmpty>
             <CommandGroup>
               {proposals.map((proposal) => {
-                const isActive = proposal.id === activeCampaignId
+                const isActive = proposal.campaignId === activeCampaignId
                 return (
                   <CommandItem
                     key={proposal.id}
                     value={`${proposal.id} ${proposal.businessName}`}
-                    onSelect={() => handleSelect(proposal.id)}
+                    onSelect={() => handleSelect(proposal)}
                     data-checked={isActive}
                     className="gap-2.5 py-2"
                   >

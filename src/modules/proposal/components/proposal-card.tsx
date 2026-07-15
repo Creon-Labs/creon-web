@@ -77,7 +77,6 @@ type ProposalCardProps = VariantProps<typeof proposalCardVariants> & {
   goalAmount?: number
   investorsCount?: number
   raisedAmount?: number
-  endAt?: string
   className?: string
   href: string
   renderFooter?: () => React.ReactNode
