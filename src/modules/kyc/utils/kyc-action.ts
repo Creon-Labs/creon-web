@@ -1,4 +1,5 @@
 import type { KycProfile, KycStatus } from "../types"
+import { getDomainStatusPollingInterval } from "@/shared/utils/domain-status"
 
 export const DUPLICATE_NIK_MESSAGE =
   "NIK ini sudah digunakan untuk memverifikasi akun lain."
@@ -36,7 +37,7 @@ export function assertKycApproved(profile: KycProfile | undefined): void {
 export function getKycPollingInterval(
   status: KycStatus | undefined
 ): number | false {
-  return status === "PENDING" ? 15_000 : false
+  return getDomainStatusPollingInterval("kyc", status, 15_000)
 }
 
 export function getKycSubmissionErrorMessage(error: unknown): string {

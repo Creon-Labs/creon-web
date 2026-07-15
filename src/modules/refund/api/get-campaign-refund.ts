@@ -2,6 +2,7 @@ import { useQuery, queryOptions } from "@tanstack/react-query"
 import { api, type ApiResponse } from "@/shared/lib/api-client"
 import { QueryConfig } from "@/shared/lib/react-query/query-config"
 import { Refund } from "../types"
+import { getDomainStatusPollingInterval } from "@/shared/utils/domain-status"
 
 export type GetCampaignRefundInput = {
   campaignId: string
@@ -34,7 +35,7 @@ export const useGetCampaignRefund = ({
   return useQuery({
     ...getCampaignRefundQueryOptions({ campaignId }),
     refetchInterval: (query) =>
-      query.state.data?.status === "PENDING" ? 5_000 : false,
+      getDomainStatusPollingInterval("refund", query.state.data?.status, 5_000),
     ...config,
   })
 }

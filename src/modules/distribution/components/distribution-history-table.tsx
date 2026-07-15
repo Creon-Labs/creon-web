@@ -8,7 +8,8 @@ import {
 } from "@shadcn-ui/table"
 import { Badge } from "@shadcn-ui/badge"
 import { Empty, EmptyTitle, EmptyDescription } from "@shadcn-ui/empty"
-import { ProfitDistribution, DistributionStatus } from "../types"
+import { getDomainStatusCopy } from "@/shared/utils/domain-status"
+import { ProfitDistribution } from "../types"
 import {
   getDistributionStatusCopy,
   isDistributionSnapshotReady,
@@ -16,21 +17,6 @@ import {
 
 interface DistributionHistoryTableProps {
   distributions: ProfitDistribution[]
-}
-
-const getStatusBadgeVariant = (
-  status: DistributionStatus
-): "default" | "secondary" | "destructive" | "outline" => {
-  switch (status) {
-    case "COMPLETED":
-      return "default"
-    case "PENDING":
-      return "secondary"
-    case "FAILED":
-      return "destructive"
-    default:
-      return "outline"
-  }
 }
 
 export function DistributionHistoryTable({
@@ -130,8 +116,14 @@ export function DistributionHistoryTable({
                   </div>
                 </TableCell>
                 <TableCell className="text-right">
-                  <Badge variant={getStatusBadgeVariant(dist.status)}>
-                    {dist.status}
+                  <Badge
+                    variant="outline"
+                    className={
+                      getDomainStatusCopy("distribution", dist.status)
+                        .badgeClassName
+                    }
+                  >
+                    {statusCopy.title}
                   </Badge>
                   {!isSnapshotReady ? (
                     <p className="mt-1 text-xs text-muted-foreground">

@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/shared/utils/cn"
 import { Badge } from "@shadcn-ui/badge"
+import { getDomainStatusCopy } from "@/shared/utils/domain-status"
 import type { MilestoneStatus } from "../types"
 
 const milestoneStatusBadgeVariants = cva(
@@ -37,17 +38,6 @@ const milestoneStatusBadgeVariants = cva(
   }
 )
 
-const STATUS_LABELS: Record<MilestoneStatus, string> = {
-  DRAFT: "Draft",
-  PENDING: "Pending",
-  VOTING: "Voting Open",
-  APPROVED: "Approved",
-  RELEASING: "Releasing",
-  RELEASED: "Released",
-  REJECTED: "Rejected",
-  FAILED: "Failed",
-}
-
 export interface MilestoneStatusBadgeProps extends VariantProps<
   typeof milestoneStatusBadgeVariants
 > {
@@ -60,13 +50,15 @@ export function MilestoneStatusBadge({
   size = "md",
   className,
 }: MilestoneStatusBadgeProps) {
+  const statusCopy = getDomainStatusCopy("milestone", status)
+
   return (
     <Badge
       asChild={false}
       variant="outline"
       className={cn(milestoneStatusBadgeVariants({ status, size }), className)}
     >
-      {STATUS_LABELS[status]}
+      {statusCopy.label}
     </Badge>
   )
 }

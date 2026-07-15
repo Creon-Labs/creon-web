@@ -12,6 +12,7 @@ import type { Campaign } from "../types"
 import {
   CAMPAIGN_DEPLOYMENT_STEPS,
   getCampaignDeploymentProgress,
+  getCampaignDeploymentStatusCopy,
   getCampaignDeploymentStep,
   getCampaignPollingInterval,
 } from "../utils/campaign-state"
@@ -47,6 +48,7 @@ export function CampaignDeploymentStatus({
   const step = getCampaignDeploymentStep(campaign.deployStatus)
   const isFailed = campaign.deployStatus === "FAILED"
   const isLive = campaign.deployStatus === "LIVE"
+  const statusCopy = getCampaignDeploymentStatusCopy(campaign.deployStatus)
 
   return (
     <Card>
@@ -84,7 +86,7 @@ export function CampaignDeploymentStatus({
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between gap-3">
               <span className="text-sm font-medium">Deployment progress</span>
-              <Badge variant={isLive ? "default" : "secondary"}>
+              <Badge variant="outline" className={statusCopy.badgeClassName}>
                 {isLive ? (
                   <CheckCircleIcon data-icon="inline-start" weight="fill" />
                 ) : (
@@ -93,7 +95,7 @@ export function CampaignDeploymentStatus({
                     className="animate-spin"
                   />
                 )}
-                {campaign.deployStatus.replaceAll("_", " ")}
+                {statusCopy.label}
               </Badge>
             </div>
             <Progress

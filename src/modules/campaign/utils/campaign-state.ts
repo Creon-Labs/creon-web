@@ -4,6 +4,10 @@ import type {
   CampaignStatus,
   UnlockStatus,
 } from "../types"
+import {
+  getDomainStatusCopy,
+  getDomainStatusPollingInterval,
+} from "@/shared/utils/domain-status"
 
 const CAMPAIGN_CANCELLATION_REFETCH_INTERVAL = 10_000
 
@@ -70,7 +74,10 @@ export function getCampaignPollingInterval(
     campaign.deployStatus === "DEPLOYING_CAMPAIGN" ||
     campaign.deployStatus === "WIRING"
   ) {
-    return 10_000
+    return getDomainStatusPollingInterval(
+      "campaignDeployment",
+      campaign.deployStatus
+    )
   }
 
   if (
@@ -81,6 +88,10 @@ export function getCampaignPollingInterval(
   }
 
   return false
+}
+
+export function getCampaignDeploymentStatusCopy(status: CampaignDeployStatus) {
+  return getDomainStatusCopy("campaignDeployment", status)
 }
 
 export function getCampaignCancellationPollingInterval(
