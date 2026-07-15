@@ -17,6 +17,7 @@ import { useEffect, useState } from "react"
 import { Controller, FormProvider } from "react-hook-form"
 import { toast } from "sonner"
 
+import { CampaignDeploymentPanel } from "@/modules/campaign"
 import { ApiError } from "@/shared/lib/api-client"
 import { useHookForm } from "@/shared/lib/hook-form"
 import { cn } from "@/shared/utils/cn"
@@ -175,10 +176,14 @@ export function EditProposalForm({ proposalId }: EditProposalFormProps) {
     id: proposalId,
     config: {
       refetchInterval: (query) => {
-        const status = query.state.data?.status
-        return status === "SUBMITTED" || status === "UNDER_REVIEW"
-          ? 10_000
-          : false
+        const proposal = query.state.data
+        const isAwaitingReview =
+          proposal?.status === "SUBMITTED" ||
+          proposal?.status === "UNDER_REVIEW"
+        const isAwaitingCampaign =
+          proposal?.status === "APPROVED" && !proposal.campaignId
+
+        return isAwaitingReview || isAwaitingCampaign ? 10_000 : false
       },
     },
   })
@@ -397,6 +402,25 @@ export function EditProposalForm({ proposalId }: EditProposalFormProps) {
           void refetch()
         }}
       />
+
+      {proposal.status === "APPROVED" ? (
+        proposal.campaignId ? (
+          <CampaignDeploymentPanel campaignId={proposal.campaignId} />
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Campaign deployment</CardTitle>
+              <CardDescription>
+                Your proposal is approved. We are creating the campaign record
+                before the on-chain deployment can begin.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-xs text-muted-foreground">
+              This status refreshes automatically every 10 seconds.
+            </CardContent>
+          </Card>
+        )
+      ) : null}
 
       <ProposalFundingStats
         investorCount={proposal.investorCount}

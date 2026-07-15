@@ -135,21 +135,21 @@ bergantung pada ID, status, dan bentuk response yang benar.
 
 ## Flow 4 — Auto-deploy Campaign
 
-- [ ] **Bangun state UI untuk proses deploy campaign.**
+- [x] **Bangun state UI untuk proses deploy campaign.**
       Setelah proposal approved, polling `GET /campaigns/:id` dan tampilkan progres
       `PENDING` → `DEPLOYING_TOKEN` → `DEPLOYING_CAMPAIGN` → `WIRING` → `LIVE`,
       termasuk state `FAILED` dan aksi retry/refresh yang sesuai.
 
-- [ ] **Gate semua aksi campaign dengan status yang benar.**
+- [x] **Gate semua aksi campaign dengan status yang benar.**
       Tombol Invest hanya aktif jika `deployStatus === "LIVE"` dan
       `status === "ACTIVE"`. Keberadaan `contractAddress` saja tidak cukup.
 
-- [ ] **Tampilkan status lock dan unlock.**
+- [x] **Tampilkan status lock dan unlock.**
       Gunakan `lockEndAt` dan `unlockStatus` untuk menjelaskan kapan saham masih
       terkunci dan kapan sudah dapat ditransfer P2P. Jangan membangun secondary
       market atau transfer UI sebagai bagian flow investasi saat ini.
 
-- [ ] **Render media campaign dari `media[]`.**
+- [x] **Render media campaign dari `media[]`.**
       Halaman publik/detail perlu menampilkan galeri gambar dan tautan PDF yang
       dilink dari proposal saat approval.
 

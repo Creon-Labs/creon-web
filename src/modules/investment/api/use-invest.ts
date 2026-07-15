@@ -2,6 +2,10 @@ import { useState } from "react"
 import { useMutation, UseMutationOptions } from "@tanstack/react-query"
 import { useStellarWallet } from "@/shared/lib/stellar-wallet"
 import {
+  assertCampaignCanAcceptInvestments,
+  getCampaignById,
+} from "@/modules/campaign"
+import {
   assertKycApproved,
   getMyKycStatus,
   isWhitelistSyncError,
@@ -25,8 +29,12 @@ export const useInvest = (options?: UseInvestOptions) => {
   const mutation = useMutation<Investment, Error, PrepareInvestmentInput>({
     mutationFn: async ({ campaignId, amount }) => {
       try {
-        const kycProfile = await getMyKycStatus()
+        const [kycProfile, campaign] = await Promise.all([
+          getMyKycStatus(),
+          getCampaignById({ id: campaignId }),
+        ])
         assertKycApproved(kycProfile)
+        assertCampaignCanAcceptInvestments(campaign)
 
         setStep("PREPARING")
         const prepareRes = await prepareInvestment({ campaignId, amount })
