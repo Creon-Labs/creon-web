@@ -328,11 +328,11 @@ bergantung pada ID, status, dan bentuk response yang benar.
 
 ## Verifikasi dan Quality Gate
 
-- [ ] **Tambahkan test untuk API wrapper dan relay flow.**
+- [x] **Tambahkan test untuk API wrapper dan relay flow.**
       Prioritaskan response envelope, `204 No Content`, error 400/401/403/409,
       prepare-sign-submit, idempotent retry, dan invalidasi query.
 
-- [ ] **Tambahkan integration test untuk role dan KYC guard.**
+- [x] **Tambahkan integration test untuk role dan KYC guard.**
       Uji entrepreneur/investor/admin, session expired, KYC pending/rejected/revoked,
       serta akses resource milik user lain.
 
