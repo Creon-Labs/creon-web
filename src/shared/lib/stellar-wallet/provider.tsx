@@ -69,7 +69,7 @@ type ConnectionIntent = "AUTHENTICATED" | "PUBLIC"
 const WalletContext = createContext<WalletContextValue | null>(null)
 
 function StellarWalletProvider({ children }: { children: React.ReactNode }) {
-  const { theme } = useTheme()
+  const { resolvedTheme } = useTheme()
 
   const [connectedAddress, setConnectedAddress] = useState<string>()
   const [isConnecting, setIsConnecting] = useState<boolean>(false)
@@ -194,7 +194,7 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
     if (typeof window !== "undefined") {
       StellarWalletsKit.init({
         theme: {
-          ...(theme === "dark" ? SwkAppDarkTheme : SwkAppLightTheme),
+          ...(resolvedTheme === "dark" ? SwkAppDarkTheme : SwkAppLightTheme),
           "border-radius": "0",
           background: "var(--card)",
           "font-family": "var(--font-sans)",
@@ -207,7 +207,7 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
         network: Networks.TESTNET,
       })
     }
-  }, [theme])
+  }, [resolvedTheme])
 
   useEffect(() => {
     StellarWalletsKit.on(KitEventType.STATE_UPDATED, async (event) => {
