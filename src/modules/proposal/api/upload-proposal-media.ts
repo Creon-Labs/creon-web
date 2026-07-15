@@ -30,7 +30,7 @@ export const uploadProposalMedia = async ({
     `/proposals/${id}/media`,
     formData
   )
-  return res.data!
+  return res.data
 }
 
 // --- Hook ---

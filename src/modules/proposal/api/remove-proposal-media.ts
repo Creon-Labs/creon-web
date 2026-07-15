@@ -17,7 +17,7 @@ export const removeProposalMedia = async ({
   const res = await api.delete<ApiResponse<Proposal>>(
     `/proposals/${id}/media/${mediaId}`
   )
-  return res.data!
+  return res.data
 }
 
 // --- Hook ---

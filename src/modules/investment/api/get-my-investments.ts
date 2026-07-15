@@ -6,7 +6,7 @@ import { Investment } from "../types"
 export const getMyInvestments = (): Promise<Investment[]> => {
   return api
     .get<ApiResponse<Investment[]>>("/investments/mine")
-    .then((res) => res.data!)
+    .then((res) => res.data)
 }
 
 export const getMyInvestmentsQueryOptions = () =>

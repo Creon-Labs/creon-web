@@ -12,7 +12,7 @@ export const getCampaignById = ({
 }: GetCampaignByIdInput): Promise<Campaign> => {
   return api
     .get<ApiResponse<Campaign>>(`/campaigns/${id}`)
-    .then((res) => res.data!)
+    .then((res) => res.data)
 }
 
 export const getCampaignByIdQueryOptions = ({ id }: GetCampaignByIdInput) =>

@@ -19,22 +19,57 @@ type RequestOptions = {
   priority?: RequestPriority
 }
 
-export type ApiResponse<TData = any> = {
+export type ApiResponse<TData = unknown> = {
   statusCode: number
   message: string
-  data?: TData
-  error?: string
+  data: TData
 }
 
-export class ApiError extends Error {
+export type ApiErrorResponse<TData = unknown> = {
+  statusCode: number
+  message: string | string[]
+  error?: string
+  data: TData | null
+}
+
+export class ApiError<TData = unknown> extends Error {
+  public readonly status: number
+  public readonly code: string
+
   constructor(
     message: string,
-    public status: number,
-    public code: string
+    public readonly statusCode: number,
+    public readonly error: string,
+    public readonly data: TData | null
   ) {
     super(message)
     this.name = "ApiError"
+    this.status = statusCode
+    this.code = error
   }
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null
+}
+
+function parseJson(text: string): unknown {
+  try {
+    return JSON.parse(text) as unknown
+  } catch {
+    return undefined
+  }
+}
+
+function getErrorMessage(message: unknown, fallback: string): string {
+  if (typeof message === "string") return message
+  if (Array.isArray(message)) {
+    const messages = message.filter(
+      (item): item is string => typeof item === "string"
+    )
+    if (messages.length > 0) return messages.join(". ")
+  }
+  return fallback
 }
 
 function buildUrlWithParams(
@@ -117,12 +152,29 @@ async function fetchApi<TResponse>(
     next,
   })
 
+  const responseText = await response.text()
+  const parsedBody = responseText ? parseJson(responseText) : undefined
+
   if (!response.ok) {
-    const body: ApiResponse<any> = await response.json()
-    throw new ApiError(body.message, body.statusCode, response.statusText)
+    const body = isRecord(parsedBody) ? parsedBody : undefined
+    const statusCode =
+      typeof body?.statusCode === "number" ? body.statusCode : response.status
+    const error =
+      typeof body?.error === "string" ? body.error : response.statusText
+    const data = body && "data" in body ? body.data : null
+
+    throw new ApiError(
+      getErrorMessage(body?.message, error || "Request failed"),
+      statusCode,
+      error,
+      data
+    )
   }
 
-  return response.json()
+  // A 204 response (notably logout) has no JSON body by definition. Returning
+  // undefined keeps it on the normal success path instead of throwing a
+  // SyntaxError while attempting to parse an empty response.
+  return parsedBody as TResponse
 }
 
 export const api = {

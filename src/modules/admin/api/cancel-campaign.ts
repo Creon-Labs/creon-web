@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-import { api } from "@/shared/lib/api-client"
+import { api, type ApiResponse } from "@/shared/lib/api-client"
 import { MutationConfig } from "@/shared/lib/react-query"
 
 import { AdminCancelCampaignResponse } from "../types"
@@ -19,7 +19,7 @@ export const cancelCampaign = async ({
   reason,
 }: CancelCampaignInput): Promise<AdminCancelCampaignResponse> => {
   return api
-    .post<{ data: AdminCancelCampaignResponse }>(
+    .post<ApiResponse<AdminCancelCampaignResponse>>(
       `/admin/campaigns/${id}/cancel`,
       { reason }
     )

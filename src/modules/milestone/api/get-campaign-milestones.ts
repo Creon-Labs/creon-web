@@ -14,7 +14,7 @@ export const getCampaignMilestones = ({
     .get<ApiResponse<Milestone[]>>("/milestones", {
       params: { campaignId },
     })
-    .then((res) => res.data!)
+    .then((res) => res.data)
 }
 
 export const getCampaignMilestonesQueryOptions = ({

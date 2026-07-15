@@ -20,7 +20,7 @@ export const login = async (
 ): Promise<AuthPrincipalResponse> => {
   const res = await api.post<LoginResponse>("/auth/login", data)
 
-  return res.data!
+  return res.data
 }
 
 type UseLoginOptions = {

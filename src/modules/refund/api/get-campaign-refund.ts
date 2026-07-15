@@ -12,7 +12,7 @@ export const getCampaignRefund = ({
 }: GetCampaignRefundInput): Promise<Refund | null> => {
   return api
     .get<ApiResponse<Refund | null>>(`/campaigns/${campaignId}/refund`)
-    .then((res) => res.data!)
+    .then((res) => res.data)
 }
 
 export const getCampaignRefundQueryOptions = ({

@@ -12,7 +12,7 @@ export const getMilestone = ({
 }: GetMilestoneInput): Promise<MilestoneDetail> => {
   return api
     .get<ApiResponse<MilestoneDetail>>(`/milestones/${milestoneId}`)
-    .then((res) => res.data!)
+    .then((res) => res.data)
 }
 
 export const getMilestoneQueryOptions = ({

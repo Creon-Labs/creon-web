@@ -12,7 +12,7 @@ export type SubmitProposalInput = {
 export const submitProposal = async ({ id }: SubmitProposalInput) => {
   const res = await api.post<ApiResponse<Proposal>>(`/proposals/${id}/submit`)
 
-  return res.data!
+  return res.data
 }
 
 // --- Hook ---

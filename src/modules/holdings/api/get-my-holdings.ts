@@ -6,7 +6,7 @@ import { Holding } from "../types"
 export const getMyHoldings = (): Promise<Holding[]> => {
   return api
     .get<ApiResponse<Holding[]>>("/holdings/mine")
-    .then((res) => res.data!)
+    .then((res) => res.data)
 }
 
 export const getMyHoldingsQueryOptions = () =>

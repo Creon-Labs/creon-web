@@ -6,7 +6,7 @@ import { RefundClaim } from "../types"
 export const getMyRefundClaims = (): Promise<RefundClaim[]> => {
   return api
     .get<ApiResponse<RefundClaim[]>>("/refunds/mine")
-    .then((res) => res.data!)
+    .then((res) => res.data)
 }
 
 export const getMyRefundClaimsQueryOptions = () =>

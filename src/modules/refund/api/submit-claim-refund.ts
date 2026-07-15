@@ -9,5 +9,5 @@ export const submitClaimRefund = ({
     .post<ApiResponse<RefundClaim>>(`/refunds/${refundId}/claim`, {
       signedXdr,
     })
-    .then((res) => res.data!)
+    .then((res) => res.data)
 }

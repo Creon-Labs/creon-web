@@ -1,6 +1,6 @@
 import { queryOptions, useQuery } from "@tanstack/react-query"
 
-import { api } from "@/shared/lib/api-client"
+import { api, type ApiResponse } from "@/shared/lib/api-client"
 import { QueryConfig } from "@/shared/lib/react-query"
 
 import { AdminKycItem, KycStatus } from "../types"
@@ -17,7 +17,7 @@ export const getAdminKycList = async ({
   status,
 }: GetAdminKycListInput = {}): Promise<AdminKycItem[]> => {
   return api
-    .get<{ data: AdminKycItem[] }>("/admin/kyc", {
+    .get<ApiResponse<AdminKycItem[]>>("/admin/kyc", {
       params: { status },
     })
     .then((res) => res.data)

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-import { api } from "@/shared/lib/api-client"
+import { api, type ApiResponse } from "@/shared/lib/api-client"
 import { MutationConfig } from "@/shared/lib/react-query"
 
 import { AdminApproveProposalResponse } from "../types"
@@ -17,7 +17,7 @@ export const approveProposal = async ({
   id,
 }: ApproveProposalInput): Promise<AdminApproveProposalResponse> => {
   return api
-    .post<{ data: AdminApproveProposalResponse }>(
+    .post<ApiResponse<AdminApproveProposalResponse>>(
       `/admin/proposals/${id}/approve`
     )
     .then((res) => res.data)

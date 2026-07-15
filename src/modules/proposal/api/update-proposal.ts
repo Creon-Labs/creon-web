@@ -11,7 +11,7 @@ export type UpdateProposalParams = {
 
 export const updateProposal = async ({ id, ...data }: UpdateProposalParams) => {
   const res = await api.patch<ApiResponse<Proposal>>(`/proposals/${id}`, data)
-  return res.data!
+  return res.data
 }
 
 // --- Hook ---

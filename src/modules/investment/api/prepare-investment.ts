@@ -10,5 +10,5 @@ export const prepareInvestment = ({
       `/campaigns/${campaignId}/investments/prepare`,
       { amount }
     )
-    .then((res) => res.data!)
+    .then((res) => res.data)
 }

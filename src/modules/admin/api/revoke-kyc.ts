@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-import { api } from "@/shared/lib/api-client"
+import { api, type ApiResponse } from "@/shared/lib/api-client"
 import { MutationConfig } from "@/shared/lib/react-query"
 
 import { AdminKycRevokeResponse } from "../types"
@@ -19,7 +19,7 @@ export const revokeKyc = async ({
   reason,
 }: RevokeKycInput): Promise<AdminKycRevokeResponse> => {
   return api
-    .post<{ data: AdminKycRevokeResponse }>(`/admin/kyc/${userId}/revoke`, {
+    .post<ApiResponse<AdminKycRevokeResponse>>(`/admin/kyc/${userId}/revoke`, {
       reason,
     })
     .then((res) => res.data)

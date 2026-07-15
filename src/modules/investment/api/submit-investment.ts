@@ -9,5 +9,5 @@ export const submitInvestment = ({
     .post<ApiResponse<Investment>>(`/campaigns/${campaignId}/investments`, {
       signedXdr,
     })
-    .then((res) => res.data!)
+    .then((res) => res.data)
 }

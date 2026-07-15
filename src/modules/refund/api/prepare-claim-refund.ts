@@ -8,5 +8,5 @@ export const prepareClaimRefund = ({
     .post<ApiResponse<PrepareRefundClaimResponse>>(
       `/refunds/${refundId}/claim/prepare`
     )
-    .then((res) => res.data!)
+    .then((res) => res.data)
 }

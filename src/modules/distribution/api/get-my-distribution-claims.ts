@@ -6,7 +6,7 @@ import { DistributionClaim } from "../types"
 export const getMyDistributionClaims = (): Promise<DistributionClaim[]> => {
   return api
     .get<ApiResponse<DistributionClaim[]>>("/distributions/mine")
-    .then((res) => res.data!)
+    .then((res) => res.data)
 }
 
 export const getMyDistributionClaimsQueryOptions = () =>

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { api } from "@/shared/lib/api-client"
+import { api, type ApiResponse } from "@/shared/lib/api-client"
 import { MutationConfig } from "@/shared/lib/react-query"
 import { Milestone } from "../types"
 
@@ -15,7 +15,9 @@ export const submitDisbursement = ({
   const formData = new FormData()
   formData.append("proof", proof)
 
-  return api.post<Milestone>(`/milestones/${milestoneId}/submit`, formData)
+  return api
+    .post<ApiResponse<Milestone>>(`/milestones/${milestoneId}/submit`, formData)
+    .then((response) => response.data)
 }
 
 type UseSubmitDisbursementOptions = {

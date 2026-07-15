@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 
-import { api } from "@/shared/lib/api-client"
+import { api, type ApiResponse } from "@/shared/lib/api-client"
 import { QueryConfig } from "@/shared/lib/react-query"
 
 import { CampaignHolding } from "../types"
@@ -24,7 +24,9 @@ export type GetCampaignHoldingsInput = {
 export const getCampaignHoldings = ({
   campaignId,
 }: GetCampaignHoldingsInput): Promise<CampaignHolding[]> => {
-  return api.get<CampaignHolding[]>(`/campaigns/${campaignId}/holdings`)
+  return api
+    .get<ApiResponse<CampaignHolding[]>>(`/campaigns/${campaignId}/holdings`)
+    .then((response) => response.data)
 }
 
 // ─── Query Options ────────────────────────────────────────────────────────────

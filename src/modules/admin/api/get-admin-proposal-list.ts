@@ -1,6 +1,6 @@
 import { queryOptions, useQuery } from "@tanstack/react-query"
 
-import { api } from "@/shared/lib/api-client"
+import { api, type ApiResponse } from "@/shared/lib/api-client"
 import { QueryConfig } from "@/shared/lib/react-query"
 
 import { AdminProposalItem, ProposalStatus } from "../types"
@@ -17,7 +17,7 @@ export const getAdminProposalList = async ({
   status,
 }: GetAdminProposalListInput = {}): Promise<AdminProposalItem[]> => {
   return api
-    .get<{ data: AdminProposalItem[] }>("/admin/proposals", {
+    .get<ApiResponse<AdminProposalItem[]>>("/admin/proposals", {
       params: { status },
     })
     .then((res) => res.data)
