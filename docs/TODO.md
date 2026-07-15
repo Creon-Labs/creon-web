@@ -221,11 +221,11 @@ bergantung pada ID, status, dan bentuk response yang benar.
 
 ## Flow 8 — Milestone dan Voting Investor
 
-- [ ] **Gunakan response envelope pada submit proof milestone.**
+- [x] **Gunakan response envelope pada submit proof milestone.**
       Endpoint submit mengembalikan data dalam `ApiResponse`; unwrap `data` sebelum
       melakukan invalidasi berdasarkan `milestone.id` dan `campaignId`.
 
-- [ ] **Gate submit milestone berdasarkan status campaign dan urutan.**
+- [x] **Gate submit milestone berdasarkan status campaign dan urutan.**
       Hanya milestone berikutnya yang berstatus `PENDING` pada campaign yang sudah
       mencapai target yang dapat disubmit. Jelaskan error previous milestone belum
       released, campaign belum penuh, dan campaign cancelled.
