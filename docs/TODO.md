@@ -25,7 +25,7 @@ integrasi dan perilaku pengguna, bukan hanya keberadaan file API atau komponen.
 Pekerjaan di bagian ini sebaiknya dikerjakan lebih dulu karena flow lain
 bergantung pada ID, status, dan bentuk response yang benar.
 
-- [ ] **Pisahkan penggunaan `proposalId` dan `campaignId`.**
+- [x] **Pisahkan penggunaan `proposalId` dan `campaignId`.**
   Saat ini kartu proposal membuka `/entrepreneur/:proposalId/...`, tetapi route
   tersebut menamai parameternya `campaignId` dan beberapa halaman mengirim ID
   itu ke endpoint campaign, holdings, milestone, dan distribution. Setelah
@@ -33,33 +33,33 @@ bergantung pada ID, status, dan bentuk response yang benar.
   `/campaigns/:id/*`, dan tetap gunakan `proposalId` hanya untuk endpoint
   `/proposals/:id`.
 
-- [ ] **Perbaiki redirect route entrepreneur dinamis.**
+- [x] **Perbaiki redirect route entrepreneur dinamis.**
   `/entrepreneur/[campaignId]` saat ini mengarah ke literal
   `/entrepreneur/campaignId/overview`. Redirect harus menyisipkan param route
   yang sebenarnya.
 
-- [ ] **Sinkronkan tipe `Campaign` dengan response backend terbaru.**
+- [x] **Sinkronkan tipe `Campaign` dengan response backend terbaru.**
   Tambahkan setidaknya `deployStatus` beserta seluruh nilainya (`PENDING`,
   `DEPLOYING_TOKEN`, `DEPLOYING_CAMPAIGN`, `WIRING`, `LIVE`, `FAILED`). Pastikan
   field status, unlock, project token, media, dan data bisnis yang dibutuhkan
   halaman discover juga sesuai OpenAPI.
 
-- [ ] **Sinkronkan tipe `Proposal` dengan statistik pendanaan.**
+- [x] **Sinkronkan tipe `Proposal` dengan statistik pendanaan.**
   `GET /proposals` dan `GET /proposals/:id` sekarang menyediakan
   `investorCount` dan `raisedAmount`. UI saat ini masih memasukkan angka `0`
   secara hard-coded ke kartu proposal.
 
-- [ ] **Konsisten membuka response envelope `{ statusCode, message, data }`.**
+- [x] **Konsisten membuka response envelope `{ statusCode, message, data }`.**
   Audit semua API function. Contoh yang masih menganggap payload mentah adalah
   campaign holdings dan submit milestone. Jika envelope tidak dibuka, komponen
   akan menerima object response, bukan data domain yang diharapkan.
 
-- [ ] **Tangani response `204 No Content` di API client.**
+- [x] **Tangani response `204 No Content` di API client.**
   `fetchApi` selalu memanggil `response.json()`, sedangkan logout sengaja
   mengembalikan body kosong. Perbaiki di API client agar logout tidak perlu
   menangkap `SyntaxError` sebagai jalur sukses.
 
-- [ ] **Perkaya `ApiError` dengan response backend.**
+- [x] **Perkaya `ApiError` dengan response backend.**
   Simpan `statusCode`, `error`, dan `data` dari envelope error supaya UI dapat
   bercabang berdasarkan status/data, bukan mencocokkan teks `message`.
 
