@@ -44,6 +44,20 @@ export type PrepareDepositResponse = {
   xdr: string
 }
 
+export type PrepareDistributionClaimInput = {
+  distributionId: string
+}
+
+export type PrepareDistributionClaimResponse = {
+  distributionId: string
+  xdr: string
+}
+
+export type SubmitDistributionClaimInput = {
+  distributionId: string
+  signedXdr: string
+}
+
 export type SubmitSignedTxRequest = {
   signedXdr: string
 }
