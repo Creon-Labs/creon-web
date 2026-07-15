@@ -16,6 +16,7 @@ import {
 import { toast } from "sonner"
 
 import { useHookForm } from "@/shared/lib/hook-form"
+import { assertKycApproved, getMyKycStatus } from "@/modules/kyc"
 import { ApiError } from "@/shared/lib/api-client"
 import { cn } from "@/shared/utils/cn"
 import {
@@ -174,6 +175,7 @@ export function CreateProposalForm() {
     setFormError(null)
     setActiveAction("draft")
     try {
+      assertKycApproved(await getMyKycStatus())
       const proposal = await createProposal({
         businessName: data.businessName,
         businessDescription: data.businessDescription,
@@ -208,6 +210,7 @@ export function CreateProposalForm() {
     setFormError(null)
     setActiveAction("submit")
     try {
+      assertKycApproved(await getMyKycStatus())
       const proposal = await createProposal({
         businessName: data.businessName,
         businessDescription: data.businessDescription,

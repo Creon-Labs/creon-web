@@ -1,6 +1,12 @@
 import { useState } from "react"
 import { useMutation, UseMutationOptions } from "@tanstack/react-query"
 import { useStellarWallet } from "@/shared/lib/stellar-wallet"
+import {
+  assertKycApproved,
+  getMyKycStatus,
+  isWhitelistSyncError,
+  WHITELIST_SYNC_MESSAGE,
+} from "@/modules/kyc"
 import { prepareInvestment } from "./prepare-investment"
 import { submitInvestment } from "./submit-investment"
 import { PrepareInvestmentInput, Investment } from "../types"
@@ -19,6 +25,9 @@ export const useInvest = (options?: UseInvestOptions) => {
   const mutation = useMutation<Investment, Error, PrepareInvestmentInput>({
     mutationFn: async ({ campaignId, amount }) => {
       try {
+        const kycProfile = await getMyKycStatus()
+        assertKycApproved(kycProfile)
+
         setStep("PREPARING")
         const prepareRes = await prepareInvestment({ campaignId, amount })
 
@@ -34,6 +43,9 @@ export const useInvest = (options?: UseInvestOptions) => {
 
         return submitRes
       } catch (error) {
+        if (isWhitelistSyncError(error)) {
+          throw new Error(WHITELIST_SYNC_MESSAGE, { cause: error })
+        }
         throw error
       } finally {
         setStep("IDLE")

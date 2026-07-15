@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useMutation, UseMutationOptions } from "@tanstack/react-query"
 import { useStellarWallet } from "@/shared/lib/stellar-wallet"
+import { assertKycApproved, getMyKycStatus } from "@/modules/kyc"
 import { prepareClaimRefund } from "./prepare-claim-refund"
 import { submitClaimRefund } from "./submit-claim-refund"
 import { PrepareRefundClaimInput, RefundClaim } from "../types"
@@ -21,6 +22,9 @@ export const useClaimRefund = (options?: UseClaimRefundOptions) => {
   const mutation = useMutation<RefundClaim, Error, PrepareRefundClaimInput>({
     mutationFn: async ({ refundId }) => {
       try {
+        const kycProfile = await getMyKycStatus()
+        assertKycApproved(kycProfile)
+
         setStep("PREPARING")
         const prepareRes = await prepareClaimRefund({ refundId })
 
