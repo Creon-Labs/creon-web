@@ -5,6 +5,8 @@ import type {
   UnlockStatus,
 } from "../types"
 
+const CAMPAIGN_CANCELLATION_REFETCH_INTERVAL = 10_000
+
 export const CAMPAIGN_DEPLOYMENT_STEPS: ReadonlyArray<{
   status: Exclude<CampaignDeployStatus, "FAILED">
   label: string
@@ -79,6 +81,14 @@ export function getCampaignPollingInterval(
   }
 
   return false
+}
+
+export function getCampaignCancellationPollingInterval(
+  status: CampaignStatus | undefined
+): number | false {
+  if (status === "CANCELLED" || status === "COMPLETED") return false
+
+  return CAMPAIGN_CANCELLATION_REFETCH_INTERVAL
 }
 
 export function canInvestInCampaign(

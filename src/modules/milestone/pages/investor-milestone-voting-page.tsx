@@ -2,13 +2,17 @@
 
 import type { Route } from "next"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import {
   ArrowsClockwiseIcon,
   CaretLeftIcon,
   WarningCircleIcon,
 } from "@phosphor-icons/react"
 
-import { useGetCampaignById } from "@/modules/campaign"
+import {
+  getCampaignCancellationPollingInterval,
+  useGetCampaignById,
+} from "@/modules/campaign"
 import { Alert, AlertDescription, AlertTitle } from "@shadcn-ui/alert"
 import { Badge } from "@shadcn-ui/badge"
 import { Button } from "@shadcn-ui/button"
@@ -46,7 +50,13 @@ export function InvestorMilestoneVotingPage({
         getMilestonePollingInterval(query.state.data?.status),
     },
   })
-  const campaignQuery = useGetCampaignById({ id: campaignId })
+  const campaignQuery = useGetCampaignById({
+    id: campaignId,
+    config: {
+      refetchInterval: (query) =>
+        getCampaignCancellationPollingInterval(query.state.data?.status),
+    },
+  })
 
   if (milestoneQuery.isLoading || campaignQuery.isLoading) {
     return <MilestoneDetailSkeleton />
@@ -92,6 +102,10 @@ export function InvestorMilestoneVotingPage({
         </AlertDescription>
       </Alert>
     )
+  }
+
+  if (campaign.status === "CANCELLED") {
+    redirect("/investor/refunds")
   }
 
   const shareSymbol = campaign.projectToken?.assetCode ?? "shares"

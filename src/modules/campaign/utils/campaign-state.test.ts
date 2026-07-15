@@ -4,6 +4,7 @@ import {
   assertCampaignCanAcceptInvestments,
   canInvestInCampaign,
   CampaignInvestmentUnavailableError,
+  getCampaignCancellationPollingInterval,
   getCampaignDeploymentProgress,
   getCampaignFundingProgress,
   getCampaignPollingInterval,
@@ -36,6 +37,14 @@ describe("campaign state helpers", () => {
         unlockStatus: "PENDING",
       })
     ).toBe(false)
+  })
+
+  it("polls for cancellation until the campaign reaches a terminal status", () => {
+    expect(getCampaignCancellationPollingInterval(undefined)).toBe(10_000)
+    expect(getCampaignCancellationPollingInterval("GOAL_REACHED")).toBe(10_000)
+    expect(getCampaignCancellationPollingInterval("LOCKED")).toBe(10_000)
+    expect(getCampaignCancellationPollingInterval("CANCELLED")).toBe(false)
+    expect(getCampaignCancellationPollingInterval("COMPLETED")).toBe(false)
   })
 
   it("maps deployment statuses to progress while keeping failures at zero", () => {

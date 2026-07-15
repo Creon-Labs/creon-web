@@ -9,7 +9,10 @@ import {
   useGetCampaignMilestones,
   SubmitDisbursementDialog,
 } from "@/modules/milestone"
-import { useGetCampaignById } from "@/modules/campaign"
+import {
+  getCampaignCancellationPollingInterval,
+  useGetCampaignById,
+} from "@/modules/campaign"
 
 export default function Page({
   params,
@@ -35,7 +38,13 @@ export default function Page({
     isLoading: isCampaignLoading,
     isFetching: isCampaignFetching,
     refetch: refetchCampaign,
-  } = useGetCampaignById({ id: resolvedParams.campaignId })
+  } = useGetCampaignById({
+    id: resolvedParams.campaignId,
+    config: {
+      refetchInterval: (query) =>
+        getCampaignCancellationPollingInterval(query.state.data?.status),
+    },
+  })
 
   if (isLoading || isCampaignLoading) return <MilestonesSkeleton />
 
@@ -60,7 +69,9 @@ export default function Page({
       />
 
       <SubmitDisbursementDialog
-        milestoneId={selectedMilestoneId}
+        milestoneId={
+          campaign.status === "CANCELLED" ? null : selectedMilestoneId
+        }
         onOpenChange={(open) => !open && setSelectedMilestoneId(null)}
       />
     </>

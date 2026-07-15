@@ -247,7 +247,7 @@ bergantung pada ID, status, dan bentuk response yang benar.
       Selama `VOTING`, `APPROVED`, atau `RELEASING`, refresh detail sampai
       `RELEASED`, `REJECTED`, atau `FAILED`.
 
-- [ ] **Alihkan campaign cancelled dari voting ke refund.**
+- [x] **Alihkan campaign cancelled dari voting ke refund.**
       Jika campaign berubah menjadi `CANCELLED`, nonaktifkan submit/vote dan arahkan
       investor ke status refund.
 
