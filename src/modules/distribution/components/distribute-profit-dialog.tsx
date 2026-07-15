@@ -4,6 +4,7 @@ import { useState } from "react"
 import { z } from "zod"
 import { toast } from "sonner"
 import { Spinner } from "@phosphor-icons/react"
+import { Alert, AlertDescription, AlertTitle } from "@shadcn-ui/alert"
 import {
   Dialog,
   DialogContent,
@@ -16,6 +17,7 @@ import { Button } from "@shadcn-ui/button"
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
 } from "@shadcn-ui/field"
@@ -28,6 +30,7 @@ import { useHookForm } from "@/shared/lib/hook-form"
 import { useStellarWallet } from "@/shared/lib/stellar-wallet"
 import { usePrepareDistributionDeposit } from "../api/prepare-distribution-deposit"
 import { useSubmitDistributionDeposit } from "../api/submit-distribution-deposit"
+import { getDistributionDepositErrorMessage } from "../utils/distribution-error"
 
 const schema = z.object({
   amount: z
@@ -97,8 +100,9 @@ export function DistributeProfitDialog({
         data: { signedXdr },
       })
 
-      toast.success("Profit distributed", {
-        description: "The distribution transaction has been submitted.",
+      toast.success("Profit deposit submitted", {
+        description:
+          "The shareholder snapshot is now being prepared. Dividends are not claimable until processing completes.",
       })
 
       setIsOpen(false)
@@ -106,12 +110,8 @@ export function DistributeProfitDialog({
       onDistributeSuccess?.()
     } catch (error: unknown) {
       setIsSigning(false)
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Failed to distribute profit. Please try again."
       toast.error("Distribution failed", {
-        description: errorMessage,
+        description: getDistributionDepositErrorMessage(error),
       })
     }
   }
@@ -140,6 +140,13 @@ export function DistributeProfitDialog({
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="mt-4">
           <FieldGroup>
+            <Alert>
+              <AlertTitle>USDC wallet requirement</AlertTitle>
+              <AlertDescription>
+                Your entrepreneur wallet needs a USDC trustline and enough USDC
+                to cover the full profit amount before signing.
+              </AlertDescription>
+            </Alert>
             <Field>
               <FieldLabel htmlFor="amount">Distribution Amount</FieldLabel>
               <InputGroup>
@@ -152,11 +159,7 @@ export function DistributeProfitDialog({
                   disabled={isLoading}
                 />
               </InputGroup>
-              {form.formState.errors.amount && (
-                <p className="text-sm text-destructive">
-                  {form.formState.errors.amount.message}
-                </p>
-              )}
+              <FieldError errors={[form.formState.errors.amount]} />
               <FieldDescription>
                 This amount will be distributed proportionally based on shares.
               </FieldDescription>
@@ -174,7 +177,10 @@ export function DistributeProfitDialog({
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? (
                   <>
-                    <Spinner className="mr-2 h-4 w-4 animate-spin" />
+                    <Spinner
+                      data-icon="inline-start"
+                      className="animate-spin"
+                    />
                     {isPreparing
                       ? "Preparing..."
                       : isSigning
