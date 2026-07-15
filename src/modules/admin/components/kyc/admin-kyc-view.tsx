@@ -12,7 +12,8 @@ import {
 } from "./admin-kyc-action-dialogs"
 
 import { Tabs, TabsList, TabsTrigger } from "@/shared/components/shadcn-ui/tabs"
-import { Spinner } from "@/shared/components/shadcn-ui/spinner"
+import { Alert, AlertDescription, AlertTitle } from "@shadcn-ui/alert"
+import { Skeleton } from "@shadcn-ui/skeleton"
 
 export function AdminKycView() {
   // We use nuqs to store status in URL, but for simplicity, React state is fine too if nuqs is not set up properly.
@@ -54,14 +55,15 @@ export function AdminKycView() {
         </Tabs>
 
         {isLoading ? (
-          <div className="flex items-center justify-center border border-dashed p-12 text-muted-foreground">
-            <Spinner className="mr-2" />
-            <span>Loading data...</span>
+          <div className="flex flex-col gap-3">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-56 w-full" />
           </div>
         ) : isError ? (
-          <div className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
-            Failed to load data: {error.message}
-          </div>
+          <Alert variant="destructive">
+            <AlertTitle>Unable to load KYC submissions</AlertTitle>
+            <AlertDescription>{error.message}</AlertDescription>
+          </Alert>
         ) : (
           <AdminKycTable
             data={data ?? []}

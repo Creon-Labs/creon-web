@@ -54,3 +54,4 @@ export type { CancelCampaignInput } from "./api/cancel-campaign"
 // UI Components
 export { AdminKycView } from "./components/kyc/admin-kyc-view"
 export { AdminCampaignsView } from "./components/campaigns/admin-campaigns-view"
+export { AdminOverview } from "./components/admin-overview"

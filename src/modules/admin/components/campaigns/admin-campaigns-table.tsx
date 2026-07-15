@@ -15,6 +15,12 @@ import {
   TableRow,
 } from "@/shared/components/shadcn-ui/table"
 import { Badge } from "@/shared/components/shadcn-ui/badge"
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@shadcn-ui/empty"
 import { Button } from "@/shared/components/shadcn-ui/button"
 import {
   DropdownMenu,
@@ -40,9 +46,14 @@ export function AdminCampaignsTable({
 }: AdminCampaignsTableProps) {
   if (data.length === 0) {
     return (
-      <div className="border border-dashed p-8 text-center text-sm text-muted-foreground">
-        No campaign proposals at this time.
-      </div>
+      <Empty className="border border-dashed">
+        <EmptyHeader>
+          <EmptyTitle>No campaign proposals</EmptyTitle>
+          <EmptyDescription>
+            There are no proposals for this status right now.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     )
   }
 
@@ -53,7 +64,7 @@ export function AdminCampaignsTable({
           <TableRow>
             <TableHead>Business Name</TableHead>
             <TableHead>Category</TableHead>
-            <TableHead>Required Funding (XLM)</TableHead>
+            <TableHead>Required Funding (USDC)</TableHead>
             <TableHead>Lock Period</TableHead>
             <TableHead>Submitted At</TableHead>
             <TableHead>Status</TableHead>

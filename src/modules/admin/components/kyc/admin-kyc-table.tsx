@@ -16,6 +16,13 @@ import {
   TableRow,
 } from "@/shared/components/shadcn-ui/table"
 import { Badge } from "@/shared/components/shadcn-ui/badge"
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@shadcn-ui/empty"
+import { getDomainStatusCopy } from "@/shared/utils/domain-status"
 import { Button } from "@/shared/components/shadcn-ui/button"
 import {
   DropdownMenu,
@@ -43,9 +50,14 @@ export function AdminKycTable({
 }: AdminKycTableProps) {
   if (data.length === 0) {
     return (
-      <div className="border border-dashed p-8 text-center text-sm text-muted-foreground">
-        No KYC submissions at this time.
-      </div>
+      <Empty className="border border-dashed">
+        <EmptyHeader>
+          <EmptyTitle>No KYC submissions</EmptyTitle>
+          <EmptyDescription>
+            There are no submissions for this status right now.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     )
   }
 
@@ -161,37 +173,10 @@ export function AdminKycTable({
 }
 
 function KycStatusBadge({ status }: { status: AdminKycItem["status"] }) {
-  switch (status) {
-    case "PENDING":
-      return (
-        <Badge
-          variant="outline"
-          className="border-amber-600/30 bg-amber-50 text-amber-600 dark:bg-amber-950/20"
-        >
-          Pending
-        </Badge>
-      )
-    case "APPROVED":
-      return (
-        <Badge
-          variant="outline"
-          className="border-emerald-600/30 bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20"
-        >
-          Approved
-        </Badge>
-      )
-    case "REJECTED":
-      return (
-        <Badge
-          variant="outline"
-          className="border-red-600/30 bg-red-50 text-red-600 dark:bg-red-950/20"
-        >
-          Rejected
-        </Badge>
-      )
-    case "REVOKED":
-      return <Badge variant="destructive">Revoked</Badge>
-    default:
-      return <Badge variant="secondary">{status}</Badge>
-  }
+  const copy = getDomainStatusCopy("kyc", status)
+  return (
+    <Badge variant="outline" className={copy.badgeClassName}>
+      {copy.label}
+    </Badge>
+  )
 }
