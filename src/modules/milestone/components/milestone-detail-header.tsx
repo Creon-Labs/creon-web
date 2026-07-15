@@ -14,7 +14,7 @@ type MilestoneDetailHeaderProps = {
 
 export function MilestoneDetailHeader({
   milestone,
-  tokenSymbol = "USDT",
+  tokenSymbol = "USDC",
 }: MilestoneDetailHeaderProps) {
   const amountNum = parseFloat(milestone.amount)
 

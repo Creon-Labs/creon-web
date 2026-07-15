@@ -25,7 +25,7 @@ type EntrepreneurMilestonesPageProps = {
 export function EntrepreneurMilestonesPage({
   milestones,
   campaign,
-  tokenSymbol = "USDT",
+  tokenSymbol = "USDC",
   lastUpdatedAt,
   onRefresh,
   isRefreshing = false,

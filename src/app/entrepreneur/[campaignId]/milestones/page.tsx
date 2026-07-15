@@ -61,7 +61,7 @@ export default function Page({
       <EntrepreneurMilestonesPage
         milestones={milestones || []}
         campaign={campaign}
-        tokenSymbol="USDT"
+        tokenSymbol="USDC"
         lastUpdatedAt="Just now"
         onRefresh={() => void Promise.all([refetch(), refetchCampaign()])}
         isRefreshing={isFetching || isCampaignFetching}

@@ -31,7 +31,7 @@ export default function Page() {
       <>
         <EntrepreneurHoldingsPage
           holdings={[]}
-          tokenSymbol="USDT"
+          tokenSymbol="USDC"
           lastUpdatedAt="Just now banget"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/10 backdrop-blur-xs">
@@ -62,7 +62,7 @@ export function HoldingsPage() {
   return (
     <EntrepreneurHoldingsPage
       holdings={holdings}
-      tokenSymbol="USDT"
+      tokenSymbol="USDC"
       lastUpdatedAt="Just now"
       onRefresh={refetch}
       isRefreshing={isFetching}

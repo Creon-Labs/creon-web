@@ -34,7 +34,7 @@ export default function Page({
     <EntrepreneurMilestoneDetailPage
       milestone={milestone}
       campaignId={resolvedParams.campaignId}
-      tokenSymbol="USDT"
+      tokenSymbol="USDC"
     />
   )
 }

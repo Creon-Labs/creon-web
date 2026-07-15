@@ -51,7 +51,7 @@ export function SummaryCards() {
             <div className="text-2xl font-bold">
               {formatUsd(totalInvestment, { showSymbol: false })}{" "}
               <span className="text-sm font-normal text-muted-foreground">
-                USDT
+                USDC
               </span>
             </div>
           )}
@@ -72,7 +72,7 @@ export function SummaryCards() {
             <div className="text-2xl font-bold">
               {formatUsd(totalRevenue, { showSymbol: false })}{" "}
               <span className="text-sm font-normal text-muted-foreground">
-                USDT
+                USDC
               </span>
             </div>
           )}

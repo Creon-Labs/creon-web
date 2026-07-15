@@ -33,7 +33,7 @@ type MilestoneCardProps = {
 export function MilestoneCard({
   milestone,
   submitState,
-  tokenSymbol = "USDT",
+  tokenSymbol = "USDC",
   onSubmitProgress,
   isSubmitting = false,
 }: MilestoneCardProps) {

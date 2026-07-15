@@ -61,7 +61,7 @@ type EntrepreneurHoldingsPageProps = {
 
 export function EntrepreneurHoldingsPage({
   holdings,
-  tokenSymbol = "USDT",
+  tokenSymbol = "USDC",
   lastUpdatedAt,
   onRefresh,
   isRefreshing = false,

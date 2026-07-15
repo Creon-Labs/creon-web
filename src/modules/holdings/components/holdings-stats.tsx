@@ -78,7 +78,7 @@ type HoldingsStatsProps = {
 
 export function HoldingsStats({
   holdings,
-  tokenSymbol = "USDT",
+  tokenSymbol = "USDC",
 }: HoldingsStatsProps) {
   const stats = useMemo(() => {
     if (holdings.length === 0)

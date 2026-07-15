@@ -16,7 +16,7 @@ type EntrepreneurMilestoneDetailPageProps = {
 export function EntrepreneurMilestoneDetailPage({
   milestone,
   campaignId,
-  tokenSymbol = "USDT",
+  tokenSymbol = "USDC",
 }: EntrepreneurMilestoneDetailPageProps) {
   return (
     <div className="flex flex-col gap-6">

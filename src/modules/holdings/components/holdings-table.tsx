@@ -180,7 +180,7 @@ function OwnershipBar({
 
 type HoldingsTableProps = {
   holdings: CampaignHolding[]
-  /** Token symbol shown in table header, e.g. "USDT" */
+  /** Token symbol shown in table header, e.g. "USDC" */
   tokenSymbol?: string
   sortKey: SortKey
   sortDir: SortDir
@@ -191,7 +191,7 @@ type HoldingsTableProps = {
 
 export function HoldingsTable({
   holdings,
-  tokenSymbol = "USDT",
+  tokenSymbol = "USDC",
   sortKey,
   sortDir,
   onSort,
