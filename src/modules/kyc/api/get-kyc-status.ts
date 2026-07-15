@@ -2,6 +2,7 @@ import { queryOptions, useQuery } from "@tanstack/react-query"
 import { api, ApiResponse } from "@/shared/lib/api-client"
 import { QueryConfig } from "@/shared/lib/react-query/query-config"
 import { KycProfile } from "../types"
+import { getKycPollingInterval } from "../utils/kyc-action"
 
 // ---------------------------------------------------------------------------
 // API function
@@ -32,6 +33,7 @@ export const getMyKycStatusQueryOptions = () =>
   queryOptions({
     queryKey: ["kyc", "me"] as const,
     queryFn: () => getMyKycStatus(),
+    refetchInterval: (query) => getKycPollingInterval(query.state.data?.status),
   })
 
 // ---------------------------------------------------------------------------

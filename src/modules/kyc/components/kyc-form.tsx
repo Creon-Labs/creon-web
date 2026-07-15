@@ -12,8 +12,6 @@ import {
 } from "@phosphor-icons/react"
 
 import { useHookForm } from "@/shared/lib/hook-form"
-import { ApiError } from "@/shared/lib/api-client"
-
 import { Button } from "@shadcn-ui/button"
 import {
   Field,
@@ -27,6 +25,7 @@ import { Separator } from "@shadcn-ui/separator"
 
 import { kycSchema, type KycFormValues } from "../schemas/kyc.schema"
 import { useSubmitKyc } from "../api/submit-kyc"
+import { getKycSubmissionErrorMessage } from "../utils/kyc-action"
 import { PhotoField } from "./webcam-capture"
 import { toast } from "sonner"
 
@@ -115,13 +114,7 @@ export function KycForm({ onSuccess }: KycFormProps) {
   // Error. Per Vercel rule: rerender-derived-state-no-effect — derive during
   // render, not via a separate effect + state.
   const errorMessage =
-    error instanceof ApiError
-      ? error.message
-      : error instanceof Error
-        ? error.message
-        : error !== null
-          ? "An unexpected error occurred. Please try again."
-          : null
+    error !== null ? getKycSubmissionErrorMessage(error) : null
 
   // Put interaction logic in the event handler (Vercel: rerender-move-effect-to-event)
   const handleFormSubmit = useCallback(
@@ -147,16 +140,16 @@ export function KycForm({ onSuccess }: KycFormProps) {
             onSuccess: () => {
               onSuccess?.()
             },
-            onError: () => {
+            onError: (submissionError) => {
               toast.error("Failed to submit KYC data", {
-                description: errorMessage,
+                description: getKycSubmissionErrorMessage(submissionError),
               })
             },
           }
         )
       })(e)
     },
-    [resetMutation, handleSubmit, submitKyc, onSuccess, errorMessage]
+    [resetMutation, handleSubmit, submitKyc, onSuccess]
   )
 
   return (
