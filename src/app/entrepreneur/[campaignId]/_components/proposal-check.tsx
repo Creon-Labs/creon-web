@@ -1,6 +1,6 @@
 "use client"
 
-import { useGetProposalById } from "@/modules/proposal"
+import { useGetProposals } from "@/modules/proposal"
 import { ArrowLeftIcon } from "@phosphor-icons/react"
 import { Button } from "@shadcn-ui/button"
 import {
@@ -14,17 +14,14 @@ import {
 import { Spinner } from "@shadcn-ui/spinner"
 import { useRouter } from "next/navigation"
 
-export function ProposalCheckProvider({
+export function CampaignCheckProvider({
   campaignId,
   children,
 }: {
   campaignId: string
   children: React.ReactNode
 }) {
-  const { data, isLoading } = useGetProposalById({
-    id: campaignId,
-    config: { enabled: !!campaignId },
-  })
+  const { data, isLoading } = useGetProposals()
 
   const router = useRouter()
 
@@ -36,7 +33,11 @@ export function ProposalCheckProvider({
     )
   }
 
-  if (!data) {
+  const ownsCampaign = data?.some(
+    (proposal) => proposal.campaignId === campaignId
+  )
+
+  if (!ownsCampaign) {
     return (
       <div className="flex h-dvh w-full items-center justify-center">
         <Empty>
@@ -44,9 +45,10 @@ export function ProposalCheckProvider({
             <EmptyMedia>
               <div className="text-3xl font-bold">404</div>
             </EmptyMedia>
-            <EmptyTitle>Campaign Proposal Not Found</EmptyTitle>
+            <EmptyTitle>Campaign Not Found</EmptyTitle>
             <EmptyDescription className="w-full">
-              The campaign proposal you are looking for does not exist
+              The campaign you are looking for does not exist or does not belong
+              to your account.
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>

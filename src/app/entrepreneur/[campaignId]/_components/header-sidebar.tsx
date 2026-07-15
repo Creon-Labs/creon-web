@@ -29,7 +29,9 @@ export function EntrepreneurSidebar(props: EntrepreneurSidebarProps) {
   const { data: proposals } = useGetProposals()
 
   // Look up the active campaign name by its ID
-  const activeCampaign = proposals?.find((c) => c.id === campaignId)
+  const activeCampaign = proposals?.find(
+    (proposal) => proposal.campaignId === campaignId
+  )
   const triggerLabel = activeCampaign?.businessName ?? "Select Campaign"
 
   // Build the nav groups based on whether we're inside a campaign context
@@ -89,7 +91,9 @@ export function EntrepreneurCampaignHeader() {
   const { data: proposals } = useGetProposals()
 
   // Look up the active campaign name by its ID
-  const activeCampaign = proposals?.find((c) => c.id === campaignId)
+  const activeCampaign = proposals?.find(
+    (proposal) => proposal.campaignId === campaignId
+  )
   const triggerLabel = activeCampaign?.businessName ?? "Select Campaign"
 
   return (

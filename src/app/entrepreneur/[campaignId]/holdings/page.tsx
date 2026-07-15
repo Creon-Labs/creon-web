@@ -8,7 +8,7 @@ import {
   HoldingsSkeleton,
   useGetCampaignHoldings,
 } from "@/modules/holdings"
-import { useGetProposalById } from "@/modules/proposal"
+import { useGetCampaignById } from "@/modules/campaign"
 import { Spinner } from "@shadcn-ui/spinner"
 import { LockIcon } from "@phosphor-icons/react"
 
@@ -17,7 +17,7 @@ export default function Page() {
 
   const { campaignId } = useParams<{ campaignId: string }>()
 
-  const { data: proposal, isLoading } = useGetProposalById({ id: campaignId })
+  const { data: campaign, isLoading } = useGetCampaignById({ id: campaignId })
 
   if (isLoading)
     return (
@@ -26,7 +26,7 @@ export default function Page() {
       </div>
     )
 
-  if (proposal?.status !== "APPROVED") {
+  if (campaign?.deployStatus !== "LIVE") {
     return (
       <>
         <EntrepreneurHoldingsPage
@@ -37,7 +37,7 @@ export default function Page() {
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/10 backdrop-blur-xs">
           <LockIcon size={24} />
           <span className="ml-2 text-sm font-medium text-muted-foreground">
-            This feature is not available until the campaign is approved.
+            This feature is not available until the campaign is live.
           </span>
         </div>
       </>

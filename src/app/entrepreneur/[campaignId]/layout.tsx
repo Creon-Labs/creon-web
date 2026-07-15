@@ -6,7 +6,7 @@ import {
   EntrepreneurCampaignHeader,
   EntrepreneurSidebar,
 } from "./_components/header-sidebar"
-import { ProposalCheckProvider } from "./_components/proposal-check"
+import { CampaignCheckProvider } from "./_components/proposal-check"
 
 export default async function EntrepreneurLayout({
   children,
@@ -20,7 +20,7 @@ export default async function EntrepreneurLayout({
   const campaignId = (await params).campaignId
 
   return (
-    <ProposalCheckProvider campaignId={campaignId}>
+    <CampaignCheckProvider campaignId={campaignId}>
       <SidebarProvider defaultOpen={defaultOpen}>
         <EntrepreneurSidebar />
         <SidebarInset>
@@ -28,6 +28,6 @@ export default async function EntrepreneurLayout({
           <AppContainer>{children}</AppContainer>
         </SidebarInset>
       </SidebarProvider>
-    </ProposalCheckProvider>
+    </CampaignCheckProvider>
   )
 }
