@@ -13,7 +13,7 @@ integrasi dan perilaku pengguna, bukan hanya keberadaan file API atau komponen.
 | 2. KYC                  | Sebagian besar selesai | Submit, status alert, resubmit, dan aksi admin tersedia; polling dan error khusus masih kurang.                       |
 | 3. Proposal             | Sebagian besar selesai | Create, edit, media, submit, dan review admin tersedia; statistik, polling, serta validasi frontend perlu dilengkapi. |
 | 4. Auto-deploy Campaign | Belum terintegrasi     | API campaign tersedia, tetapi model `deployStatus`, polling deploy, dan UI status campaign belum ada.                 |
-| 5. Investasi            | API saja               | Relay prepare-sign-submit tersedia, tetapi belum ada UI discover/detail/invest.                                       |
+| 5. Investasi            | Selesai                 | Discover, detail, relay invest, pre-flight USDC, invalidasi portofolio, dan riwayat transaksi tersedia.                |
 | 6. Deposit Profit       | Sebagian selesai       | Relay dan riwayat distribusi tersedia; polling `PENDING` ke `COMPLETED` belum ada.                                    |
 | 7. Klaim Dividen        | Belum selesai          | Daftar entitlement tersedia, tetapi prepare-sign-submit dan tombol claim belum ada.                                   |
 | 8. Milestone & Voting   | Sebagian selesai       | Submit proof dan tampilan tally entrepreneur tersedia; voting investor dan polling release belum ada.                 |
@@ -155,31 +155,31 @@ bergantung pada ID, status, dan bentuk response yang benar.
 
 ## Flow 5 — Investor Investasi
 
-- [ ] **Implementasikan halaman discover campaign.**
+- [x] **Implementasikan halaman discover campaign.**
       Ganti placeholder `/investor/discovers` dengan data `GET /campaigns`, loading,
       error, empty state, thumbnail, target/raised amount, status, dan tautan ke
       detail campaign.
 
-- [ ] **Implementasikan halaman detail campaign.**
+- [x] **Implementasikan halaman detail campaign.**
       Ganti placeholder `/investor/discovers/[campaignId]` dengan detail bisnis,
       media, progress pendanaan, lock period, milestone, deploy status, dan form
       investasi.
 
-- [ ] **Pasang `useInvest` pada form investasi.**
+- [x] **Pasang `useInvest` pada form investasi.**
       Gunakan amount string maksimal tujuh desimal dan tampilkan tahapan
       `PREPARING`, `SIGNING`, serta `SUBMITTING`. Jangan mengubah XDR dari backend
       sebelum ditandatangani wallet.
 
-- [ ] **Tambahkan pre-flight guidance USDC.**
+- [x] **Tambahkan pre-flight guidance USDC.**
       Jelaskan bahwa wallet membutuhkan trustline USDC dan saldo yang cukup.
       Tangani kegagalan balance, trustline, campaign belum LIVE, dan whitelist yang
       belum tersinkron dengan pesan berbeda.
 
-- [ ] **Refresh portfolio setelah investasi sukses.**
+- [x] **Refresh portfolio setelah investasi sukses.**
       Invalidate query campaign, `investments/mine`, dan `holdings/mine` setelah
       submit menghasilkan investment `CONFIRMED`.
 
-- [ ] **Lengkapi halaman riwayat investasi.**
+- [x] **Lengkapi halaman riwayat investasi.**
       `/investor/investments` masih placeholder meskipun API dan tabel ringkas pada
       overview sudah tersedia. Buat tampilan penuh dengan status dan tx hash.
 
