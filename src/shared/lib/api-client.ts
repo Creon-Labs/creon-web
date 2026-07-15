@@ -130,10 +130,15 @@ async function fetchApi<TResponse>(
     cookieHeader = await getServerCookies()
   }
 
-  const fullUrl = buildUrlWithParams(
-    `${env.NEXT_PUBLIC_BASE_API_URL}${url}`,
-    params
-  )
+  // Requests made in the browser are routed through Next.js, so the httpOnly
+  // session cookie is first-party to the Vercel app. This avoids relying on a
+  // third-party cookie between the Vercel frontend and Railway API, which can
+  // still be blocked even when it uses SameSite=None.
+  const baseUrl =
+    typeof window === "undefined"
+      ? env.NEXT_PUBLIC_BASE_API_URL
+      : "/api/backend"
+  const fullUrl = buildUrlWithParams(`${baseUrl}${url}`, params)
 
   // When the body is a FormData instance we must NOT set Content-Type —
   // the browser sets it automatically with the correct multipart boundary —
