@@ -30,21 +30,21 @@ export const useSubmitDisbursement = ({
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: submitDisbursement,
-    onSuccess: (...args) => {
-      const data = args[0]
-      // Invalidate both the detail view of this milestone and the list of milestones for this campaign
-      queryClient.invalidateQueries({
-        queryKey: ["milestone", data.id],
-      })
-      queryClient.invalidateQueries({
-        queryKey: ["milestones", data.campaignId],
-      })
-
-      if (config?.onSuccess) {
-        config.onSuccess(...args)
-      }
-    },
     ...config,
+    mutationFn: submitDisbursement,
+    onSuccess: async (...args) => {
+      const [milestone] = args
+
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["milestone", milestone.id],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["milestones", milestone.campaignId],
+        }),
+      ])
+
+      await config?.onSuccess?.(...args)
+    },
   })
 }
