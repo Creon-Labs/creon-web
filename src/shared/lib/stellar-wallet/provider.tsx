@@ -6,6 +6,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react"
 
@@ -27,7 +28,7 @@ import {
 } from "@/modules/auth"
 import { useQueryClient } from "@tanstack/react-query"
 import { Route } from "next"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { ApiError } from "../api-client"
 // import { walletConnectModule } from "./wc-module"
@@ -60,7 +61,10 @@ type WalletContextValue = {
   signTransaction: SignTransactionFunction
   signAuthEntry: SignAuthEntryFunction
   signMessage: SignMessageFunction
+  setConnectionIntent: (intent: ConnectionIntent) => void
 }
+
+type ConnectionIntent = "AUTHENTICATED" | "PUBLIC"
 
 const WalletContext = createContext<WalletContextValue | null>(null)
 
@@ -69,12 +73,25 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
 
   const [connectedAddress, setConnectedAddress] = useState<string>()
   const [isConnecting, setIsConnecting] = useState<boolean>(false)
+  const pathname = usePathname()
+  const connectionIntentRef = useRef<ConnectionIntent>(
+    pathname === "/faucet" ? "PUBLIC" : "AUTHENTICATED"
+  )
 
   const queryClient = useQueryClient()
 
   const router = useRouter()
 
   const { mutate: logout } = useLogout()
+
+  const setConnectionIntent = useCallback((intent: ConnectionIntent) => {
+    connectionIntentRef.current = intent
+  }, [])
+
+  useEffect(() => {
+    connectionIntentRef.current =
+      pathname === "/faucet" ? "PUBLIC" : "AUTHENTICATED"
+  }, [pathname])
 
   const disconnect = useCallback(
     async ({ redirect }: { redirect?: Route } = {}) => {
@@ -198,6 +215,11 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
       const address = event.payload.address
       try {
         if (address) {
+          if (connectionIntentRef.current === "PUBLIC") {
+            setConnectedAddress(address)
+            return
+          }
+
           const auth = await handleAuthMe()
           if (!auth?.id) {
             await handleLogin(address)
@@ -230,6 +252,7 @@ function StellarWalletProvider({ children }: { children: React.ReactNode }) {
         signTransaction,
         signAuthEntry,
         signMessage,
+        setConnectionIntent,
       }}
     >
       {children}

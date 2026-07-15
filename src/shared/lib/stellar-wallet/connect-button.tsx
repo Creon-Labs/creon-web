@@ -15,19 +15,21 @@ import { WalletContext } from "./provider"
 
 type ButtonConnectWalletProps = VariantProps<typeof buttonVariants> & {
   className?: string
+  authenticate?: boolean
 }
 
 function ConnectButton({
   className,
   variant = "default",
   size = "default",
+  authenticate = true,
 }: ButtonConnectWalletProps) {
   const ctx = useContext(WalletContext)
 
   if (!ctx)
     throw new Error("ConnectButton must be used within StellarWalletProvider")
 
-  const { connectedAddress, isConnecting } = ctx
+  const { connectedAddress, isConnecting, setConnectionIntent } = ctx
 
   const buttonWrapper = useRef<HTMLDivElement>(null)
 
@@ -58,6 +60,12 @@ function ConnectButton({
         }),
         "relative overflow-hidden"
       )}
+      onPointerDownCapture={() =>
+        setConnectionIntent(authenticate ? "AUTHENTICATED" : "PUBLIC")
+      }
+      onClickCapture={() =>
+        setConnectionIntent(authenticate ? "AUTHENTICATED" : "PUBLIC")
+      }
     >
       {isConnecting ? (
         <SpinnerIcon className="animate-spin" />

@@ -17,6 +17,7 @@ type RequestOptions = {
   integrity?: string
   mode?: RequestMode
   priority?: RequestPriority
+  credentials?: RequestCredentials
 }
 
 export type ApiResponse<TData = unknown> = {
@@ -120,11 +121,12 @@ async function fetchApi<TResponse>(
     params,
     cache = "no-store",
     next,
+    credentials = "include",
   } = options
 
   // Get cookies from the request when running on server
   let cookieHeader = cookie
-  if (typeof window === "undefined" && !cookie) {
+  if (credentials !== "omit" && typeof window === "undefined" && !cookie) {
     cookieHeader = await getServerCookies()
   }
 
@@ -144,10 +146,12 @@ async function fetchApi<TResponse>(
       ...(isFormData ? {} : { "Content-Type": "application/json" }),
       Accept: "application/json",
       ...headers,
-      ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+      ...(credentials !== "omit" && cookieHeader
+        ? { Cookie: cookieHeader }
+        : {}),
     },
     body: isFormData ? body : body ? JSON.stringify(body) : undefined,
-    credentials: "include",
+    credentials,
     cache,
     next,
   })
