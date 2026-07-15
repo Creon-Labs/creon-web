@@ -3,6 +3,7 @@ export { MilestoneStatusBadge } from "./components/milestone-status-badge"
 export { MilestonesSkeleton } from "./components/milestones-skeleton"
 export { EntrepreneurMilestonesPage } from "./pages/entrepreneur-milestones-page"
 export { EntrepreneurMilestoneDetailPage } from "./pages/entrepreneur-milestone-detail-page"
+export { InvestorMilestoneVotingPage } from "./pages/investor-milestone-voting-page"
 export { MilestoneDetailSkeleton } from "./components/milestone-detail-skeleton"
 export { SubmitDisbursementDialog } from "./components/submit-disbursement-dialog"
 

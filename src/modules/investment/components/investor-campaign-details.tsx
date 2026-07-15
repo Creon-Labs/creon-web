@@ -1,5 +1,7 @@
 "use client"
 
+import type { Route } from "next"
+import Link from "next/link"
 import {
   ArrowsClockwiseIcon,
   CalendarBlankIcon,
@@ -159,6 +161,7 @@ export function InvestorCampaignDetails({
         <div className="flex min-w-0 flex-col gap-6">
           <CampaignMediaGallery media={campaign.media} />
           <CampaignMilestones
+            campaignId={campaign.id}
             milestones={milestonesQuery.data}
             error={milestonesQuery.error}
             isLoading={milestonesQuery.isLoading}
@@ -194,12 +197,14 @@ function CampaignStat({ label, value }: { label: string; value: string }) {
 }
 
 function CampaignMilestones({
+  campaignId,
   milestones,
   error,
   isLoading,
   isFetching,
   onRefresh,
 }: {
+  campaignId: string
   milestones: Milestone[] | undefined
   error: Error | null
   isLoading: boolean
@@ -256,6 +261,19 @@ function CampaignMilestones({
                 <span className="text-xs font-medium">
                   {formatUsdcAmount(milestone.amount)} USDC
                 </span>
+                <div>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link
+                      href={
+                        `/investor/discovers/${campaignId}/milestones/${milestone.id}` as Route
+                      }
+                    >
+                      {milestone.status === "VOTING"
+                        ? "Review and vote"
+                        : "View milestone"}
+                    </Link>
+                  </Button>
+                </div>
               </li>
             ))}
           </ol>

@@ -234,7 +234,7 @@ bergantung pada ID, status, dan bentuk response yang benar.
       Tambahkan `POST /milestones/:milestoneId/vote` dengan pilihan `APPROVE` atau
       `REJECT`, termasuk kemampuan mengubah vote sebelum `votingEndsAt`.
 
-- [ ] **Bangun UI voting untuk investor.**
+- [x] **Bangun UI voting untuk investor.**
       Tampilkan proof, waktu tersisa, bobot saham, pilihan vote, vote pengguna,
       tally, quorum, approval threshold, dan status campaign. Investor tanpa saham
       mendapat penjelasan 403 yang sesuai.
