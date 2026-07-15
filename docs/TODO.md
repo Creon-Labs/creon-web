@@ -84,22 +84,22 @@ bergantung pada ID, status, dan bentuk response yang benar.
 
 ## Flow 2 — Submit dan Approval KYC
 
-- [ ] **Aktifkan polling KYC ketika status `PENDING`.**
+- [x] **Aktifkan polling KYC ketika status `PENDING`.**
   Gunakan `refetchInterval` sekitar 10–30 detik hanya selama status masih
   `PENDING`, lalu hentikan polling setelah `APPROVED`, `REJECTED`, atau
   `REVOKED`.
 
-- [ ] **Berikan pesan khusus untuk NIK duplikat (`409`).**
+- [x] **Berikan pesan khusus untuk NIK duplikat (`409`).**
   Jangan hanya menampilkan error generik. Copy yang disarankan:
   “NIK ini sudah digunakan untuk memverifikasi akun lain.”
 
-- [ ] **Pastikan guard aksi konsisten dengan status KYC.**
+- [x] **Pastikan guard aksi konsisten dengan status KYC.**
   Tombol create proposal, invest, vote, claim dividend, dan claim refund harus
   dinonaktifkan atau dialihkan ke KYC sebelum request dikirim. Status
   `REJECTED` dan `REVOKED` tetap menyediakan jalur resubmit dengan copy yang
   berbeda.
 
-- [ ] **Tangani masa sinkronisasi whitelist setelah KYC approved.**
+- [x] **Tangani masa sinkronisasi whitelist setelah KYC approved.**
   Karena `whitelistStatus` belum diekspos oleh `/kyc/me`, kegagalan investasi
   pertama setelah approval perlu menampilkan pesan retry/backoff, bukan error
   sistem yang menyesatkan.
