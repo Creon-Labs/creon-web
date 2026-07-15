@@ -24,6 +24,13 @@ import { Separator } from "@shadcn-ui/separator"
 import { Alert } from "@shadcn-ui/alert"
 
 import type { CreateProposalFormValues } from "../../schema/proposal-schema"
+import {
+  addStroops,
+  compareStroops,
+  decimalAmountToStroops,
+  formatStroops,
+  subtractStroops,
+} from "../../schema/proposal-schema"
 
 // ---------------------------------------------------------------------------
 // MilestoneAmountSummary
@@ -39,17 +46,27 @@ function MilestoneAmountSummary({
   requestedAmount,
   milestones,
 }: MilestoneAmountSummaryProps) {
-  const target = parseFloat(requestedAmount || "0")
-  const total = milestones.reduce((sum, m) => {
-    const v = parseFloat(m.amount || "0")
-    return sum + (isNaN(v) ? 0 : v)
-  }, 0)
+  const isValidAmount = (amount: string) => /^\d+(\.\d{1,7})?$/.test(amount)
+  const hasValidTarget = isValidAmount(requestedAmount)
+  const hasValidMilestones = milestones.every((milestone) =>
+    isValidAmount(milestone.amount)
+  )
 
+  if (!hasValidTarget) return null
+
+  const target = decimalAmountToStroops(requestedAmount)
+  const total = hasValidMilestones
+    ? milestones.reduce(
+        (sum, milestone) =>
+          addStroops(sum, decimalAmountToStroops(milestone.amount)),
+        "0"
+      )
+    : "0"
+  const difference = subtractStroops(total, target)
   const isBalanced =
-    !isNaN(target) && target > 0 && Math.abs(total - target) < 0.0000001
-  const diff = total - target
-
-  if (!target || isNaN(target)) return null
+    hasValidMilestones && target !== "0" && compareStroops(total, target) === 0
+  const formattedTotal = formatStroops(total)
+  const formattedDifference = formatStroops(difference.amount)
 
   return (
     <Alert
@@ -67,10 +84,10 @@ function MilestoneAmountSummary({
           <>Milestone amounts sum correctly to {requestedAmount} USDC</>
         ) : (
           <>
-            Milestone amounts sum to <strong>{total.toFixed(7)}</strong> USDC —
+            Milestone amounts sum to <strong>{formattedTotal}</strong> USDC —
             must equal <strong>{requestedAmount}</strong> USDC (
-            {diff > 0 ? "+" : ""}
-            {diff.toFixed(7)} USDC remaining)
+            {difference.sign > 0 ? "+" : difference.sign < 0 ? "-" : ""}
+            {formattedDifference} USDC difference)
           </>
         )}
       </span>

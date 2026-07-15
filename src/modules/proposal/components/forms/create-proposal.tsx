@@ -140,6 +140,8 @@ export function CreateProposalForm() {
       ],
       images: [],
       documents: [],
+      existingImageCount: 0,
+      existingDocumentCount: 0,
     },
   })
 
@@ -279,10 +281,7 @@ export function CreateProposalForm() {
               render={({ field }) => (
                 <Field data-invalid={!!errors.category || undefined}>
                   <FieldLabel htmlFor="category">Business Category</FieldLabel>
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger
                       id="category"
                       aria-invalid={!!errors.category}
@@ -297,11 +296,14 @@ export function CreateProposalForm() {
                             {cat}
                           </SelectItem>
                         ))}
-                        {field.value && !(BUSINESS_CATEGORIES as readonly string[]).includes(field.value) && (
-                          <SelectItem key={field.value} value={field.value}>
-                            {field.value}
-                          </SelectItem>
-                        )}
+                        {field.value &&
+                          !(BUSINESS_CATEGORIES as readonly string[]).includes(
+                            field.value
+                          ) && (
+                            <SelectItem key={field.value} value={field.value}>
+                              {field.value}
+                            </SelectItem>
+                          )}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
