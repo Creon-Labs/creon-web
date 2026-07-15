@@ -3,6 +3,7 @@
 import { useGetMyRefundClaims } from "../api/get-my-refund-claims"
 import { useClaimRefund } from "../api/use-claim-refund"
 import { RefundClaim } from "../types"
+import { getRefundClaimState } from "../utils/refund-claim-state"
 import {
   Card,
   CardHeader,
@@ -31,15 +32,19 @@ function RefundClaimCard({ claim }: { claim: RefundClaim }) {
     step,
     isPending,
   } = useClaimRefund({
-    onSuccess: () => {
-      toast.success("Refund successfully claimed!")
+    onSuccess: (updatedClaim) => {
+      toast.success("Refund successfully claimed", {
+        description: updatedClaim.claimTxHash
+          ? `Status: ${updatedClaim.status}. Tx: ${updatedClaim.claimTxHash}`
+          : `Status: ${updatedClaim.status}. Your USDC was sent to your wallet.`,
+      })
     },
     onError: (error) => {
       toast.error(error.message || "Failed to claim refund.")
     },
   })
 
-  const isPendingStatus = claim.status === "PENDING"
+  const claimState = getRefundClaimState(claim)
   const isClaimed = claim.status === "CLAIMED"
   const isFailed = claim.status === "FAILED"
 
@@ -88,13 +93,30 @@ function RefundClaimCard({ claim }: { claim: RefundClaim }) {
         </div>
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Refund Entitlement</span>
-          <span className="font-medium">{claim.amount} XLM</span>
+          <span className="font-medium">{claim.amount} USDC</span>
         </div>
+        <p className="text-sm text-muted-foreground">
+          Refund is calculated pro-rata from the campaign funds still held after
+          milestone disbursements; it may be less than your original investment.
+        </p>
+        {claimState.description ? (
+          <p className="text-sm text-muted-foreground">
+            {claimState.description}
+          </p>
+        ) : null}
+        {claim.claimTxHash ? (
+          <div className="flex flex-col gap-1 text-sm">
+            <span className="text-muted-foreground">Claim transaction</span>
+            <span className="font-mono text-xs break-all">
+              {claim.claimTxHash}
+            </span>
+          </div>
+        ) : null}
       </CardContent>
       <CardFooter>
         <Button
           className="w-full"
-          disabled={!isPendingStatus || isPending}
+          disabled={!claimState.canClaim || isPending}
           onClick={handleClaim}
           variant={isClaimed ? "secondary" : "default"}
         >
@@ -105,9 +127,7 @@ function RefundClaimCard({ claim }: { claim: RefundClaim }) {
               : step === "SIGNING"
                 ? "Awaiting Wallet..."
                 : "Submitting..."
-            : isClaimed
-              ? "Already Claimed"
-              : "Claim Refund"}
+            : claimState.label}
         </Button>
       </CardFooter>
     </Card>

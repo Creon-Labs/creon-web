@@ -24,6 +24,13 @@ export const useGetMyRefundClaims = ({
 }: UseGetMyRefundClaimsOptions = {}) => {
   return useQuery({
     ...getMyRefundClaimsQueryOptions(),
+    refetchInterval: (query) =>
+      query.state.data?.some(
+        (claim) =>
+          claim.status === "PENDING" && claim.refund?.status === "PENDING"
+      )
+        ? 5_000
+        : false,
     ...config,
   })
 }

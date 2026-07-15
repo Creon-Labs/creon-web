@@ -8,8 +8,9 @@ export default function InvestorRefundPage() {
     <>
       <div className="flex flex-col gap-2">
         <p className="text-muted-foreground">
-          View your refund entitlements from cancelled campaigns and claim them
-          to your wallet.
+          View pro-rata USDC refund entitlements from cancelled campaigns. The
+          amount is based on funds remaining after milestone disbursements and
+          may be lower than your original investment.
         </p>
       </div>
       <RefundList />

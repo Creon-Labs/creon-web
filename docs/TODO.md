@@ -253,32 +253,32 @@ bergantung pada ID, status, dan bentuk response yang benar.
 
 ## Flow 9 — Cancel Campaign dan Refund
 
-- [ ] **Pastikan admin membatalkan berdasarkan campaign ID.**
+- [x] **Pastikan admin membatalkan berdasarkan campaign ID.**
       Daftar admin saat ini berangkat dari proposal item. Pastikan ID yang dikirim
       ke `/admin/campaigns/:id/cancel` adalah campaign ID, bukan proposal ID.
 
-- [ ] **Polling status refund setelah cancel.**
+- [x] **Polling status refund setelah cancel.**
       Gunakan `GET /campaigns/:campaignId/refund` sampai `COMPLETED` atau `FAILED`
       untuk menampilkan progres proses cancel on-chain dan pembuatan Merkle tree.
 
-- [ ] **Gate tombol Claim Refund dengan nested refund status.**
+- [x] **Gate tombol Claim Refund dengan nested refund status.**
       Claim hanya aktif jika `claim.status === "PENDING"` dan
       `claim.refund.status === "COMPLETED"`. Saat refund masih `PENDING`, tampilkan
       “refund sedang diproses”.
 
-- [ ] **Perbaiki satuan refund menjadi USDC.**
+- [x] **Perbaiki satuan refund menjadi USDC.**
       UI saat ini menampilkan entitlement sebagai XLM, padahal flow backend
       mengembalikan sisa dana dalam USDC.
 
-- [ ] **Jelaskan bahwa refund bukan selalu pengembalian penuh.**
+- [x] **Jelaskan bahwa refund bukan selalu pengembalian penuh.**
       Copy UI harus menyebut nominal dihitung pro-rata dari sisa dana campaign
       setelah pencairan milestone, bukan selalu sebesar investasi awal.
 
-- [ ] **Refresh data setelah claim refund sukses.**
+- [x] **Refresh data setelah claim refund sukses.**
       Invalidate `refunds/mine`, campaign refund, holdings, dan ringkasan dashboard
       agar tombol serta total refund langsung berubah ke state terbaru.
 
-- [ ] **Tampilkan tx hash dan status claim.**
+- [x] **Tampilkan tx hash dan status claim.**
       Sediakan feedback setelah submit `201`, tanpa mengasumsikan bahwa semua
       endpoint sukses selalu mengembalikan HTTP 200.
 

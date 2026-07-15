@@ -93,7 +93,7 @@ export function SummaryCards() {
             <div className="text-2xl font-bold">
               {formatUsd(totalRefund, { showSymbol: false })}{" "}
               <span className="text-sm font-normal text-muted-foreground">
-                USDT
+                USDC
               </span>
             </div>
           )}
