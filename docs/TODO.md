@@ -243,7 +243,7 @@ bergantung pada ID, status, dan bentuk response yang benar.
       Jelaskan bahwa voting dapat diperpanjang satu kali dan akan default-approve
       bila quorum tetap tidak tercapai, agar perilaku sistem tidak mengejutkan user.
 
-- [ ] **Polling status milestone hingga terminal.**
+- [x] **Polling status milestone hingga terminal.**
       Selama `VOTING`, `APPROVED`, atau `RELEASING`, refresh detail sampai
       `RELEASED`, `REJECTED`, atau `FAILED`.
 

@@ -28,6 +28,7 @@ import { MilestoneProofCard } from "../components/milestone-proof-card"
 import { MilestoneQuorumAlert } from "../components/milestone-quorum-alert"
 import { MilestoneTallyCard } from "../components/milestone-tally-card"
 import { MilestoneVoteCard } from "../components/milestone-vote-card"
+import { getMilestonePollingInterval } from "../utils/milestone-polling"
 
 type InvestorMilestoneVotingPageProps = {
   campaignId: string
@@ -38,7 +39,13 @@ export function InvestorMilestoneVotingPage({
   campaignId,
   milestoneId,
 }: InvestorMilestoneVotingPageProps) {
-  const milestoneQuery = useGetMilestone({ milestoneId })
+  const milestoneQuery = useGetMilestone({
+    milestoneId,
+    config: {
+      refetchInterval: (query) =>
+        getMilestonePollingInterval(query.state.data?.status),
+    },
+  })
   const campaignQuery = useGetCampaignById({ id: campaignId })
 
   if (milestoneQuery.isLoading || campaignQuery.isLoading) {
