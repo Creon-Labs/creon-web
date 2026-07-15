@@ -45,6 +45,7 @@ export type ProposalStatus =
 
 export type AdminProposalItem = {
   id: string
+  campaignId: string | null
   businessName: string
   category: string
   location?: string | null

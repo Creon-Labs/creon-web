@@ -5,6 +5,7 @@ import { z } from "zod"
 import { toast } from "sonner"
 
 import { useHookForm } from "@/shared/lib/hook-form"
+import type { AdminCancelCampaignResponse } from "../../types"
 import {
   useApproveProposal,
   useRejectProposal,
@@ -208,14 +209,16 @@ const cancelSchema = z.object({
 })
 
 type CancelCampaignDialogProps = {
-  campaignId: string | null // Using proposal ID as campaign ID if we are cancelling from the proposal view (or if they are mapped)
+  campaignId: string | null
   businessName: string | null
+  onRefundOpened: (refund: AdminCancelCampaignResponse) => void
   onOpenChange: (open: boolean) => void
 }
 
 export function CancelCampaignDialog({
   campaignId,
   businessName,
+  onRefundOpened,
   onOpenChange,
 }: CancelCampaignDialogProps) {
   const { mutate: cancel, isPending } = useCancelCampaign()
@@ -229,10 +232,11 @@ export function CancelCampaignDialog({
     cancel(
       { id: campaignId, reason: data.reason },
       {
-        onSuccess: () => {
+        onSuccess: (refund) => {
           toast.success("Campaign Canceled", {
             description: `Campaign ${businessName} is canceled and refund process has started.`,
           })
+          onRefundOpened(refund)
           form.reset()
           onOpenChange(false)
         },

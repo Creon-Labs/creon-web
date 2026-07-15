@@ -113,7 +113,7 @@ export function AdminCampaignsTable({
                       </>
                     )}
 
-                    {item.status === "APPROVED" && (
+                    {item.status === "APPROVED" && item.campaignId && (
                       <>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => onCancel(item)}>
@@ -123,6 +123,11 @@ export function AdminCampaignsTable({
                           </span>
                         </DropdownMenuItem>
                       </>
+                    )}
+                    {item.status === "APPROVED" && !item.campaignId && (
+                      <DropdownMenuItem disabled>
+                        Campaign ID unavailable
+                      </DropdownMenuItem>
                     )}
                   </DropdownMenuContent>
                 </DropdownMenu>

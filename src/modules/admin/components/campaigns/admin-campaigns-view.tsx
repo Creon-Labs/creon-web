@@ -7,6 +7,7 @@ import {
   ProposalStatus,
   useGetAdminProposalList,
 } from "@/modules/admin"
+import { useGetCampaignRefund } from "@/modules/refund"
 
 import { AdminCampaignsTable } from "./admin-campaigns-table"
 import {
@@ -17,6 +18,64 @@ import {
 
 import { Tabs, TabsList, TabsTrigger } from "@/shared/components/shadcn-ui/tabs"
 import { Spinner } from "@/shared/components/shadcn-ui/spinner"
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/shared/components/shadcn-ui/alert"
+import { Button } from "@/shared/components/shadcn-ui/button"
+import {
+  CheckCircleIcon,
+  InfoIcon,
+  WarningCircleIcon,
+} from "@phosphor-icons/react"
+
+type RefundProgressProps = {
+  campaignId: string
+  onDismiss: () => void
+}
+
+function RefundProgress({ campaignId, onDismiss }: RefundProgressProps) {
+  const refundQuery = useGetCampaignRefund({ campaignId })
+  const refund = refundQuery.data
+  const isFailed = refund?.status === "FAILED"
+  const isCompleted = refund?.status === "COMPLETED"
+
+  return (
+    <Alert variant={isFailed ? "destructive" : "default"}>
+      {refundQuery.isLoading || refund?.status === "PENDING" ? (
+        <Spinner />
+      ) : isFailed ? (
+        <WarningCircleIcon weight="fill" />
+      ) : isCompleted ? (
+        <CheckCircleIcon weight="fill" />
+      ) : (
+        <InfoIcon weight="fill" />
+      )}
+      <AlertTitle>
+        {isFailed
+          ? "Refund processing failed"
+          : isCompleted
+            ? "Refund is ready for investors"
+            : "Refund sedang diproses"}
+      </AlertTitle>
+      <AlertDescription className="flex flex-col items-start gap-3">
+        <span>
+          {isFailed
+            ? "The on-chain cancellation or Merkle tree setup did not finish. Check the backend job before retrying."
+            : isCompleted
+              ? "The on-chain cancellation and Merkle tree are complete. Eligible investors can now claim their pro-rata USDC refund."
+              : "Waiting for the on-chain cancellation and Merkle tree generation to finish. This status refreshes automatically."}
+        </span>
+        {(isFailed || isCompleted) && (
+          <Button size="sm" variant="outline" onClick={onDismiss}>
+            Dismiss
+          </Button>
+        )}
+      </AlertDescription>
+    </Alert>
+  )
+}
 
 export function AdminCampaignsView() {
   const [status, setStatus] = React.useState<ProposalStatus>("SUBMITTED")
@@ -32,6 +91,9 @@ export function AdminCampaignsView() {
     React.useState<AdminProposalItem | null>(null)
   const [cancelCampaign, setCancelCampaign] =
     React.useState<AdminProposalItem | null>(null)
+  const [refundCampaignId, setRefundCampaignId] = React.useState<string | null>(
+    null
+  )
 
   return (
     <div className="flex flex-col gap-6">
@@ -46,6 +108,13 @@ export function AdminCampaignsView() {
           </p>
         </div>
       </div>
+
+      {refundCampaignId ? (
+        <RefundProgress
+          campaignId={refundCampaignId}
+          onDismiss={() => setRefundCampaignId(null)}
+        />
+      ) : null}
 
       <div className="flex flex-col gap-4">
         <Tabs
@@ -91,8 +160,9 @@ export function AdminCampaignsView() {
         onOpenChange={(open) => !open && setRejectProposal(null)}
       />
       <CancelCampaignDialog
-        campaignId={cancelCampaign?.id ?? null}
+        campaignId={cancelCampaign?.campaignId ?? null}
         businessName={cancelCampaign?.businessName ?? null}
+        onRefundOpened={(refund) => setRefundCampaignId(refund.campaignId)}
         onOpenChange={(open) => !open && setCancelCampaign(null)}
       />
     </div>

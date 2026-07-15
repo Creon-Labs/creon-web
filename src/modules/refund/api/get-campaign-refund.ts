@@ -33,6 +33,8 @@ export const useGetCampaignRefund = ({
 }: UseGetCampaignRefundOptions) => {
   return useQuery({
     ...getCampaignRefundQueryOptions({ campaignId }),
+    refetchInterval: (query) =>
+      query.state.data?.status === "PENDING" ? 5_000 : false,
     ...config,
   })
 }
