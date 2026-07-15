@@ -32,6 +32,13 @@ export type Milestone = {
 
 export type VoteChoice = "APPROVE" | "REJECT"
 
+export type MilestoneVote = {
+  milestoneId: string
+  choice: VoteChoice
+  /** The voter's current share balance, as a decimal string (7 decimals) */
+  weight: string
+}
+
 export type MilestoneTally = {
   /** Total voting weight (shares) cast so far, as a decimal string */
   participation: string

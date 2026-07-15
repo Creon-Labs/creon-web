@@ -230,7 +230,7 @@ bergantung pada ID, status, dan bentuk response yang benar.
       mencapai target yang dapat disubmit. Jelaskan error previous milestone belum
       released, campaign belum penuh, dan campaign cancelled.
 
-- [ ] **Implementasikan API dan mutation voting.**
+- [x] **Implementasikan API dan mutation voting.**
       Tambahkan `POST /milestones/:milestoneId/vote` dengan pilihan `APPROVE` atau
       `REJECT`, termasuk kemampuan mengubah vote sebelum `votingEndsAt`.
 

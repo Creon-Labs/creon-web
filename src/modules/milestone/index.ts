@@ -9,6 +9,7 @@ export { SubmitDisbursementDialog } from "./components/submit-disbursement-dialo
 export * from "./api/get-campaign-milestones"
 export * from "./api/get-milestone"
 export * from "./api/submit-disbursement"
+export * from "./api/vote-milestone"
 export * from "./utils/milestone-submit-state"
 
 export type {
@@ -16,5 +17,6 @@ export type {
   MilestoneStatus,
   MilestoneDetail,
   MilestoneTally,
+  MilestoneVote,
   VoteChoice,
 } from "./types"
