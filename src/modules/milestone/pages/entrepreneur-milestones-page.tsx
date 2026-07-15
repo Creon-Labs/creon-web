@@ -5,12 +5,15 @@ import { ArrowsClockwiseIcon, InfoIcon } from "@phosphor-icons/react"
 import { Button } from "@shadcn-ui/button"
 
 import { Text } from "@/shared/components/primitives/typography"
+import type { Campaign } from "@/modules/campaign"
 
 import type { Milestone } from "../types"
 import { MilestoneCard } from "../components/milestone-card"
+import { getMilestoneSubmitState } from "../utils/milestone-submit-state"
 
 type EntrepreneurMilestonesPageProps = {
   milestones: Milestone[]
+  campaign: Pick<Campaign, "goalAmount" | "raisedAmount" | "status">
   tokenSymbol?: string
   lastUpdatedAt?: string
   onRefresh?: () => void
@@ -21,6 +24,7 @@ type EntrepreneurMilestonesPageProps = {
 
 export function EntrepreneurMilestonesPage({
   milestones,
+  campaign,
   tokenSymbol = "USDT",
   lastUpdatedAt,
   onRefresh,
@@ -82,15 +86,24 @@ export function EntrepreneurMilestonesPage({
       ) : (
         /* Milestones Grid */
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {sortedMilestones.map((milestone) => (
-            <MilestoneCard
-              key={milestone.id}
-              milestone={milestone}
-              tokenSymbol={tokenSymbol}
-              onSubmitProgress={onSubmitProgress}
-              isSubmitting={isSubmitting}
-            />
-          ))}
+          {sortedMilestones.map((milestone) => {
+            const submitState = getMilestoneSubmitState({
+              campaign,
+              milestone,
+              milestones: sortedMilestones,
+            })
+
+            return (
+              <MilestoneCard
+                key={milestone.id}
+                milestone={milestone}
+                submitState={submitState}
+                tokenSymbol={tokenSymbol}
+                onSubmitProgress={onSubmitProgress}
+                isSubmitting={isSubmitting}
+              />
+            )
+          })}
         </div>
       )}
     </div>

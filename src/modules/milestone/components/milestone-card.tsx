@@ -3,7 +3,13 @@
 import Link from "next/link"
 
 import { format } from "date-fns"
-import { CheckCircleIcon, ClockIcon, WarningIcon } from "@phosphor-icons/react"
+import {
+  CheckCircleIcon,
+  ClockIcon,
+  WarningCircleIcon,
+  WarningIcon,
+} from "@phosphor-icons/react"
+import { Alert, AlertDescription, AlertTitle } from "@shadcn-ui/alert"
 import { Button } from "@shadcn-ui/button"
 import { Card, CardContent, CardFooter } from "@shadcn-ui/card"
 import { Progress } from "@shadcn-ui/progress"
@@ -12,11 +18,13 @@ import { formatUsd } from "@/shared/utils/format-usd"
 import { H5, Text } from "@/shared/components/primitives/typography"
 
 import type { Milestone } from "../types"
+import type { MilestoneSubmitState } from "../utils/milestone-submit-state"
 import { MilestoneStatusBadge } from "./milestone-status-badge"
 import { Route } from "next"
 
 type MilestoneCardProps = {
   milestone: Milestone
+  submitState: MilestoneSubmitState
   tokenSymbol?: string
   onSubmitProgress?: (milestoneId: string) => void
   isSubmitting?: boolean
@@ -24,6 +32,7 @@ type MilestoneCardProps = {
 
 export function MilestoneCard({
   milestone,
+  submitState,
   tokenSymbol = "USDT",
   onSubmitProgress,
   isSubmitting = false,
@@ -74,13 +83,23 @@ export function MilestoneCard({
 
       <CardFooter className="flex flex-col items-stretch gap-3 border-t bg-muted/10 p-4">
         {milestone.status === "PENDING" && (
-          <Button
-            className="w-full"
-            disabled={isSubmitting}
-            onClick={() => onSubmitProgress?.(milestone.id)}
-          >
-            Submit Progress
-          </Button>
+          <>
+            <Button
+              className="w-full"
+              disabled={isSubmitting || !submitState.canSubmit}
+              onClick={() => onSubmitProgress?.(milestone.id)}
+            >
+              Submit Progress
+            </Button>
+
+            {!submitState.canSubmit && (
+              <Alert>
+                <WarningCircleIcon />
+                <AlertTitle>{submitState.title}</AlertTitle>
+                <AlertDescription>{submitState.description}</AlertDescription>
+              </Alert>
+            )}
+          </>
         )}
 
         {milestone.status === "VOTING" && (

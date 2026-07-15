@@ -9,6 +9,7 @@ import {
   useGetCampaignMilestones,
   SubmitDisbursementDialog,
 } from "@/modules/milestone"
+import { useGetCampaignById } from "@/modules/campaign"
 
 export default function Page({
   params,
@@ -29,18 +30,32 @@ export default function Page({
     isFetching,
   } = useGetCampaignMilestones({ campaignId: resolvedParams.campaignId })
 
-  console.log({ milestones })
+  const {
+    data: campaign,
+    isLoading: isCampaignLoading,
+    isFetching: isCampaignFetching,
+    refetch: refetchCampaign,
+  } = useGetCampaignById({ id: resolvedParams.campaignId })
 
-  if (isLoading) return <MilestonesSkeleton />
+  if (isLoading || isCampaignLoading) return <MilestonesSkeleton />
+
+  if (!campaign) {
+    return (
+      <div className="py-10 text-center font-medium text-muted-foreground">
+        Campaign not found
+      </div>
+    )
+  }
 
   return (
     <>
       <EntrepreneurMilestonesPage
         milestones={milestones || []}
+        campaign={campaign}
         tokenSymbol="USDT"
         lastUpdatedAt="Just now"
-        onRefresh={refetch}
-        isRefreshing={isFetching}
+        onRefresh={() => void Promise.all([refetch(), refetchCampaign()])}
+        isRefreshing={isFetching || isCampaignFetching}
         onSubmitProgress={(milestoneId) => setSelectedMilestoneId(milestoneId)}
       />
 
