@@ -9,6 +9,10 @@ import {
 import { Badge } from "@shadcn-ui/badge"
 import { Empty, EmptyTitle, EmptyDescription } from "@shadcn-ui/empty"
 import { ProfitDistribution, DistributionStatus } from "../types"
+import {
+  getDistributionStatusCopy,
+  isDistributionSnapshotReady,
+} from "../utils/distribution-state"
 
 interface DistributionHistoryTableProps {
   distributions: ProfitDistribution[]
@@ -50,6 +54,7 @@ export function DistributionHistoryTable({
           <TableRow>
             <TableHead>Date</TableHead>
             <TableHead>Total Amount</TableHead>
+            <TableHead>Snapshot</TableHead>
             <TableHead>Reward Per Share</TableHead>
             <TableHead>Claimed Progress</TableHead>
             <TableHead className="text-right">Status</TableHead>
@@ -63,11 +68,12 @@ export function DistributionHistoryTable({
               day: "numeric",
             })
 
-            // Calculate claimed percentage safely
             const totalAmount = parseFloat(dist.totalAmount)
             const totalClaimed = parseFloat(dist.totalClaimed)
             const claimedPercentage =
               totalAmount > 0 ? (totalClaimed / totalAmount) * 100 : 0
+            const isSnapshotReady = isDistributionSnapshotReady(dist)
+            const statusCopy = getDistributionStatusCopy(dist.status)
 
             return (
               <TableRow key={dist.id}>
@@ -81,7 +87,23 @@ export function DistributionHistoryTable({
                   USDC
                 </TableCell>
                 <TableCell>
-                  {dist.rewardPerShare
+                  {isSnapshotReady ? (
+                    <div className="flex flex-col gap-1 text-sm">
+                      <span>{dist.totalShares} shares</span>
+                      <span className="font-mono text-xs text-muted-foreground">
+                        {dist.merkleRoot?.slice(0, 12)}…
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-sm text-muted-foreground">
+                      {dist.status === "PENDING"
+                        ? "Snapshot processing…"
+                        : "Snapshot unavailable"}
+                    </span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {isSnapshotReady && dist.rewardPerShare
                     ? `$${parseFloat(dist.rewardPerShare).toLocaleString(
                         "en-US",
                         {
@@ -89,7 +111,9 @@ export function DistributionHistoryTable({
                           maximumFractionDigits: 6,
                         }
                       )}`
-                    : "-"}
+                    : dist.status === "PENDING"
+                      ? "Processing snapshot"
+                      : "Snapshot unavailable"}
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
@@ -109,6 +133,11 @@ export function DistributionHistoryTable({
                   <Badge variant={getStatusBadgeVariant(dist.status)}>
                     {dist.status}
                   </Badge>
+                  {!isSnapshotReady ? (
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {statusCopy.description}
+                    </p>
+                  ) : null}
                 </TableCell>
               </TableRow>
             )

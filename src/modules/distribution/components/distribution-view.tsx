@@ -2,6 +2,7 @@
 
 import { Button } from "@shadcn-ui/button"
 import { Skeleton } from "@shadcn-ui/skeleton"
+import { Alert, AlertDescription, AlertTitle } from "@shadcn-ui/alert"
 import { useGetCampaignDistributions } from "../api/get-campaign-distributions"
 import { DistributeProfitDialog } from "./distribute-profit-dialog"
 import { DistributionHistoryTable } from "./distribution-history-table"
@@ -23,6 +24,9 @@ export function DistributionView({
       enabled: !!campaignId,
     },
   })
+  const hasPendingDistribution = distributions.some(
+    (distribution) => distribution.status === "PENDING"
+  )
 
   return (
     <div className="flex flex-col gap-8">
@@ -91,6 +95,16 @@ export function DistributionView({
         </div>
       ) : (
         <>
+          {hasPendingDistribution ? (
+            <Alert>
+              <AlertTitle>Processing a dividend distribution</AlertTitle>
+              <AlertDescription>
+                The shareholder snapshot is being prepared. This page refreshes
+                automatically until the distribution is ready for investors to
+                claim.
+              </AlertDescription>
+            </Alert>
+          ) : null}
           <DistributionStats distributions={distributions} />
 
           <div className="flex flex-col gap-4">

@@ -2,6 +2,7 @@ import { useQuery, queryOptions } from "@tanstack/react-query"
 import { api, type ApiResponse } from "@/shared/lib/api-client"
 import { QueryConfig } from "@/shared/lib/react-query"
 import { ProfitDistribution } from "../types"
+import { getDistributionPollingInterval } from "../utils/distribution-state"
 
 export type GetCampaignDistributionsInput = {
   campaignId: string
@@ -23,6 +24,8 @@ export const getCampaignDistributionsQueryOptions = ({
   queryOptions({
     queryKey: ["campaigns", campaignId, "distributions"],
     queryFn: () => getCampaignDistributions({ campaignId }),
+    refetchInterval: (query) =>
+      getDistributionPollingInterval(query.state.data),
   })
 
 type UseGetCampaignDistributionsOptions = GetCampaignDistributionsInput & {
