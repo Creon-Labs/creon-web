@@ -1,13 +1,10 @@
 "use client"
 
+import { InvestmentHistoryPage } from "@/modules/investment"
 import { usePageTitle } from "@/shared/components/sections/app-header"
 
 export default function InvestorInvestmentsPage() {
   usePageTitle("Investments")
 
-  return (
-    <>
-      <h1 className="text-2xl font-semibold">Investments</h1>
-    </>
-  )
+  return <InvestmentHistoryPage />
 }

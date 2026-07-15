@@ -2,7 +2,7 @@
 
 import { use } from "react"
 
-import { CampaignDetails } from "@/modules/campaign"
+import { InvestorCampaignDetails } from "@/modules/investment"
 import { usePageTitle } from "@/shared/components/sections/app-header"
 
 export default function CampaignDetailPage({
@@ -13,5 +13,5 @@ export default function CampaignDetailPage({
   usePageTitle("Campaign details")
   const { campaignId } = use(params)
 
-  return <CampaignDetails campaignId={campaignId} />
+  return <InvestorCampaignDetails campaignId={campaignId} />
 }
