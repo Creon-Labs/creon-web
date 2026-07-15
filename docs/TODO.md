@@ -18,7 +18,7 @@ integrasi dan perilaku pengguna, bukan hanya keberadaan file API atau komponen.
 | 7. Klaim Dividen        | Selesai                | API relay, tombol claim bergated, dan hasil klaim pada entitlement investor tersedia.                                  |
 | 8. Milestone & Voting   | Sebagian selesai       | Submit proof dan tampilan tally entrepreneur tersedia; voting investor dan polling release belum ada.                 |
 | 9. Cancel & Refund      | Sebagian besar selesai | Cancel admin dan relay claim refund tersedia; readiness gate, polling, dan copy nominal perlu diperbaiki.             |
-| 10. Faucet USDC         | Belum ada              | Belum ada API module maupun UI trustline/claim.                                                                       |
+| 10. Faucet USDC         | Selesai                | Faucet publik menyediakan connect tanpa login, Friendbot, relay trustline, cooldown, dan claim issuer tanpa signature. |
 
 ## Prioritas 0 — Memperbaiki Kontrak Data dan Routing
 
@@ -284,23 +284,23 @@ bergantung pada ID, status, dan bentuk response yang benar.
 
 ## Flow 10 — Faucet USDC Test
 
-- [ ] **Buat module API faucet.**
+- [x] **Buat module API faucet.**
       Tambahkan API function untuk trustline prepare, trustline submit, dan claim
       USDC. Endpoint ini public dan tidak memerlukan status login/KYC.
 
-- [ ] **Bangun UI faucet publik.**
+- [x] **Bangun UI faucet publik.**
       Sediakan flow connect wallet → cek/fund XLM testnet → prepare trustline → sign
       → submit → claim USDC, dengan tahap proses yang mudah dipahami juri.
 
-- [ ] **Tangani wallet yang sudah mempunyai trustline.**
+- [x] **Tangani wallet yang sudah mempunyai trustline.**
       Error `409` pada trustline prepare berarti pengguna dapat langsung melanjutkan
       ke claim, bukan kegagalan fatal.
 
-- [ ] **Tampilkan cooldown dan error akun belum aktif.**
+- [x] **Tampilkan cooldown dan error akun belum aktif.**
       Berikan instruksi Friendbot ketika akun belum ada on-chain dan tampilkan waktu
       tunggu ketika wallet masih berada dalam cooldown claim.
 
-- [ ] **Jangan meminta signature pada langkah claim USDC.**
+- [x] **Jangan meminta signature pada langkah claim USDC.**
       Hanya transaksi `changeTrust` yang ditandatangani user; payment claim
       ditandatangani issuer/platform.
 
