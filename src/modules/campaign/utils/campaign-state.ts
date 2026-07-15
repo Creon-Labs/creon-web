@@ -87,6 +87,34 @@ export function canInvestInCampaign(
   return campaign.deployStatus === "LIVE" && campaign.status === "ACTIVE"
 }
 
+function decimalToStroops(value: string): bigint | null {
+  if (!/^\d+(?:\.\d{1,7})?$/.test(value)) return null
+
+  const [integerPart, fractionPart = ""] = value.split(".")
+  return (
+    BigInt(integerPart) * BigInt(10_000_000) +
+    BigInt(fractionPart.padEnd(7, "0"))
+  )
+}
+
+export function getCampaignFundingProgress(
+  raisedAmount: string,
+  goalAmount: string
+): number {
+  const raised = decimalToStroops(raisedAmount)
+  const goal = decimalToStroops(goalAmount)
+
+  if (raised === null || goal === null || goal <= BigInt(0)) return 0
+
+  const maximumBasisPoints = BigInt(10_000)
+  const basisPoints = (raised * maximumBasisPoints) / goal
+  return (
+    Number(
+      basisPoints > maximumBasisPoints ? maximumBasisPoints : basisPoints
+    ) / 100
+  )
+}
+
 export function getCampaignInvestmentBlockReason(
   campaign: Pick<Campaign, "deployStatus" | "status">
 ): string | null {

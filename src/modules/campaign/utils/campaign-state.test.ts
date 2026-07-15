@@ -5,6 +5,7 @@ import {
   canInvestInCampaign,
   CampaignInvestmentUnavailableError,
   getCampaignDeploymentProgress,
+  getCampaignFundingProgress,
   getCampaignPollingInterval,
   getUnlockStatusCopy,
 } from "./campaign-state"
@@ -61,6 +62,13 @@ describe("campaign state helpers", () => {
         status: "PENDING_DEPLOYMENT",
       })
     ).toThrow(CampaignInvestmentUnavailableError)
+  })
+
+  it("calculates funding progress from exact decimal strings", () => {
+    expect(getCampaignFundingProgress("2500.0000000", "10000.0000000")).toBe(25)
+    expect(getCampaignFundingProgress("150", "100")).toBe(100)
+    expect(getCampaignFundingProgress("1", "0")).toBe(0)
+    expect(getCampaignFundingProgress("invalid", "100")).toBe(0)
   })
 
   it("explains that unlocked shares are transferable only peer-to-peer", () => {
